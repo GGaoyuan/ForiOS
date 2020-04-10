@@ -1,0 +1,12 @@
+platform :ios, '10.0'
+inhibit_all_warnings!   #去掉pod里的所有警告
+
+
+target 'ForiOS' do
+  pod 'YYModel'
+  pod 'YYImage'
+  pod 'YYCache'
+  pod 'YYWebImage'
+  pod 'YYText'
+  pod "AFNetworking"
+end
