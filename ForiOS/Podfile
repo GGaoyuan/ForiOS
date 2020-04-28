@@ -9,4 +9,5 @@ target 'ForiOS' do
   pod 'YYWebImage'
   pod 'YYText'
   pod "AFNetworking"
+  pod 'SDWebImage'
 end
