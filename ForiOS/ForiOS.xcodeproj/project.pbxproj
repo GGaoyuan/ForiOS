@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A8F9DA246B978F00877A25 /* AssignObject.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
 		30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5B124401FD10090BFA4 /* ViewController.m */; };
@@ -37,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		30A8F9D9246B978F00877A25 /* AssignObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignObject.h; sourceTree = "<group>"; };
+		30A8F9DA246B978F00877A25 /* AssignObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignObject.m; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AFC5AA24401FD10090BFA4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		30AFC5AB24401FD10090BFA4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				30AFC5B824401FD30090BFA4 /* LaunchScreen.storyboard */,
 				30AFC5BB24401FD30090BFA4 /* Info.plist */,
 				30AFC5BC24401FD30090BFA4 /* main.m */,
+				30A8F9D9246B978F00877A25 /* AssignObject.h */,
+				30A8F9DA246B978F00877A25 /* AssignObject.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -150,7 +155,6 @@
 				61B592F567E1D8B5D1E97E1A /* Pods-ForiOS.debug.xcconfig */,
 				D9D2F329F101A1411EAD32B9 /* Pods-ForiOS.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -319,6 +323,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
+				30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				30AFC5BD24401FD30090BFA4 /* main.m in Sources */,
 				30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */,
