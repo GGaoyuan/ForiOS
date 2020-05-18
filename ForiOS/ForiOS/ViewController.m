@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 #import "AssignObject.h"
+//#import "ForiOS-Bridging-Header.h"
+#import "ForiOS-Swift.h"
+//#import "TestClass.swift"
 
 @interface ViewController ()
 
@@ -40,6 +43,9 @@
     NSLog(@"地址%p", &_testStr);
     
     NSLog(@"地址%p", &_testStr);
+    
+    TestClass *test = [TestClass new];
+    [test testMethod];
 }
 
 

@@ -17,6 +17,7 @@
 		30AFC5BD24401FD30090BFA4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5BC24401FD30090BFA4 /* main.m */; };
 		30AFC5C724401FD30090BFA4 /* ForiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5C624401FD30090BFA4 /* ForiOSTests.m */; };
 		30AFC5D224401FD30090BFA4 /* ForiOSUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */; };
+		30D7B50224723AD700F9CD69 /* TestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B50124723AD700F9CD69 /* TestClass.swift */; };
 		B81F5D86F206BA0C2BFD4892 /* libPods-ForiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC879102B91C02D5B1BE845 /* libPods-ForiOS.a */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,8 @@
 		30AFC5CD24401FD30090BFA4 /* ForiOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForiOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ForiOSUITests.m; sourceTree = "<group>"; };
 		30AFC5D324401FD30090BFA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ForiOS-Bridging-Header.h"; sourceTree = "<group>"; };
+		30D7B50124723AD700F9CD69 /* TestClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClass.swift; sourceTree = "<group>"; };
 		4DC879102B91C02D5B1BE845 /* libPods-ForiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ForiOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B592F567E1D8B5D1E97E1A /* Pods-ForiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForiOS.debug.xcconfig"; path = "Target Support Files/Pods-ForiOS/Pods-ForiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D9D2F329F101A1411EAD32B9 /* Pods-ForiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForiOS.release.xcconfig"; path = "Target Support Files/Pods-ForiOS/Pods-ForiOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -127,6 +130,7 @@
 				30AFC5BC24401FD30090BFA4 /* main.m */,
 				30A8F9D9246B978F00877A25 /* AssignObject.h */,
 				30A8F9DA246B978F00877A25 /* AssignObject.m */,
+				30D7B57324725BAF00F9CD69 /* Swift */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -147,6 +151,15 @@
 				30AFC5D324401FD30090BFA4 /* Info.plist */,
 			);
 			path = ForiOSUITests;
+			sourceTree = "<group>";
+		};
+		30D7B57324725BAF00F9CD69 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				30D7B50124723AD700F9CD69 /* TestClass.swift */,
+				30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */,
+			);
+			path = Swift;
 			sourceTree = "<group>";
 		};
 		369740D8703E3EF4CB41A176 /* Pods */ = {
@@ -234,6 +247,7 @@
 				TargetAttributes = {
 					30AFC5A624401FD10090BFA4 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 					30AFC5C124401FD30090BFA4 = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -326,6 +340,7 @@
 				30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				30AFC5BD24401FD30090BFA4 /* main.m in Sources */,
+				30D7B50224723AD700F9CD69 /* TestClass.swift in Sources */,
 				30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,6 +511,7 @@
 			baseConfigurationReference = 61B592F567E1D8B5D1E97E1A /* Pods-ForiOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ForiOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -504,6 +520,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = gaoyuan.ForiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ForiOS/Swift/ForiOS-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -513,6 +532,7 @@
 			baseConfigurationReference = D9D2F329F101A1411EAD32B9 /* Pods-ForiOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ForiOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -521,6 +541,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = gaoyuan.ForiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ForiOS/Swift/ForiOS-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -528,6 +550,7 @@
 		30AFC5DA24401FD30090BFA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ForiOSTests/Info.plist;
@@ -547,6 +570,7 @@
 		30AFC5DB24401FD30090BFA4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ForiOSTests/Info.plist;
@@ -566,6 +590,7 @@
 		30AFC5DD24401FD30090BFA4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ForiOSUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -583,6 +608,7 @@
 		30AFC5DE24401FD30090BFA4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ForiOSUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
