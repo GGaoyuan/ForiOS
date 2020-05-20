@@ -8,9 +8,8 @@
 
 #import "ViewController.h"
 #import "AssignObject.h"
-//#import "ForiOS-Bridging-Header.h"
 #import "ForiOS-Swift.h"
-//#import "TestClass.swift"
+#import "NewDictionary.h"
 
 @interface ViewController ()
 
@@ -18,6 +17,8 @@
 @property (nonatomic, assign) AssignObject *assignObject;
 
 @property (nonatomic, copy) NSString *testStr;
+
+@property (nonatomic, weak) id object;
 
 @end
 
@@ -30,22 +31,27 @@
 //    self.assignObject = [[AssignObject alloc] init];
 //    printf(@"%p", self.assignObject);
     
-    NSString *str = @"11111";
-    NSLog(@"%p", str);
-    str = @"222222";
-    NSLog(@"%p", str);
+//    NSString *str = @"11111";
+//    NSLog(@"%p", str);
+//    str = @"222222";
+//    NSLog(@"%p", str);
+//
+//    _testStr = @"aaaaaaaaa";
+//    NSLog(@"指针%p", _testStr);
+//    NSLog(@"地址%p", &_testStr);
+//    _testStr = @"bbbbbbb";
+//    NSLog(@"指针%p", _testStr);
+//    NSLog(@"地址%p", &_testStr);
+//
+//    NSLog(@"地址%p", &_testStr);
     
-    _testStr = @"aaaaaaaaa";
-    NSLog(@"指针%p", _testStr);
-    NSLog(@"地址%p", &_testStr);
-    _testStr = @"bbbbbbb";
-    NSLog(@"指针%p", _testStr);
-    NSLog(@"地址%p", &_testStr);
+    id a = [NewDictionary alloc];
     
-    NSLog(@"地址%p", &_testStr);
+    SwiftMain *swift = [SwiftMain new];
+    [swift enter];
     
-    TestClass *test = [TestClass new];
-    [test testMethod];
+    NewDictionary *newDic = [NewDictionary new];
+    newDic.string = @"11111";
 }
 
 

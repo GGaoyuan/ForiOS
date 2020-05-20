@@ -17,7 +17,16 @@
 		30AFC5BD24401FD30090BFA4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5BC24401FD30090BFA4 /* main.m */; };
 		30AFC5C724401FD30090BFA4 /* ForiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5C624401FD30090BFA4 /* ForiOSTests.m */; };
 		30AFC5D224401FD30090BFA4 /* ForiOSUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */; };
-		30D7B50224723AD700F9CD69 /* TestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B50124723AD700F9CD69 /* TestClass.swift */; };
+		30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57A24728DE500F9CD69 /* SwiftMain.swift */; };
+		30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */; };
+		30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57E2472914F00F9CD69 /* FactoryProtocol.swift */; };
+		30D7B581247291D400F9CD69 /* MouseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B580247291D400F9CD69 /* MouseProtocol.swift */; };
+		30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5822472927700F9CD69 /* LenovoMouse.swift */; };
+		30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5842472928100F9CD69 /* HPMouse.swift */; };
+		30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5862472929100F9CD69 /* LogitechMouse.swift */; };
+		30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5882472937600F9CD69 /* MouseFactory.swift */; };
+		30D7B5982473CC5500F9CD69 /* NewDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5972473CC5500F9CD69 /* NewDictionary.m */; };
+		30D7B59B2473D9FF00F9CD69 /* MethodSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */; };
 		B81F5D86F206BA0C2BFD4892 /* libPods-ForiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC879102B91C02D5B1BE845 /* libPods-ForiOS.a */; };
 /* End PBXBuildFile section */
 
@@ -60,7 +69,18 @@
 		30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ForiOSUITests.m; sourceTree = "<group>"; };
 		30AFC5D324401FD30090BFA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ForiOS-Bridging-Header.h"; sourceTree = "<group>"; };
-		30D7B50124723AD700F9CD69 /* TestClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClass.swift; sourceTree = "<group>"; };
+		30D7B57A24728DE500F9CD69 /* SwiftMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMain.swift; sourceTree = "<group>"; };
+		30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPatternEntrance.swift; sourceTree = "<group>"; };
+		30D7B57E2472914F00F9CD69 /* FactoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryProtocol.swift; sourceTree = "<group>"; };
+		30D7B580247291D400F9CD69 /* MouseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseProtocol.swift; sourceTree = "<group>"; };
+		30D7B5822472927700F9CD69 /* LenovoMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LenovoMouse.swift; sourceTree = "<group>"; };
+		30D7B5842472928100F9CD69 /* HPMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPMouse.swift; sourceTree = "<group>"; };
+		30D7B5862472929100F9CD69 /* LogitechMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechMouse.swift; sourceTree = "<group>"; };
+		30D7B5882472937600F9CD69 /* MouseFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseFactory.swift; sourceTree = "<group>"; };
+		30D7B5962473CC5500F9CD69 /* NewDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewDictionary.h; sourceTree = "<group>"; };
+		30D7B5972473CC5500F9CD69 /* NewDictionary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewDictionary.m; sourceTree = "<group>"; };
+		30D7B5992473D9FF00F9CD69 /* MethodSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MethodSwizzling.h; sourceTree = "<group>"; };
+		30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MethodSwizzling.m; sourceTree = "<group>"; };
 		4DC879102B91C02D5B1BE845 /* libPods-ForiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ForiOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B592F567E1D8B5D1E97E1A /* Pods-ForiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForiOS.debug.xcconfig"; path = "Target Support Files/Pods-ForiOS/Pods-ForiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D9D2F329F101A1411EAD32B9 /* Pods-ForiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForiOS.release.xcconfig"; path = "Target Support Files/Pods-ForiOS/Pods-ForiOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -131,6 +151,10 @@
 				30A8F9D9246B978F00877A25 /* AssignObject.h */,
 				30A8F9DA246B978F00877A25 /* AssignObject.m */,
 				30D7B57324725BAF00F9CD69 /* Swift */,
+				30D7B5962473CC5500F9CD69 /* NewDictionary.h */,
+				30D7B5972473CC5500F9CD69 /* NewDictionary.m */,
+				30D7B5992473D9FF00F9CD69 /* MethodSwizzling.h */,
+				30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -156,10 +180,41 @@
 		30D7B57324725BAF00F9CD69 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
-				30D7B50124723AD700F9CD69 /* TestClass.swift */,
 				30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */,
+				30D7B57A24728DE500F9CD69 /* SwiftMain.swift */,
+				30D7B578247284C800F9CD69 /* DP */,
 			);
 			path = Swift;
+			sourceTree = "<group>";
+		};
+		30D7B578247284C800F9CD69 /* DP */ = {
+			isa = PBXGroup;
+			children = (
+				30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */,
+				30D7B579247284CF00F9CD69 /* 工厂 */,
+			);
+			path = DP;
+			sourceTree = "<group>";
+		};
+		30D7B579247284CF00F9CD69 /* 工厂 */ = {
+			isa = PBXGroup;
+			children = (
+				30D7B57E2472914F00F9CD69 /* FactoryProtocol.swift */,
+				30D7B5882472937600F9CD69 /* MouseFactory.swift */,
+				30D7B5952473C1A100F9CD69 /* Mouse */,
+			);
+			path = "工厂";
+			sourceTree = "<group>";
+		};
+		30D7B5952473C1A100F9CD69 /* Mouse */ = {
+			isa = PBXGroup;
+			children = (
+				30D7B580247291D400F9CD69 /* MouseProtocol.swift */,
+				30D7B5822472927700F9CD69 /* LenovoMouse.swift */,
+				30D7B5842472928100F9CD69 /* HPMouse.swift */,
+				30D7B5862472929100F9CD69 /* LogitechMouse.swift */,
+			);
+			path = Mouse;
 			sourceTree = "<group>";
 		};
 		369740D8703E3EF4CB41A176 /* Pods */ = {
@@ -336,11 +391,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */,
+				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
+				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
+				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
+				30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */,
+				30D7B581247291D400F9CD69 /* MouseProtocol.swift in Sources */,
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
+				30D7B59B2473D9FF00F9CD69 /* MethodSwizzling.m in Sources */,
 				30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */,
+				30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */,
+				30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */,
+				30D7B5982473CC5500F9CD69 /* NewDictionary.m in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				30AFC5BD24401FD30090BFA4 /* main.m in Sources */,
-				30D7B50224723AD700F9CD69 /* TestClass.swift in Sources */,
 				30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
