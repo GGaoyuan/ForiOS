@@ -22,4 +22,8 @@
     NSLog(@"%s", __FUNCTION__);
 }
 
++ (void)AssignTestMethod {
+    NSLog(@"AssignObject --- AssignTestMethod");
+}
+
 @end

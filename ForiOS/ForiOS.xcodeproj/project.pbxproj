@@ -17,6 +17,7 @@
 		30AFC5BD24401FD30090BFA4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5BC24401FD30090BFA4 /* main.m */; };
 		30AFC5C724401FD30090BFA4 /* ForiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5C624401FD30090BFA4 /* ForiOSTests.m */; };
 		30AFC5D224401FD30090BFA4 /* ForiOSUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */; };
+		30C6ED7A247782FD0034680E /* AssignSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C6ED79247782FD0034680E /* AssignSubObject.m */; };
 		30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57A24728DE500F9CD69 /* SwiftMain.swift */; };
 		30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */; };
 		30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57E2472914F00F9CD69 /* FactoryProtocol.swift */; };
@@ -68,6 +69,8 @@
 		30AFC5CD24401FD30090BFA4 /* ForiOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForiOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ForiOSUITests.m; sourceTree = "<group>"; };
 		30AFC5D324401FD30090BFA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30C6ED78247782FD0034680E /* AssignSubObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignSubObject.h; sourceTree = "<group>"; };
+		30C6ED79247782FD0034680E /* AssignSubObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignSubObject.m; sourceTree = "<group>"; };
 		30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ForiOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		30D7B57A24728DE500F9CD69 /* SwiftMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMain.swift; sourceTree = "<group>"; };
 		30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPatternEntrance.swift; sourceTree = "<group>"; };
@@ -155,6 +158,8 @@
 				30D7B5972473CC5500F9CD69 /* NewDictionary.m */,
 				30D7B5992473D9FF00F9CD69 /* MethodSwizzling.h */,
 				30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */,
+				30C6ED78247782FD0034680E /* AssignSubObject.h */,
+				30C6ED79247782FD0034680E /* AssignSubObject.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -393,6 +398,7 @@
 			files = (
 				30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */,
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
+				30C6ED7A247782FD0034680E /* AssignSubObject.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
 				30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */,
