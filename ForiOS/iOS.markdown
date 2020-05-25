@@ -20,8 +20,10 @@ copywithzone方法里的zone参数是历史遗留问题，不必理会
 #### 理解引用计数ARC
 苹果系统是内部有一个引用计数表来管理引用计数
 修饰符有__strong,__weak,__autoreleasing
-alloc/new/copy/mutableCopy生成的对象，这种对象会被当前的变量所持有，引用计数会加1，
-#### 用assign修饰对象
+alloc/new/copy/mutableCopy生成的对象，这种对象会被当前的变量所持有，引用计数会加1，而其他的如array，mutibale等等需要在舒适化之后调用retain才能持有这个方法
+#### 用assign修饰对象会怎样
+会崩溃
+因为
 ---
 
 ## Block
@@ -61,10 +63,7 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 比如声明NSString，就是 NSString *s = @"s";  而不是NSString *s = [NSString stringWithFormat:@"1"];
 
 
-
-
 #### Num31:在dealloc里移除通知和监听
-
 #### Num32:编写“异常安全代码”时注意内存安全
 注意try/catch时候的内存管理，因为这里是很容易造成内存泄漏的，比如在try中异常了，那么会直接跳到catch中，那么try中可能有关于释放内存的代码就无法
 执行，会造成内存泄漏。这种时候最好是用try/catch/finally，在finally里释放资源
@@ -73,7 +72,6 @@ unsafe_unretain和weak作用完全相同，也就是weak和assign的作用相同
 #### Num34：用autoreleasepool降低内存峰值
 #### Num35：用僵尸对象调试内存问题
 开启僵尸对象调试后，原本要被系统回收的对象系统就不会将他们回收，而是转化成僵尸对象，所占用的内存也不会被复写，当他们收到消息的时候，就会抛出异常。僵尸对象的生成类似KVO，当设置了僵尸对象，系统会在dealloc的时候swizzle到new出来的新的僵尸Object，并指向原本的Object，原本的Object不会释放，当僵尸对象收到消息，就能找到原本将收到消息的对象了并抛出异常
-
 #### Num36：不要使用retainCount
 注意String的引用计数，通常是在常量区，引用计数是(2^64)-1-->整数的最大值。系统会吧NSString当做单例对象，编译的时候都放在常量区，运行的时候直接用，并不创建对象。但是汉字，或者是其他的一些较长的文本，NSString会和其他对象一样在堆内存中，会有ARC的引用计数
 
