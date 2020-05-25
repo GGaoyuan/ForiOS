@@ -47,16 +47,20 @@
     
     self.testAssign = [NSObject new];
     
+    id __strong obj = [NSObject new];
+//    NSLog(obj);
+    id __unsafe_unretained obj2 = [NSObject new];
+    NSLog(@"obj2");
     
     
-    SwiftMain *swift = [SwiftMain new];
-    [swift enter];
-    
-    NewDictionary *newDic = [NewDictionary new];
-    newDic.string = @"11111";
-    
-    [AssignObject AssignTestMethod];
-    [AssignSubObject AssignTestMethod];
+//    SwiftMain *swift = [SwiftMain new];
+//    [swift enter];
+//
+//    NewDictionary *newDic = [NewDictionary new];
+//    newDic.string = @"11111";
+//
+//    [AssignObject AssignTestMethod];
+//    [AssignSubObject AssignTestMethod];
 }
 
 
