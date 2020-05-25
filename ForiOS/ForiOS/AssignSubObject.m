@@ -10,6 +10,11 @@
 
 @implementation AssignSubObject
 
++ (void)AssignTestMethod {
+    [super AssignTestMethod];
+    NSLog(@"AssignSubObject --- AssignTestMethod");
+}
+
 //+ (void)AssignTestMethod {
 //    NSLog(@"AssignSubObject --- AssignTestMethod");
 //}

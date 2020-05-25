@@ -153,13 +153,13 @@
 				30AFC5BC24401FD30090BFA4 /* main.m */,
 				30A8F9D9246B978F00877A25 /* AssignObject.h */,
 				30A8F9DA246B978F00877A25 /* AssignObject.m */,
+				30C6ED78247782FD0034680E /* AssignSubObject.h */,
+				30C6ED79247782FD0034680E /* AssignSubObject.m */,
 				30D7B57324725BAF00F9CD69 /* Swift */,
 				30D7B5962473CC5500F9CD69 /* NewDictionary.h */,
 				30D7B5972473CC5500F9CD69 /* NewDictionary.m */,
 				30D7B5992473D9FF00F9CD69 /* MethodSwizzling.h */,
 				30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */,
-				30C6ED78247782FD0034680E /* AssignSubObject.h */,
-				30C6ED79247782FD0034680E /* AssignSubObject.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
