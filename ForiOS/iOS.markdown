@@ -45,6 +45,37 @@ assign和weak修饰类似，weak对应的关键修饰符是__weak，assign是__u
 开启僵尸对象调试？？？
 #### 用僵尸对象调试内存问题
 开启僵尸对象调试后，原本要被系统回收的对象系统就不会将他们回收，而是转化成僵尸对象，所占用的内存也不会被复写，当他们收到消息的时候，就会抛出异常。僵尸对象的生成类似KVO，当设置了僵尸对象，系统会在dealloc的时候swizzle到new出来的新的僵尸Object，并指向原本的Object，原本的Object不会释放，当僵尸对象收到消息，就能找到原本将收到消息的对象了并抛出异常
+#### id的实质(联系block为什么是一个OC对象)
+```
+//id为一个objc_object结构体的指针类型
+typedef struct objc_object {
+    Class isa;
+} *id;
+
+//Class为objc_class结构体的指针类型
+typedef struct objc_class *Class;
+struct objc_class {
+    Class isa;
+};
+```
+而block的结构体
+```
+struct __block_impl {
+    void *isa;
+    int Flags;
+    int Reserved;
+    void *FuncPtr;
+}
+```
+一个普通对象
+```
+struct TestObject {
+    Class isa;
+    int val0;
+    int val1;
+}
+```
+对比一下，明白了吧？
 
 
 --------------------------------------------
@@ -76,6 +107,57 @@ val in block = 10
 Program ended with exit code: 0
 ```
 因为block会捕获局部变量的瞬间值，所以在block捕获之后，val的值改变成多少，都和block捕获的变量无关
+#### blcok的实质
+当一个block被转换为C代码后是这样的
+```
+//Block
+void(^blk)(void) = ^{
+    printf("Block\n");
+};
+blk();
+//转化后是这样
+struct __block_impl {
+    void *isa;
+    int Flags;
+    int Reserved;
+    void *FuncPtr;
+}
+//接下来是几个名叫__main_block_xxx_0的结构体和方法
+//这里用impl代替原本的__main_block_impl_0
+//这里用func代替原本的__main_block_func_0
+//这里用desc代替原本的__main_block_desc_0
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    //block的一个构造方法
+    impl0(void *fp ... ...) {
+        impl.isa = &StackBlock;
+        impl.FuncPtr = fp;
+    }
+}
+
+static void func0(struct impl *__cself) {
+    printf("Block\n");
+}
+
+static struct desc0 {    //这个里边就是关于版本，大小的数据
+    unsigned long reserved;
+    unsigned long Block_size;
+}
+//block的最终生成函数
+void(^blk)(void) = (void (*)(void)) &imp0((void *)func0 ... ...)
+//blk();转化
+(*blk->imp.FuncPtr)(blk);
+```
+(以下分别省去__main_block_0这个前缀和后缀)
+从源代码中就可以看出，其实Block内部最终的方法就是func里的内容。从这个方法的参数，又能联系到impl这个结构体，在这个结构体里又有__block_impl这个结构体和desc这个结构体。
+然后看最后的block生成函数，一个block就是调用结构体的impl0的构造函数初始化一个impl0的struct，传入代表源block内部方法的func0，impl0里的impl又有关于impl0需要的信息和函数指针
+因为OC对象的实质就是个有isa指针的结构体，所以Block也可以看做一个OC对象(RB.P97~P99，这里有详细介绍id,即void *是什么个东西)
+最后使用Block的代码blk()转换后就是简单的函数调用
+#### Blcok如何截取局部变量
+？？？
+
+
 #### __blcok
 ？？？
 
@@ -184,7 +266,7 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 ？？？
 #### KVC
 ？？？
-
+#### main函数之前都有什么
 
 
 --------------------------------------------

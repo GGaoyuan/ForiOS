@@ -17,12 +17,13 @@
 @property (nonatomic, assign) NSInteger testNum;
 @property (nonatomic, assign) AssignObject *assignObject;
 
-@property (nonatomic, copy) NSString *testStr;
-
 @property (nonatomic, weak) id object;
 
 @property (nonatomic, weak) NSObject *testWeak;
 @property (nonatomic, assign) NSObject *testAssign;
+
+@property (nonatomic, copy) NSString *testStr;
+@property (nonatomic, copy) NSMutableArray *testArray;
 
 @end
 
@@ -38,21 +39,9 @@
     [self.view addSubview:imageView];
     [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
     
-    @autoreleasepool {
-        self.testWeak = [NSObject new];
-        NSLog(@"");
-    }
-    self.testWeak = [NSObject new];
-    
-    
-    self.testAssign = [NSObject new];
-    
-    id __strong obj = [NSObject new];
-//    NSLog(obj);
-    id __unsafe_unretained obj2 = [NSObject new];
-    NSLog(@"obj2");
-    
-    
+    self.testStr = @"1111";
+    self.testArray = [[NSMutableArray alloc] init];
+    [self.testArray addObject:[NSObject new]];
 //    SwiftMain *swift = [SwiftMain new];
 //    [swift enter];
 //
