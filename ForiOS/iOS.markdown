@@ -155,6 +155,41 @@ void(^blk)(void) = (void (*)(void)) &imp0((void *)func0 ... ...)
 因为OC对象的实质就是个有isa指针的结构体，所以Block也可以看做一个OC对象(RB.P97~P99，这里有详细介绍id,即void *是什么个东西)
 最后使用Block的代码blk()转换后就是简单的函数调用
 #### Blcok如何截取局部变量
+```
+//Block
+int val = 10;
+const char *fmt = "val = %d\n";
+void(^blk)(void) = ^{
+    printf(fmt, val);
+};
+blk();
+//转化后代码合上面的block实质这部分差不多，不过下面这里不同
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    int val;
+    const char *fmt;
+    //block的一个构造方法
+    impl0(void *fp , int _val, char *_fmt ... ...) {
+        impl.isa = &StackBlock;
+        impl.FuncPtr = fp;
+    }
+}
+static void func0(struct impl *__cself) {
+    const char *fmt = __cself->fmt;
+    int val = __cself->val;
+    printf(fmt, val);
+}
+```
+从源码中可知，局部变量fmt和val会被作为impl0这个结构体的成员变量
+```
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    int val;
+    const char *fmt;
+}
+```
 ？？？
 
 
