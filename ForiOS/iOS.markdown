@@ -195,8 +195,69 @@ struct impl0 {
 所以所谓的截取成员变量，就是将成员变量值被保存到block的实例中（即impl0这个机构体之中）
 #### __blcok
 __block其实是和static将变量存在静态区，auto存在栈区等说明符一样，是指将变量放入某个特定的内存区域
-？？？
+```
+__block int val = 10;
+void(^blk)(void) = ^{
+    val = 1;
+};
+```
+```
+__block int val = 10;
+//编译后
+struct __Block_byref_val_0 {
+    void *__isa;
+    __Block_byref_val_0 *__forwarding;
+    int __flags;
+    int __size;
+    int val;
+};
+```
+可以见得val加了__block之后成为了一个结构体，可以将它看成一个objc对象。其中，val就是真正的int val，而__forwarding是一个指向自己的指针,他存在的原因是因为->block都有哪几种类型的Block
+这个结构体可以用在几个block中。
+```
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    __Block_byref_val_0 *val;
+    //block的一个构造方法
+    impl0(void *fp, __Block_byref_val_0 *_val : val(val->__forwarding) ... ...) {
+        impl.isa = &StackBlock;
+        impl.FuncPtr = fp;
+    }
+}
 
+static void func0(struct impl *__cself) {
+    __Block_byref_val_0 *val = __cself->val;
+    val->__forwarding->val = 1;
+}
+```
+在这个func0中，我们可以看到，实际上，我们可以通过拿到当前Block结构体(即impl0)中的val，然后再通过val这个结构体(即__block编译出的结构体)找到最终的那个__block int val并赋值;
+？？？
+#### block都有哪几种类型的Block，__block的变量存储域
+有StacK,Malloc,Global(数据区)
+在block初始化的时候结构体__block_impl的isa指针会指向对应的block类型
+```
+//NSConcreteGlobalBlock
+void(^blk)(void) = ^{printf("Global Block");};
+int main() {
+    //
+}
+//注意，全局Block是不能使用局部变量的
+```
+```
+//NSConcreteStackBlock
+int main() {
+    void(^blk)(void) = ^{printf("Stack Block");};
+}
+```
+GlobalBlock，任何地方都能访问，但是全局Block是不能使用局部变量的
+StackBlock在ARC下其实已经没有了，一生成就会被编译器自动copy到堆上成为堆Block。通过编译后的代码可以看出一个StackBlock会初始化后将自己copy到堆上，然后加入到autoreleasepool中。
+然鹅有时候会因为编译器在特殊情况下是无法识别Block是否需要被copy，这时候得手动调用copy方法。反正对于block来说，调用copy就行，准没错
+对于__block来说，当在栈上的时候，blk0和blk1使用它，如果blk0或blk1被复制到了堆上，那么__block这个被修饰的变量(即objc的对象)则会被一同复制过去的block持有，一个block持有引用计数+1，俩就+2。（因为__block的变量是对象）
+
+对于__block里的__forwarding正是为了解决copy到堆上的问题。当被copy到堆上之后，新的__forwarding还是指向自己，但是老的__forwarding会指向新的，这样就能永远只访问同一个变量
+#### block为啥要用copy
+？？？
 #### block里面使用实例变量会造成循环引用吗
 ？？？
 
@@ -264,6 +325,8 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 
 --------------------------------------------
 ## 其他
+#### 内存区域有哪几个
+？？？
 #### 了解Objective-C起源
 所有的Objective-C的对象都是声明一个指针*，指向的对象会被分配在堆空间中，堆中内存自己管理（ARC）
 如果代码中不含有*的变量，那么就是在栈上，如NSInteger, CGRect
