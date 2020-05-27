@@ -150,13 +150,14 @@ void(^blk)(void) = (void (*)(void)) &imp0((void *)func0 ... ...)
 (*blk->imp.FuncPtr)(blk);
 ```
 (以下分别省去__main_block_0这个前缀和后缀)
-从源代码中就可以看出，其实Block内部最终的方法就是func里的内容。从这个方法的参数，又能联系到impl这个结构体，在这个结构体里又有__block_impl这个结构体和desc这个结构体。
-然后看最后的block生成函数，一个block就是调用结构体的impl0的构造函数初始化一个impl0的struct，传入代表源block内部方法的func0，impl0里的impl又有关于impl0需要的信息和函数指针
+从源代码中就可以看出，其实Block内部最终的方法就是func里的内容。从这个方法的参数，又能联系到impl0这个结构体，在这个结构体里又有__block_impl这个结构体和desc这个结构体。
+然后看最后的block生成函数，一个block就是调用结构体的impl0的构造函数初始化一个impl0的struct，传入代表源block内部方法的func0，impl0里的impl又有关于impl0需要的信息和函数指针。由此看出impl0结构体，实际上就是我们的block。
 因为OC对象的实质就是个有isa指针的结构体，所以Block也可以看做一个OC对象(RB.P97~P99，这里有详细介绍id,即void *是什么个东西)
 最后使用Block的代码blk()转换后就是简单的函数调用
 #### Blcok如何截取局部变量
 ```
 //Block
+int dmy = 20;
 int val = 10;
 const char *fmt = "val = %d\n";
 void(^blk)(void) = ^{
@@ -181,7 +182,7 @@ static void func0(struct impl *__cself) {
     printf(fmt, val);
 }
 ```
-从源码中可知，局部变量fmt和val会被作为impl0这个结构体的成员变量
+从源码中可知，局部变量fmt和val会被作为impl0这个结构体的成员变量，但是dmy这个变量block没有使用，所以他是不会被追加进去的。
 ```
 struct impl0 {
     struct __block_impl impl;
@@ -190,9 +191,8 @@ struct impl0 {
     const char *fmt;
 }
 ```
-？？？
-
-
+由此我们可以看出block是如何截取变量的。
+所以所谓的截取成员变量，就是将成员变量值被保存到block的实例中（即impl0这个机构体之中）
 #### __blcok
 ？？？
 
