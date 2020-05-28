@@ -12,14 +12,18 @@
 
 - (void)mainStart {
     NSLog(@"mainStart");
-    dispatch_queue_t queue = dispatch_queue_create("123", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(queue, ^{
-        for (int i = 0; i < 100000; i++) {
-            if (i == 9998) {
-                NSLog(@"1111111111 -------- %@",[NSThread currentThread]);
-            }
-        }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"111111");
     });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        NSLog(@"111111");
+//    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        NSLog(@"111111");
+//    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        NSLog(@"111111");
+//    });
 }
 
 @end
