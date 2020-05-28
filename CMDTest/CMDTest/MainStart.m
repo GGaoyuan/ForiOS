@@ -12,9 +12,13 @@
 
 - (void)mainStart {
     NSLog(@"mainStart");
-    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t queue = dispatch_queue_create("123", DISPATCH_QUEUE_SERIAL);
     dispatch_async(queue, ^{
-        
+        for (int i = 0; i < 100000; i++) {
+            if (i == 9998) {
+                NSLog(@"1111111111 -------- %@",[NSThread currentThread]);
+            }
+        }
     });
 }
 
