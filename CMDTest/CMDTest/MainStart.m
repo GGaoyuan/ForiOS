@@ -12,6 +12,10 @@
 
 - (void)mainStart {
     NSLog(@"mainStart");
+    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(queue, ^{
+        
+    });
 }
 
 @end
