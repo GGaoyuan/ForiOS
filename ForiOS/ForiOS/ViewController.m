@@ -34,35 +34,35 @@
     
     dispatch_queue_t queue = dispatch_queue_create("id", DISPATCH_QUEUE_CONCURRENT);
     
-    dispatch_sync(queue, ^{
+    dispatch_async(queue, ^{
         for (int i = 0; i < 1000000; i++) {
             if (i == 999990) {
                 NSLog(@"1111 ---- %@", [NSThread currentThread]);
             }
         }
     });
-    dispatch_sync(queue, ^{
+    dispatch_async(queue, ^{
         for (int i = 0; i < 10000000; i++) {
             if (i == 9999900) {
                 NSLog(@"2222 ---- %@", [NSThread currentThread]);
             }
         }
     });
-    dispatch_sync(queue, ^{
+    dispatch_async(queue, ^{
         for (int i = 0; i < 1000000; i++) {
             if (i == 999990) {
                 NSLog(@"3333 ---- %@", [NSThread currentThread]);
             }
         }
     });
-    dispatch_async(queue, ^{
+    dispatch_sync(queue, ^{
         for (int i = 0; i < 1000000; i++) {
             if (i == 909999) {
                 NSLog(@"4444 ---- %@", [NSThread currentThread]);
             }
         }
     });
-    dispatch_async(queue, ^{
+    dispatch_sync(queue, ^{
         for (int i = 0; i < 100000; i++) {
             if (i == 99999) {
                 NSLog(@"5555 ---- %@", [NSThread currentThread]);

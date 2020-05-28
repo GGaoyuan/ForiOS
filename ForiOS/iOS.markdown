@@ -298,7 +298,9 @@ person.block();
 --------------------------------------------
 ## 多线程
 #### 简单介绍下GCD
-DispatchQueue是FIFO先进先出的，模式有等待当前执行处理的Seria和不等待当前的Concurrent
+DispatchQueue是FIFO先进先出的，模式有等待当前执行处理的Seria（串行）和不等待当前执行的的Concurrent（并行）
+还有阻塞当前线程的sync（同步）和不阻塞当前线程的async（异步）
+
 
 #### 线程死锁的四个条件
 ？？？
