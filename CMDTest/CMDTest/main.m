@@ -7,26 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
-void(^blk3)(int a) = ^{
-    
-};
+#import "MainStart.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        
-        __block int a = 10;
-        void(^blk0)(void) = ^{
-            a = 20;
-        };
-        void(^blk1)(void) = ^{
-            a = 30;
-        };
-        printf("%d", a);
-        blk0();
-        printf("%d", a);
-        blk1();
-        printf("%d", a);
+        [[MainStart new] mainStart];
     }
     return 0;
 }
