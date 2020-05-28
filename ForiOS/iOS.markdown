@@ -193,7 +193,7 @@ struct impl0 {
 ```
 由此我们可以看出block是如何截取变量的。即使在Block内部使用了被截取的变量，也不会对原来的对象有影响
 所以所谓的截取成员变量，就是将成员变量值被保存到block的实例中（即impl0这个机构体之中）
-#### __blcok
+#### __block
 __block其实是和static将变量存在静态区，auto存在栈区等说明符一样，是指将变量放入某个特定的内存区域
 ```
 __block int val = 10;
@@ -256,10 +256,45 @@ StackBlock在ARC下其实已经没有了，一生成就会被编译器自动copy
 对于__block来说，当在栈上的时候，blk0和blk1使用它，如果blk0或blk1被复制到了堆上，那么__block这个被修饰的变量(即objc的对象)则会被一同复制过去的block持有，一个block持有引用计数+1，俩就+2。（因为__block的变量是对象）
 
 对于__block里的__forwarding正是为了解决copy到堆上的问题。当被copy到堆上之后，新的__forwarding还是指向自己，但是老的__forwarding会指向新的，这样就能永远只访问同一个变量
-#### block为啥要用copy
-？？？
 #### block里面使用实例变量会造成循环引用吗
+看实例变量是否被是否被强引用，看block是都被其他对象强引用
+```
+Person *person = [[Person alloc]init];
+person.age = 20;
+person.block = ^{
+    NSLog(@"age is %d",person.age);
+};
+//编译后
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  Person *__strong person; // 对 person 产生了强引用
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, Person *__strong _person, int flags=0) : person(_person) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+```
+由此看出，block里使用了person，那么block会持有person这个对象。但是person对象又持有了Block，那么就会循环引用
+解决的办法有三个，__weak,_unsafe_unretain,还有__block
+而__block的代码是：
+```
+Person *person = [[Person alloc]init];
+__block Person *weakPerson = person;
+person.age = 20;
+person.block = ^{
+    NSLog(@"my age is %d",weakPerson.age);
+    //在 block 内部,把 person 对象置为nil
+    weakPerson = nil;
+};
+person.block();
+```
+#### block为啥要用copy
+其实用strong也行
 ？？？
+
 
 
 
