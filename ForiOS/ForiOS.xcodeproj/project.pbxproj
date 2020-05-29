@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		302B322C2481004F007AEA23 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322B2481004F007AEA23 /* UIImageView.swift */; };
 		30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A8F9DA246B978F00877A25 /* AssignObject.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
@@ -49,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		302B322B2481004F007AEA23 /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		30A8F9D9246B978F00877A25 /* AssignObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignObject.h; sourceTree = "<group>"; };
 		30A8F9DA246B978F00877A25 /* AssignObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignObject.m; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +117,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		302B32222480FA47007AEA23 /* SourceCode */ = {
+			isa = PBXGroup;
+			children = (
+				302B32232480FA61007AEA23 /* WebImage */,
+			);
+			path = SourceCode;
+			sourceTree = "<group>";
+		};
+		302B32232480FA61007AEA23 /* WebImage */ = {
+			isa = PBXGroup;
+			children = (
+				302B322B2481004F007AEA23 /* UIImageView.swift */,
+			);
+			path = WebImage;
+			sourceTree = "<group>";
+		};
 		30AFC59E24401FD10090BFA4 = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +205,7 @@
 			children = (
 				30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */,
 				30D7B57A24728DE500F9CD69 /* SwiftMain.swift */,
+				302B32222480FA47007AEA23 /* SourceCode */,
 				30D7B578247284C800F9CD69 /* DP */,
 			);
 			path = Swift;
@@ -406,6 +425,7 @@
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
 				30D7B59B2473D9FF00F9CD69 /* MethodSwizzling.m in Sources */,
 				30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */,
+				302B322C2481004F007AEA23 /* UIImageView.swift in Sources */,
 				30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */,
 				30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */,
 				30D7B5982473CC5500F9CD69 /* NewDictionary.m in Sources */,

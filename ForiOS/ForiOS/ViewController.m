@@ -23,6 +23,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+//    NSString *url = @"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589985186178&di=d9bd6c8a6debf28bc3607aaa5006dd5e&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinakd20200416ac%2F185%2Fw640h345%2F20200416%2Fdddf-iskepxs4936582.jpg";
+//    UIImageView *imageView = [[UIImageView alloc] init];
+//    //    imageView.backgroundColor = [UIColor redColor];
+//    imageView.frame = CGRectMake(200, 200, 400, 240);
+//    [self.view addSubview:imageView];
+//    [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
+
+    SwiftMain *main = [SwiftMain new];
+    [main webImageWithVc:self];
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 //    dispatch_queue_t queue = dispatch_queue_create("CONCURRENT", DISPATCH_QUEUE_CONCURRENT);
 //    dispatch_async(queue, ^{ NSLog(@"111 ---- %@", [NSThread currentThread]);});
 //    dispatch_async(queue, ^{ NSLog(@"222 ---- %@", [NSThread currentThread]);});
