@@ -292,8 +292,10 @@ person.block = ^{
 person.block();
 ```
 #### block为啥要用copy
-其实用strong也行
-？？？
+其实用strong也行，文档写的用Copy,
+
+#### 逻辑Block
+???
 
 --------------------------------------------
 ## 多线程

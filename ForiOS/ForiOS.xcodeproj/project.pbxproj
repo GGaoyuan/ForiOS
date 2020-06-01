@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		302B322C2481004F007AEA23 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322B2481004F007AEA23 /* UIImageView.swift */; };
 		302B322E24811263007AEA23 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322D24811263007AEA23 /* WebImage.swift */; };
+		3033B42124854AAC003A5A9B /* Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42024854AAC003A5A9B /* Block.m */; };
 		30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A8F9DA246B978F00877A25 /* AssignObject.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
@@ -53,6 +54,8 @@
 /* Begin PBXFileReference section */
 		302B322B2481004F007AEA23 /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		302B322D24811263007AEA23 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
+		3033B41F24854AAC003A5A9B /* Block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Block.h; sourceTree = "<group>"; };
+		3033B42024854AAC003A5A9B /* Block.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Block.m; sourceTree = "<group>"; };
 		30A8F9D9246B978F00877A25 /* AssignObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignObject.h; sourceTree = "<group>"; };
 		30A8F9DA246B978F00877A25 /* AssignObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignObject.m; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -181,6 +184,8 @@
 				30D7B5972473CC5500F9CD69 /* NewDictionary.m */,
 				30D7B5992473D9FF00F9CD69 /* MethodSwizzling.h */,
 				30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */,
+				3033B41F24854AAC003A5A9B /* Block.h */,
+				3033B42024854AAC003A5A9B /* Block.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -422,6 +427,7 @@
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
 				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
 				30C6ED7A247782FD0034680E /* AssignSubObject.m in Sources */,
+				3033B42124854AAC003A5A9B /* Block.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
 				30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */,
