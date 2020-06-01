@@ -20,6 +20,18 @@ class SwiftMain: NSObject {
         imageView.backgroundColor = .red
         imageView.frame = CGRect(x: 200, y: 200, width: 400, height: 240)
         vc.view.addSubview(imageView)
+        let a = imageView.wi
 //        imageView.setupImage(url: <#T##String#>, placeHolder: <#T##UIImage#>, options: <#T##WebImageOptions#>)
+        
+        let imageView2 = UIImageView()
+        let b = imageView2.wi
+        
+        let imageView3 = UIImageView()
+        let c = imageView3.wi
+        
+        let imageView4 = UIImageView()
+        let d = imageView4.wi
+        
+        print("")
     }
 }

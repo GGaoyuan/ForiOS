@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		302B322C2481004F007AEA23 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322B2481004F007AEA23 /* UIImageView.swift */; };
+		302B322E24811263007AEA23 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322D24811263007AEA23 /* WebImage.swift */; };
 		30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A8F9DA246B978F00877A25 /* AssignObject.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		302B322B2481004F007AEA23 /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		302B322D24811263007AEA23 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		30A8F9D9246B978F00877A25 /* AssignObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignObject.h; sourceTree = "<group>"; };
 		30A8F9DA246B978F00877A25 /* AssignObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignObject.m; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -129,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				302B322B2481004F007AEA23 /* UIImageView.swift */,
+				302B322D24811263007AEA23 /* WebImage.swift */,
 			);
 			path = WebImage;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 			files = (
 				30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */,
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
+				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
 				30C6ED7A247782FD0034680E /* AssignSubObject.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
