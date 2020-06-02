@@ -16,11 +16,14 @@ public protocol WebImageProtocol {
 }
 public extension WebImageProtocol {
     var wi: WebImage<Self> {
-        return WebImage()
+        return WebImage(self)
     }
 }
 
 public final class WebImage<Base> {
-    
+    public let base: Base
+    public init(_ base: Base) {
+        self.base = base
+    }
 }
 

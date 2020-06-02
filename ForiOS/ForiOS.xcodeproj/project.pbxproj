@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		302B322C2481004F007AEA23 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322B2481004F007AEA23 /* UIImageView.swift */; };
 		302B322E24811263007AEA23 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322D24811263007AEA23 /* WebImage.swift */; };
 		3033B42124854AAC003A5A9B /* Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42024854AAC003A5A9B /* Block.m */; };
 		30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A8F9DA246B978F00877A25 /* AssignObject.m */; };
@@ -21,6 +20,7 @@
 		30AFC5C724401FD30090BFA4 /* ForiOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5C624401FD30090BFA4 /* ForiOSTests.m */; };
 		30AFC5D224401FD30090BFA4 /* ForiOSUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5D124401FD30090BFA4 /* ForiOSUITests.m */; };
 		30C6ED7A247782FD0034680E /* AssignSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C6ED79247782FD0034680E /* AssignSubObject.m */; };
+		30C9D06F248676F200044171 /* UIImageView+WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D06E248676F200044171 /* UIImageView+WebImage.swift */; };
 		30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57A24728DE500F9CD69 /* SwiftMain.swift */; };
 		30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */; };
 		30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B57E2472914F00F9CD69 /* FactoryProtocol.swift */; };
@@ -52,7 +52,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		302B322B2481004F007AEA23 /* UIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		302B322D24811263007AEA23 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		3033B41F24854AAC003A5A9B /* Block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Block.h; sourceTree = "<group>"; };
 		3033B42024854AAC003A5A9B /* Block.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Block.m; sourceTree = "<group>"; };
@@ -78,6 +77,7 @@
 		30AFC5D324401FD30090BFA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		30C6ED78247782FD0034680E /* AssignSubObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignSubObject.h; sourceTree = "<group>"; };
 		30C6ED79247782FD0034680E /* AssignSubObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignSubObject.m; sourceTree = "<group>"; };
+		30C9D06E248676F200044171 /* UIImageView+WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+WebImage.swift"; sourceTree = "<group>"; };
 		30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ForiOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		30D7B57A24728DE500F9CD69 /* SwiftMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMain.swift; sourceTree = "<group>"; };
 		30D7B57C24728EA300F9CD69 /* DesignPatternEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignPatternEntrance.swift; sourceTree = "<group>"; };
@@ -133,8 +133,8 @@
 		302B32232480FA61007AEA23 /* WebImage */ = {
 			isa = PBXGroup;
 			children = (
-				302B322B2481004F007AEA23 /* UIImageView.swift */,
 				302B322D24811263007AEA23 /* WebImage.swift */,
+				30C9D06E248676F200044171 /* UIImageView+WebImage.swift */,
 			);
 			path = WebImage;
 			sourceTree = "<group>";
@@ -435,8 +435,8 @@
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
 				30D7B59B2473D9FF00F9CD69 /* MethodSwizzling.m in Sources */,
 				30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */,
-				302B322C2481004F007AEA23 /* UIImageView.swift in Sources */,
 				30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */,
+				30C9D06F248676F200044171 /* UIImageView+WebImage.swift in Sources */,
 				30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */,
 				30D7B5982473CC5500F9CD69 /* NewDictionary.m in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,

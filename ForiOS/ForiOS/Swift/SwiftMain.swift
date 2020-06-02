@@ -31,7 +31,11 @@ class SwiftMain: NSObject {
         
         let imageView4 = UIImageView()
         let d = imageView4.wi
-        
+        imageView.wi.setupImage(urlString: url, options: .a, progress: { (r, a) in
+            
+        }) { (image, error, cacheType, url) in
+            
+        }
         print("")
     }
 }

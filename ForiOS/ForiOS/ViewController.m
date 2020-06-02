@@ -33,19 +33,19 @@
 //    num = 1;
 //    NSInteger r = block(2);
 //
-    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"1", @"2", nil];
-    [arr addObject:@"5"];
-    NSLog(@"%p", &arr);
-    void(^blk)(void) = ^{
-        NSLog(@"%@", arr);
-        [arr addObject:@"4"];
-        NSLog(@"%p", &arr);
-    };
-    [arr addObject:@"3"];
-    NSLog(@"%p", &arr);
-    arr = nil;
-    NSLog(@"%p", &arr);
-    blk();
+//    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"1", @"2", nil];
+//    [arr addObject:@"5"];
+//    NSLog(@"%p", &arr);
+//    void(^blk)(void) = ^{
+//        NSLog(@"%@", arr);
+//        [arr addObject:@"4"];
+//        NSLog(@"%p", &arr);
+//    };
+//    [arr addObject:@"3"];
+//    NSLog(@"%p", &arr);
+//    arr = nil;
+//    NSLog(@"%p", &arr);
+//    blk();
     
     
 
@@ -54,8 +54,8 @@
     
     
     
-//    SwiftMain *main = [SwiftMain new];
-//    [main webImageWithVc:self];
+    SwiftMain *main = [SwiftMain new];
+    [main webImageWithVc:self];
     
     
     
