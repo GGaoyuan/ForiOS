@@ -8,7 +8,11 @@
 
 import UIKit
 
-enum WebImageOptions {
+//public enum WebImageResource {
+//
+//}
+
+public enum WebImageOptions {
     case a
     case b
 }
@@ -18,6 +22,8 @@ public enum WebImageCacheType {
     case memory
     case disk
 }
+
+
 public typealias DownloadProgress = ((_ receivedSize: Int64, _ totalSize: Int64) -> Void)
 public typealias CompletionHandler = ((_ image: UIImage?, _ error: NSError?, _ cacheType: WebImageCacheType, _ imageURL: URL?) -> Void)
 
