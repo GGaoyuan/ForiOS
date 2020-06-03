@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		302B322E24811263007AEA23 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322D24811263007AEA23 /* WebImage.swift */; };
 		3033B42124854AAC003A5A9B /* Block.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42024854AAC003A5A9B /* Block.m */; };
+		3033B4242487F1A9003A5A9B /* iTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B4232487F1A9003A5A9B /* iTouch.m */; };
+		3033B4272487F20C003A5A9B /* UITouch+Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B4262487F20C003A5A9B /* UITouch+Test.m */; };
 		30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A8F9DA246B978F00877A25 /* AssignObject.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
@@ -55,6 +57,10 @@
 		302B322D24811263007AEA23 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		3033B41F24854AAC003A5A9B /* Block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Block.h; sourceTree = "<group>"; };
 		3033B42024854AAC003A5A9B /* Block.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Block.m; sourceTree = "<group>"; };
+		3033B4222487F1A9003A5A9B /* iTouch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTouch.h; sourceTree = "<group>"; };
+		3033B4232487F1A9003A5A9B /* iTouch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTouch.m; sourceTree = "<group>"; };
+		3033B4252487F20C003A5A9B /* UITouch+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITouch+Test.h"; sourceTree = "<group>"; };
+		3033B4262487F20C003A5A9B /* UITouch+Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITouch+Test.m"; sourceTree = "<group>"; };
 		30A8F9D9246B978F00877A25 /* AssignObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignObject.h; sourceTree = "<group>"; };
 		30A8F9DA246B978F00877A25 /* AssignObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignObject.m; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,6 +192,10 @@
 				30D7B59A2473D9FF00F9CD69 /* MethodSwizzling.m */,
 				3033B41F24854AAC003A5A9B /* Block.h */,
 				3033B42024854AAC003A5A9B /* Block.m */,
+				3033B4222487F1A9003A5A9B /* iTouch.h */,
+				3033B4232487F1A9003A5A9B /* iTouch.m */,
+				3033B4252487F20C003A5A9B /* UITouch+Test.h */,
+				3033B4262487F20C003A5A9B /* UITouch+Test.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -429,11 +439,13 @@
 				30C6ED7A247782FD0034680E /* AssignSubObject.m in Sources */,
 				3033B42124854AAC003A5A9B /* Block.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
+				3033B4272487F20C003A5A9B /* UITouch+Test.m in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
 				30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */,
 				30D7B581247291D400F9CD69 /* MouseProtocol.swift in Sources */,
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
 				30D7B59B2473D9FF00F9CD69 /* MethodSwizzling.m in Sources */,
+				3033B4242487F1A9003A5A9B /* iTouch.m in Sources */,
 				30A8F9DB246B978F00877A25 /* AssignObject.m in Sources */,
 				30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */,
 				30C9D06F248676F200044171 /* UIImageView+WebImage.swift in Sources */,

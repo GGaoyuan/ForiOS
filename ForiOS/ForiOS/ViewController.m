@@ -13,6 +13,7 @@
 #import "UIImageView+WebCache.h"
 #import "AssignSubObject.h"
 #import "Block.h"
+#import "iTouch.h"
 @interface ViewController ()
 
 @property (nonatomic, assign) NSInteger result;
@@ -20,6 +21,10 @@
 @end
 
 @implementation ViewController
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"");
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -49,11 +54,6 @@
     
     
 
-    
-    
-    
-    
-    
     SwiftMain *main = [SwiftMain new];
     [main webImageWithVc:self];
     

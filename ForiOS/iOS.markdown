@@ -322,7 +322,8 @@ DispatchQueue是FIFO先进先出的，模式有等待当前执行处理的Seria�
 ？？？
 #### GCD和NSOperation的区别？
 ？？？
-
+#### 线程常驻
+AFN？？？
 
 --------------------------------------------
 ## 持久化
@@ -336,6 +337,62 @@ DispatchQueue是FIFO先进先出的，模式有等待当前执行处理的Seria�
 --------------------------------------------
 ## runloop
 #### runloop有几个mode
+runloop内部有几个mode,而mode里有timer，source，observer(？？？都是数组，一个mode能有好几个timer，source，observer？？？)
+timer:下面的都是这个的timer封装
+```
++ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;
+- (void)performSelector:(SEL)aSelector withObject:(nullable id)anArgument afterDelay:(NSTimeInterval)delay;
++ (CADisplayLink *)displayLinkWithTarget:(id)target selector:(SEL)sel;
+- (void)addToRunLoop:(NSRunLoop *)runloop forMode:(NSRunLoopMode)mode;
+```
+关于时间的封装几乎都和runloop有关
+source:runloop执行的输入源（一个protcol）
+只要符合protocol就可以随便跑(几乎不可能遇到)
+runloop自己定义了俩，就叫source0和source1
+source0:处理App内部事件，比如touch事件，socket
+source1:由runloop和内核管理，mach port驱动，如CFMachPort,CFMessagePort。（mach port用在进程通信）
+observer:告诉当前的runloop是设么状态，在干嘛
+```
+typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
+    kCFRunLoopEntry         = (1UL << 0), // 即将进入Loop
+    kCFRunLoopBeforeTimers  = (1UL << 1), // 即将处理 Timer
+    kCFRunLoopBeforeSources = (1UL << 2), // 即将处理 Source
+    kCFRunLoopBeforeWaiting = (1UL << 5), // 即将进入休眠
+    kCFRunLoopAfterWaiting  = (1UL << 6), // 刚从休眠中唤醒
+    kCFRunLoopExit          = (1UL << 7), // 即将退出Loop
+};
+```
+比如CAAnimation，会在kCFRunLoopBeforeWaiting || kCFRunLoopAfterWaiting后调用。runloop会搜集这一次runloop循环里的所有动画，然后再一块执行
+**runloopobserver和autorelease的关系**
+**在UITouch里dealloc加个断点，点击后进入断点可以看到，在runloop的一个observercallout后会走调用autoreleasepophandler，之后就是池的pop，具体的释放时间是在一个runloop结束了后sleep然后再继续跑，释放时间就是在两次的sleep的时间之间**
+
+每次更换mode的时候要停下当前mode，再重启loop，同一时间只能执行一个
+```
+NSDefaultRunLoopMode    //默认的，空闲状态
+UITrankingRunloopMode   //滑动scrollView
+NSRunLoopCommonModes    //上面俩的集合，俩的都能跑
+//还有个私有的，在启动的时候，不会用到
+```
+一般Timer都在default里，滑动的时候成了UITranking，所以timer不走了。要timer走得让timer用commonmodes
+
+这里说一句，gcd的timer是系统内核实现，由runloop回调，gcdtimer的实现和runloop无关
+？？？
+#### 和runloop有关的东西(孙源)
+NSTimer：完全依赖runloop
+UIEvent
+Autorelease
+NSObject中关于时间的方法，比如performDelay，performcancel，performOnMainThread等等
+CADisplayLink:每画一帧给一个回调
+CAAnimation
+CATransition
+dispatch_get_main_queue
+NSURLConnection
+AFN
+？？？
+#### runloop实践(孙源)
+AFN中的runloop和NSMachPort一起实现线程常驻
+tableView因为下载图片变卡，可以用performdelay:0 mode:default来做，当tableView彻底停下之后再下载图片
+Crash时候收到Signal后会杀死runloop，手动开启runloop让app回光返照
 
 --------------------------------------------
 ## runtime
@@ -354,6 +411,8 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 直接访问实例变量不会触发KVO
 #### 如何手动触发KVO的方式
 ？？？
+#### 子线程与通知
+？？？
 
 --------------------------------------------
 ## 响应链和UI
@@ -362,6 +421,9 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 
 --------------------------------------------
 ## 其他
+#### MachPort
+没用过，在xcode点哪个暂停的时候能看到调用栈了有MachPort，应该是runloop被暂停，进程被挂起了吧
+？？？
 #### 加密
 ？？？
 #### 内存区域有哪几个
