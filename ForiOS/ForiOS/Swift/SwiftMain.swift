@@ -39,7 +39,11 @@ class SwiftMain: NSObject {
 
 struct Person {
     var name: String
-    var age: Int
+    var age: Int {
+        didSet {
+            
+        }
+    }
     var btn: UIButton!
     init(name: String, age: Int) {
         self.name = name
