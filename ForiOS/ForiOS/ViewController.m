@@ -57,11 +57,7 @@
     SwiftMain *main = [SwiftMain new];
     [main webImageWithVc:self];
     
-    
-    
-    
-    
-    
+    [self languegeTest];
     
     
     
@@ -102,5 +98,23 @@
     
 }
 
+
+- (void)languegeTest {
+    //    西班牙语、阿拉伯语、法语、俄语、日语、汉语拼音、意大利语、海地语、印第安语
+    NSArray *testArray = @[@"Señor", @" العسل الحلو",
+                           @"Je suis un mot très compliqué.",
+                           @"Я очень сложное слово",
+                           @"私は超複雑な言葉です。",
+                           @"Sono un detto super complesso",
+                           @"Mwen se yon konplèks ki di",
+                           @"मैं एक सुपर जटिल कह रहा हूँ",];
+    CGFloat height = 100;
+    for (int i = 0; i < testArray.count; i++) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, i * height, [UIScreen mainScreen].bounds.size.width, height)];
+        label.text = testArray[i];
+        label.backgroundColor = [UIColor yellowColor];
+        [self.view addSubview:label];
+    }
+}
 
 @end

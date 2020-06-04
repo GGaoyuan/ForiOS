@@ -11,6 +11,6 @@
 @implementation UITouch (Test)
 -(void)dealloc {
     NSLog(@"");
-    NSDefaultRunLoopMode
+    
 }
 @end
