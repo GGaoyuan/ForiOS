@@ -1,8 +1,8 @@
 //
-//  Block.h
+//  KVOObject.h
 //  ForiOS
 //
-//  Created by gaoyuan on 2020/6/1.
+//  Created by gaoyuan on 2020/6/5.
 //  Copyright © 2020 gaoyuan. All rights reserved.
 //
 
@@ -10,9 +10,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Block : NSObject
+@interface KVOObject : NSObject
 
-- (void)viewDidLoad;
+@property (nonatomic, strong) NSString *name;
 
 @end
 

@@ -7,87 +7,58 @@
 //
 
 #import "ViewController.h"
-#import "AssignObject.h"
 #import "ForiOS-Swift.h"
 #import "NewDictionary.h"
 #import "UIImageView+WebCache.h"
-#import "AssignSubObject.h"
-#import "Block.h"
-#import "iTouch.h"
+#import "KVOObject.h"
 @interface ViewController ()
 
-@property (nonatomic, assign) NSInteger result;
+@property (nonatomic, strong) KVOObject *kvoObj;
 
 @end
 
 @implementation ViewController
 
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    NSLog(@"");
+- (void)btnAction {
+    NSLog(@"%@", self.kvoObj.name);
+    self.kvoObj.name = @"111";
+}
+
+- (void)btn2Action {
+    [self.kvoObj willChangeValueForKey:@"name"];
+    [self.kvoObj didChangeValueForKey:@"name"];
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    [[Block new] viewDidLoad];
-    
-//    NSInteger num = 2;
-//    NSInteger(^block)(NSInteger) = ^NSInteger(NSInteger n) {
-//        return num * n;
-//    };
-//    num = 1;
-//    NSInteger r = block(2);
-//
-//    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"1", @"2", nil];
-//    [arr addObject:@"5"];
-//    NSLog(@"%p", &arr);
-//    void(^blk)(void) = ^{
-//        NSLog(@"%@", arr);
-//        [arr addObject:@"4"];
-//        NSLog(@"%p", &arr);
-//    };
-//    [arr addObject:@"3"];
-//    NSLog(@"%p", &arr);
-//    arr = nil;
-//    NSLog(@"%p", &arr);
-//    blk();
-    
-    
 
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.backgroundColor = [UIColor redColor];
+    [btn addTarget:self action:@selector(btnAction) forControlEvents:UIControlEventTouchUpInside];
+    btn.frame = CGRectMake(100, 100, 100, 100);
+    [self.view addSubview:btn];
+    
+    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn2.backgroundColor = [UIColor blueColor];
+    [btn2 addTarget:self action:@selector(btn2Action) forControlEvents:UIControlEventTouchUpInside];
+    btn2.frame = CGRectMake(100, 200, 100, 100);
+    [self.view addSubview:btn2];
+    
     SwiftMain *main = [SwiftMain new];
     [main webImageWithVc:self];
     
-    [self languegeTest];
+    self.kvoObj = [[KVOObject alloc] init];
+    self.kvoObj.name = @"aaaa";
+    [self.kvoObj addObserver:self forKeyPath:@"name" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     
-    
-    
-    
-    
-//    dispatch_queue_t queue = dispatch_queue_create("CONCURRENT", DISPATCH_QUEUE_CONCURRENT);
-//    dispatch_async(queue, ^{ NSLog(@"111 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"222 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"333 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"444 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"555 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"666 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"777 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue, ^{ NSLog(@"888 ---- %@", [NSThread currentThread]);});
-    
-//    dispatch_queue_t queue2 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//    dispatch_queue_t queue2 = dispatch_get_main_queue();
-//    dispatch_queue_t queue2 = dispatch_queue_create("CONCURRENT", DISPATCH_QUEUE_SERIAL);
-//    dispatch_async(queue2, ^{
-//        NSLog(@"~~~111 ---- %@", [NSThread currentThread]);
-//    });
-//    
-//    dispatch_async(queue2, ^{ NSLog(@"~~~222 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue2, ^{ NSLog(@"~~~333 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue2, ^{ NSLog(@"~~~444 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue2, ^{ NSLog(@"~~~555 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue2, ^{ NSLog(@"~~~666 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue2, ^{ NSLog(@"~~~777 ---- %@", [NSThread currentThread]);});
-//    dispatch_async(queue2, ^{ NSLog(@"~~~888 ---- %@", [NSThread currentThread]);});
-//    NSLog(@"finish");
+//    [self languegeTest];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"name"] && [object isEqual:self.kvoObj]) {
+        NSLog(@"observeValueForKeyPath --- %@", self.kvoObj.name);
+    }
 }
 
 - (void)readMethod {

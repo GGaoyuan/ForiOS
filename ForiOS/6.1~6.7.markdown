@@ -10,3 +10,7 @@
 视图相差较大的cell就不要改布局，直接用新的cell
 异步绘制
 按需加载(runloopMode)
+#### 如何手动调用KVO
+手动调用willChangeValueForKey和didChangeValueForKey方法
+键值观察通知依赖于 NSObject 的两个方法: willChangeValueForKey: 和 didChangeValueForKey。在一个被观察属性发生改变之前， willChangeValueForKey: 一定会被调用，这就 会记录旧的值。而当改变发生后， didChangeValueForKey 会被调用，继而 observeValueForKey:ofObject:change:context: 也会被调用。
+只调用didChangeValueForKey方法不可以触发KVO方法，因为willChangeValueForKey: 记录旧的值，如果不记录旧的值，那就没有改变一说了
