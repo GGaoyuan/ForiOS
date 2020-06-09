@@ -1,32 +1,76 @@
 [toc]
-### 6.8
-#### 1
+## 6.9
+#### SEL和IMP的区别
+SEL是方法编号，也是方法名，在dyld加载镜像到内存时，通过_read_image方法加载到内存的表中了
+IMP是函数实现指针，找IMP就是找函数实现的过程
+SEL和IMP的关系就可以解释为：
+SEL就相当于书本的⽬录标题
+IMP就是书本的⻚码
+函数就是具体页码对应的内容
+#### autoreleasepool实现原理
+objc_autoreleasePoolPush和objc_autoreleasePoolPop方法，实际调用的是AutoreleasePoolPage的Push和Pop方法。
+AutoreleasePoolPage是一个双向链表的节点，里面有字段
+magic表示是否完整
+child,parent父节点和子节点
+thread:当前线程
+next表示autorelease对象的下一个位置，next == begin()时为空，next == end()时为pool满了
+当前 page 存在且没有满时，直接将对象添加到当前 page 中，即 next 指向的位置；
+当前 page 存在且已满时next == end()，创建一个新的 page ，并将对象添加到新创建的 page 中；
+当前 page 不存在时，即还没有 page 时，创建第一个 page，next == begin() ，并将对象添加到新创建的 page
+#### NSThread、NSRunLoop 和 NSAutoreleasePool
+苹果不允许直接创建 RunLoop，它只提供了两个自动获取的函数：CFRunLoopGetMain()和 CFRunLoopGetCurrent()。 这两个函数内部的逻辑大概是
+线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你不主动获取，那它一直都不会有。RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 RunLoop（主线程除外）
+NSAutoreleasePool 中还提到，每一个线程都会维护自己的 autoreleasepool 堆栈。换句话说 autoreleasepool 是与线程紧密相关的，每一个 autoreleasepool 只对应一个线程。(runloop也是一个)
+总而言之：每一个 autoreleasepool 只对应一个线程。每一个线程拥有一个专属的 NSRunLoop 对象。
+
+## 6.10
+### runtime相关问题
+#### runtime的内存模型（isa、对象、类、metaclass、结构体的存储信息等）
 1
-#### 2
+#### 为什么要设计metaclass
 2
-#### 3
+#### class_copyIvarList & class_copyPropertyList区别
 3
-#### 4
+#### class_rw_t 和 class_ro_t 的区别
 4
-#### 5
+#### category如何被加载的,两个category的load方法的加载顺序，两个category的同名方法的加载顺序
 5
-#### 6
+#### category & extension区别，能给NSObject添加Extension吗，结果如何
 6
-#### 7
+#### 消息转发机制，消息转发机制和其他语言的消息机制优劣对比
 7
-#### 8
+#### 在方法调用的时候，方法查询-> 动态解析-> 消息转发 之前做了什么
 8
-#### 9
+#### IMP、SEL、Method的区别和使用场景
 9
-#### 10
+#### load、initialize方法的区别什么？在继承关系中他们有什么区别
 10
-#### 11
+#### 说说消息转发机制的优劣
 11
-#### 12
+#### weak的实现原理？SideTable的结构是什么样的
 12
-#### 13
+#### 关联对象的应用？系统如何实现关联对象的
 13
-#### 14
+#### 关联对象的如何进行内存管理的？关联对象如何实现weak属性
 14
-#### 15
+#### Autoreleasepool的原理？所使用的的数据结构是什么
 15
+
+
+
+#### ARC的实现原理？ARC下对retain & release做了哪些优化
+16
+#### ARC下哪些情况会造成内存泄漏
+17
+#### Method Swizzle注意事项
+18
+#### 属性修饰符atomic的内部实现是怎么样的?能保证线程安全吗
+19
+#### iOS 中内省的几个方法有哪些？内部实现原理是什么
+20
+#### class、objc_getClass、object_getclass 方法有什么区别?
+21
+
+
+
+https://github.com/colourful987/bytedance-alibaba-interview

@@ -14,7 +14,7 @@
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *kvoObj;
-
+@property (nonatomic, copy) NSMutableArray *array;
 @end
 
 @implementation ViewController
@@ -28,6 +28,80 @@
     [self.kvoObj willChangeValueForKey:@"name"];
     [self.kvoObj didChangeValueForKey:@"name"];
     
+}
+
+- (void)test {
+    for(int i = 0; i < 100000; i++) {
+        if (i == 99999) {
+            NSLog(@"2");
+        }
+    }
+    self.array = [NSMutableArray array];
+    [self.array addObject:@"1"];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+//    self.array = [NSMutableArray array];
+//    [self.array addObject:@"1"];
+    
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        
+        NSLog(@"current --- %@", [NSRunLoop currentRunLoop]);
+        
+        @autoreleasepool {
+            NSLog(@"autorelease current --- %@", [NSRunLoop currentRunLoop]);
+        }
+        
+        NSLog(@"main --- %@", [NSRunLoop mainRunLoop]);
+    });
+    
+    
+    
+//    dispatch_queue_t queue = dispatch_get_global_queue(0, 0);
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        for(int i = 0; i < 100000; i++) {
+            if (i == 99999) {
+                NSLog(@"1");
+            }
+        }
+        
+//        [self performSelector:@selector(test) withObject:nil afterDelay:0];
+//        [self test];
+        
+        for(int i = 0; i < 100000; i++) {
+            if (i == 99999) {
+                NSLog(@"3");
+            }
+        }
+        for(int i = 0; i < 100000; i++) {
+            if (i == 99999) {
+                NSLog(@"4");
+            }
+        }
+    });
+    NSLog(@"------------------");
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            for(int i = 0; i < 100000; i++) {
+                if (i == 99999) {
+                    NSLog(@"11");
+                }
+            }
+            
+    //        [self performSelector:@selector(test) withObject:nil afterDelay:0];
+//            [self test];
+            
+            for(int i = 0; i < 100000; i++) {
+                if (i == 99999) {
+                    NSLog(@"33");
+                }
+            }
+            for(int i = 0; i < 100000; i++) {
+                if (i == 99999) {
+                    NSLog(@"44");
+                }
+            }
+        });
 }
 
 - (void)viewDidLoad {
