@@ -11,19 +11,15 @@
 @implementation MainStart
 
 - (void)mainStart {
-    NSLog(@"mainStart");
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSLog(@"111111");
-    });
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSLog(@"111111");
-//    });
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSLog(@"111111");
-//    });
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSLog(@"111111");
-//    });
+    
+}
+
++ (void)load {
+    NSLog(@"mainStart load");
+}
+
++ (void)initialize {
+    NSLog(@"mainStart initialize");
 }
 
 @end

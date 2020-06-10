@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		302B3220247FB075007AEA23 /* MainStart.m in Sources */ = {isa = PBXBuildFile; fileRef = 302B321F247FB075007AEA23 /* MainStart.m */; };
 		3033B419247EB0B4003A5A9B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B418247EB0B4003A5A9B /* main.m */; };
+		30A90B9B2491363000B47D50 /* TestObjct.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90B9A2491363000B47D50 /* TestObjct.m */; };
+		30A90B9E2491367F00B47D50 /* TestObjct+num1.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90B9D2491367F00B47D50 /* TestObjct+num1.m */; };
+		30A90BA12491368700B47D50 /* TestObjct+num2.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA02491368700B47D50 /* TestObjct+num2.m */; };
+		30A90BA724913EE300B47D50 /* SuperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA624913EE300B47D50 /* SuperClass.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +32,16 @@
 		302B321F247FB075007AEA23 /* MainStart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainStart.m; sourceTree = "<group>"; };
 		3033B415247EB0B4003A5A9B /* CMDTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CMDTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3033B418247EB0B4003A5A9B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		30A90B992491363000B47D50 /* TestObjct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestObjct.h; sourceTree = "<group>"; };
+		30A90B9A2491363000B47D50 /* TestObjct.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestObjct.m; sourceTree = "<group>"; };
+		30A90B9C2491367F00B47D50 /* TestObjct+num1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestObjct+num1.h"; sourceTree = "<group>"; };
+		30A90B9D2491367F00B47D50 /* TestObjct+num1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TestObjct+num1.m"; sourceTree = "<group>"; };
+		30A90B9F2491368700B47D50 /* TestObjct+num2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestObjct+num2.h"; sourceTree = "<group>"; };
+		30A90BA02491368700B47D50 /* TestObjct+num2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TestObjct+num2.m"; sourceTree = "<group>"; };
+		30A90BA22491383100B47D50 /* NSObject+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+Test.h"; sourceTree = "<group>"; };
+		30A90BA42491399600B47D50 /* TestObjct+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestObjct+Test.h"; sourceTree = "<group>"; };
+		30A90BA524913EE300B47D50 /* SuperClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SuperClass.h; sourceTree = "<group>"; };
+		30A90BA624913EE300B47D50 /* SuperClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SuperClass.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +77,16 @@
 				3033B418247EB0B4003A5A9B /* main.m */,
 				302B321E247FB075007AEA23 /* MainStart.h */,
 				302B321F247FB075007AEA23 /* MainStart.m */,
+				30A90B992491363000B47D50 /* TestObjct.h */,
+				30A90B9A2491363000B47D50 /* TestObjct.m */,
+				30A90B9C2491367F00B47D50 /* TestObjct+num1.h */,
+				30A90B9D2491367F00B47D50 /* TestObjct+num1.m */,
+				30A90B9F2491368700B47D50 /* TestObjct+num2.h */,
+				30A90BA02491368700B47D50 /* TestObjct+num2.m */,
+				30A90BA22491383100B47D50 /* NSObject+Test.h */,
+				30A90BA42491399600B47D50 /* TestObjct+Test.h */,
+				30A90BA524913EE300B47D50 /* SuperClass.h */,
+				30A90BA624913EE300B47D50 /* SuperClass.m */,
 			);
 			path = CMDTest;
 			sourceTree = "<group>";
@@ -125,7 +149,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3033B419247EB0B4003A5A9B /* main.m in Sources */,
+				30A90B9E2491367F00B47D50 /* TestObjct+num1.m in Sources */,
+				30A90BA12491368700B47D50 /* TestObjct+num2.m in Sources */,
 				302B3220247FB075007AEA23 /* MainStart.m in Sources */,
+				30A90BA724913EE300B47D50 /* SuperClass.m in Sources */,
+				30A90B9B2491363000B47D50 /* TestObjct.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

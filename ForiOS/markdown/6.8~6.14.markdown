@@ -17,6 +17,8 @@ next表示autorelease对象的下一个位置，next == begin()时为空，next 
 当前 page 存在且没有满时，直接将对象添加到当前 page 中，即 next 指向的位置；
 当前 page 存在且已满时next == end()，创建一个新的 page ，并将对象添加到新创建的 page 中；
 当前 page 不存在时，即还没有 page 时，创建第一个 page，next == begin() ，并将对象添加到新创建的 page
+哨兵对象：
+POOL_BOUNDARY 是一个边界对象 nil,之前的源代码变量名是 POOL_SENTINEL哨兵对象,用来区别每个page即每个 AutoreleasePoolPage 边界
 #### NSThread、NSRunLoop 和 NSAutoreleasePool
 苹果不允许直接创建 RunLoop，它只提供了两个自动获取的函数：CFRunLoopGetMain()和 CFRunLoopGetCurrent()。 这两个函数内部的逻辑大概是
 线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你不主动获取，那它一直都不会有。RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 RunLoop（主线程除外）
@@ -26,29 +28,130 @@ NSAutoreleasePool 中还提到，每一个线程都会维护自己的 autoreleas
 ## 6.10
 ### runtime相关问题
 #### runtime的内存模型（isa、对象、类、metaclass、结构体的存储信息等）
-1
+```
+typedef struct objc_class *Class;
+
+struct objc_class {
+    Class isa  OBJC_ISA_AVAILABILITY;
+#if !__OBJC2__
+    Class super_class                      OBJC2_UNAVAILABLE;  // 父类
+    const char *name                        OBJC2_UNAVAILABLE;  // 类名
+    long version                            OBJC2_UNAVAILABLE;  // 类的版本信息，默认为0
+    long info                              OBJC2_UNAVAILABLE;  // 类信息，供运行期使用的一些位标识
+    long instance_size                      OBJC2_UNAVAILABLE;  // 该类的实例变量大小
+    struct objc_ivar_list *ivars            OBJC2_UNAVAILABLE;  // 该类的成员变量链表
+    struct objc_method_list **methodLists  OBJC2_UNAVAILABLE;  // 方法定义的链表
+    struct objc_cache *cache                OBJC2_UNAVAILABLE;  // 方法缓存
+    struct objc_protocol_list *protocols    OBJC2_UNAVAILABLE;  // 协议链表
+#endif
+
+} OBJC2_UNAVAILABLE;
+
+}
+```
+isa :需要注意的是在Objective-c中，所有类自身也是一个对象，因为这个对象Class里面也有一个isa指针，它指向mateClass(元类)
+里面有图https://developer.aliyun.com/ask/282811
+
+元类（Meta Class）：是一个类对象的类，即：Class的类，这里保存了类方法等相关信息
+NSObject的metaClass的isa指向的是自己本身，
+而NSObject的metaClass的superClass指向的是NSObject
 #### 为什么要设计metaclass
-2
+万物皆对象啊，这样类作为对象也能用消息机制，让每一个类都有自己的metaclass有利于单一职责，不然就全写在NSObjct的Metaclass了
+#### id的本质是什么呢
+```
+/// An opaque type that represents an Objective-C class.
+typedef struct objc_class *Class;
+
+/// Represents an instance of a class.
+struct objc_object {
+    Class isa  OBJC_ISA_AVAILABILITY;
+};
+
+/// A pointer to an instance of a class.
+typedef struct objc_object *id;
+```
+id也就是这个struct objc_object结构体的指针
+它包括一个isa指针，指向的是这个对象的类对象,一个对象实例就是通过这个isa找到它自己的Class，而这个Class中存储的就是这个实例的方法列表、属性列表、成员变量列表等相关信息的。
 #### class_copyIvarList & class_copyPropertyList区别
-3
-#### class_rw_t 和 class_ro_t 的区别
-4
-#### category如何被加载的,两个category的load方法的加载顺序，两个category的同名方法的加载顺序
-5
+```
+{
+    NSString *str;
+}
+@property NSString *property;
+
+//class_copyIvarList
+str
+_property
+//class_copyPropertyList
+property
+```
+class_copyIvarList:能够获取.h和.m中的所有属性以及大括号中声明的变量，获取的属性名称有下划线(大括号中的除外)。
+class_copyPropertyList:只能获取由property声明的属性，包括.m中的，获取的属性名称不带下划线。
+所以OC中没有真正的私有属性
+#### category如何被加载的,两个category的load方法的加载顺序，两个category的同名方法的加载顺序呢，initialize,在继承关系中他们有什么区别
++load 方法是main加载的时候调用。不管这个类会不会用都会被调用。
+先调用父类的load，然后是自己的
+category的load是按照编译顺序来的，先编译的先调用，后编译的后调用
+
+initialize其实是类第一次被使用到的时候会被调用在main之后
+依旧是先调用父类的initialize，然后是自己的
+category的initialize是按照编译顺序来的，所有的initialize只调用一次，也就是最后编译的那个category中的initialize方法
+
+还能看出如果在A中load里调用B对象，那么B对象会先load，然后调用B的initialize，这个initialize是在main之前调用，用的消息转发机制
+```
+2020-06-11 00:17:05.142181+0800 CMDTest[18977:6172550] mainStart load
+2020-06-11 00:17:05.142721+0800 CMDTest[18977:6172550] SuperClass load
+2020-06-11 00:17:05.142753+0800 CMDTest[18977:6172550] main load
+2020-06-11 00:17:05.142786+0800 CMDTest[18977:6172550] num1 load
+2020-06-11 00:17:05.142817+0800 CMDTest[18977:6172550] num2 load
+main Start
+2020-06-11 00:17:05.142969+0800 CMDTest[18977:6172550] SuperClass initialize
+2020-06-11 00:17:05.143013+0800 CMDTest[18977:6172550] num2 initialize
+2020-06-11 00:17:05.143042+0800 CMDTest[18977:6172550] ggsimida
+Program ended with exit code: 0
+```
 #### category & extension区别，能给NSObject添加Extension吗，结果如何
-6
+category:
+运行时添加分类属性/协议/方法
+分类添加的方法会“覆盖”原类方法，因为方法查找的话是从头至尾，一旦查找到了就停止了
+同名分类方法谁生效取决于编译顺序，读取的信息是倒叙的，所以编译越靠后的越先读入
+extension:
+编译时决议
+只有.h文件，只以声明的形式存在，所以不能为系统类添加扩展
+这东西就是用来访问自己写的类的私有方法的
 #### 消息转发机制，消息转发机制和其他语言的消息机制优劣对比
-7
+
 #### 在方法调用的时候，方法查询-> 动态解析-> 消息转发 之前做了什么
-8
+检查selector是否需要忽略，比如retain和release这样的函数
+检查target是不是为nil，如果是nil的话msg_send就会被忽略掉
+之后就是在缓冲中找有没有方法，没有就去对象的method_list找，还没有就去父类中去找，还没找到就会到_objc_msgForward消息转发，还不行还有最后的一次机会包装NSInvocation给开发，还不行就崩溃了
 #### IMP、SEL、Method的区别和使用场景
-9
-#### load、initialize方法的区别什么？在继承关系中他们有什么区别
-10
+SEL是方法编号，也是方法名，在dyld加载镜像到内存时，通过_read_image方法加载到内存的表中了
+IMP是Method实现指针，找IMP就是找函数实现的过程
+SEL和IMP的关系就可以解释为：
+SEL就相当于书本的⽬录标题
+IMP就是书本的⻚码
+Method就是具体页码对应的内容
 #### 说说消息转发机制的优劣
 11
 #### weak的实现原理？SideTable的结构是什么样的
-12
+为了管理所有对象的引用计数和weak指针，苹果创建了一个全局的SideTables，虽然名字后面有个不过他其实是一个全局的Hash表
+实现步骤
+1、初始化时：runtime会调用objc_initWeak函数，初始化一个新的weak指针指向对象的地址。
+2、添加引用时：objc_initWeak函数会调用 objc_storeWeak() 函数， objc_storeWeak() 的作用是更新指针指向，创建对应的弱引用表。
+3、释放时，调用clearDeallocating函数。clearDeallocating函数首先根据对象地址获取所有weak指针地址的数组，然后遍历这个数组把其中的数据设为nil，最后把这个entry从weak表中删除，最后清理对象的记录。
+```
+struct SideTable {
+// 因为对象引用计数相关操作应该是原子性的。不然如果多个线程同时去写一个对象的引用计数，那就会造成数据错乱，失去了内存管理的意义
+    spinlock_t slock;
+    // 引用计数的 hash 表
+    RefcountMap refcnts;
+    // weak 引用全局 hash 表
+    weak_table_t weak_table;
+}
+```
+
+https://www.jianshu.com/p/ef6d9bf8fe59
 #### 关联对象的应用？系统如何实现关联对象的
 13
 #### 关联对象的如何进行内存管理的？关联对象如何实现weak属性
