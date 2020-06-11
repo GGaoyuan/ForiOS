@@ -125,6 +125,8 @@
     self.kvoObj = [[KVOObject alloc] init];
     self.kvoObj.name = @"aaaa";
     [self.kvoObj addObserver:self forKeyPath:@"name" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+                         
+    NSArray *a = [[NSArray alloc] initWithArray:@[] copyItems:YES];
     
 //    [self languegeTest];
 }

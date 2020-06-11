@@ -173,7 +173,138 @@ https://www.jianshu.com/p/ef6d9bf8fe59
 20
 #### class、objc_getClass、object_getclass 方法有什么区别?
 21
-
-
-
 https://github.com/colourful987/bytedance-alibaba-interview
+
+## 6.11
+### 内存相关问题
+#### 有哪些检测内存泄露的方式
+Xcode自带的Analyze
+Instrument的Allocation和Leak
+第三方腾讯出的MLeaksFinder
+
+#### MRC下的Setter和Getter如何重写
+set是先释放旧值，再retain新值
+```
+- (void)setName:(NSString *)name {
+    if (_name != name) {
+        [_name release];
+        _name = [brand retain];
+    }
+}
+```
+get是先retain，然后再autorelease，保证再取值的时候有值，在不需要之后释放
+```
+- (NSString *)name {
+    return [[_name retain] autorelease];
+}
+```
+重写dealloc,但是不要调用，会崩溃
+```
+- (void)dealloc {
+    [_name release];
+    [super dealloc];
+}
+```
+
+#### 容易造成内存泄露的情况和处理情况
+循环引用实质：多个对象之间相互强引用而不能释放
+delegate：用weak修饰delegate
+block：用__weak，或者用__block在合适的时候置为nil。在block中使用__strong是怕在block中对象被释放掉，让在Block期间被持有，block结束后再释放
+NSTimer：在控制器内Timer作为属性的时候会强引用控制器，所以会相互引用，只需要在合适的时候将将定时器 invalidate 并置为 nil 即可
+try/catch：EOC
+
+#### 野指针和悬垂指针
+OC野指针和悬垂指针(迷途指针都是一回事)，即指针指向的对象已经被回收掉了
+C语言分悬垂指针和野指针：
+悬垂指针：指针指向的内存已经被释放了，但是指针还在，这个就是悬垂指针（）
+野指针：指针指向的对象已经被回收掉了.这个指针就叫做野指针.
+
+#### 说一下对strong,copy,assign,weak关键字的理解
+copy   对应的所有修饰符是 __strong
+retain 对应的所有修饰符是 __strong
+strong 对应的所有修饰符是 __strong
+assign 对应的所有修饰符是 __unsafe_unretain
+weak   对应的所有修饰符是 __weak
+strong持有该对象，引用计数+1
+weak指向对象但是不持有对象，引用计数也不会加1，weak不可以修饰基础数据类型
+assign是指针赋值修饰基本数据类型，如NSInterger和CGFloat，也可以修饰对象，会有警告，脱离作用域就被释放了，再访问assgin修饰的对象会报野指针
+copy关键字和strong类似，copy多用于修饰有可变类型的不可变对象NSString,NSArray,NSDictionary上，计数设置为1。（引用场景：类似于重新创造了一只狗，并给这只狗套上了一条绳）
+__unsafe_unretain可以类似比较assign，不安全
+__autoreleasing就是把对象扔autoreeasepool中
+
+#### 是否了解深拷贝和浅拷贝的概念，集合类深拷贝如何实现
+对不可变的非集合对象，copy 是指针拷贝，mutablecopy 是内容拷贝
+对于可变的非集合对象，copy，mutablecopy 都是内容拷贝
+对不可变的数组、字典、集合等集合类对象，copy 是指针拷贝，mutablecopy 是内容拷贝
+对于可变的数组、字典、集合等集合类对象，copy，mutablecopy 都是内容拷贝
+集合类深拷贝用
+```
+[[NSArray alloc] initWithArray:@[] copyItems:YES];
+```
+
+#### 使用自动引用计数应遵循的原则
+不能使用retain、release、retainCount、autorelease
+不可以使用NSAllocateObject、NSDeallocateObject
+不需要显示的调用Dealloc。
+使用@autoreleasePool来代替NSAutoreleasePool
+不可以使用区域NSZone。
+显示转换id和void*。
+
+#### 能不能简述一下 Dealloc 的实现机制
+Dealloc 的实现机制是内容管理部分的重点，把这个知识点弄明白，对于全方位的理解内存管理的只是很有必要。
+dealloc时调用
+1._objc_rootDealloc
+2.rootDealloc()
+3.object_dispose()
+4.objc_destructInstance()
+    4.1:object_cxxDestruct:判断有没有关联Cpp的东西，删除掉
+    4.2:_object_remove_assocations:去除和这个对象assocate的对象
+    4.3:objc_clear_deallocating:清空引用计数表并清除弱引用表，将所有weak引用指nil（这也就是weak变量能安全置空的所在）
+
+#### 内存中的5大区分别是什么
+栈区(stack):由编译器自动分配释放存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。
+堆区(heap):一般由程序员分配释放，若程序员不释放，程序结束时可能由OS回收。注意它与 数据结构中的堆是两回事，分配方式倒是类似于链表。
+全局区(静态区)(static):全局变量和静态变量的存储是放在一块的，初始化的全局变量和静态变量在一块区域，未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。程序结束后由系统释放。
+常量区:常量就是放在这里的。程序结束后由系统释放。
+程序代码区:存放函数体的二进制代码。
+
+#### 内存管理默认的关键字是什么
+MRC：atomic, readwrite, retain
+ARC：atomic, readwrite, strong
+
+#### 内存管理方案
+taggedPointer:由于NSNumber、NSDate一类的变量本身的值需要占用的内存大小常常不需要8个字节，所以将一个对象的指针拆成两部分，一部分直接保存数据，另一部分作为特殊标记，表示这是一个特别的指针，不指向任何一个地址，将值直接存储到了指针本身里。但是TaggedPointer因为并不是真正的对象，而是一个伪对象，所以你如果完全把它当成对象来使，可能会让它露马脚。所有对象都有 isa指针，而TaggedPointer其实是没有的
+具体的看文章https://www.jianshu.com/p/c9089494fb6c
+
+NONPOINTER_ISA--(非指针型的 isa):在64位架构下，isa指针是占64比特位的，实际上只有30多位就已经够用了，为了提高利用率，剩余的比特位存储了内存管理的相关数据内容
+第一位的0或1代表是纯地址型isa指针，还是NONPOINTER_ISA指针。
+第二位，代表是否有关联对象
+第三位代表是否有C++代码。
+接下来33位代表指向的内存地址
+接下来有弱引用的标记
+接下来有是否delloc的标记....等等
+
+散列表:复杂的数据结构，包括了引用计数表和弱引用表通过SideTables()结构来实现的，SideTables()结构下，有很多 SideTable 的数据结构。而sideTable 当中包含了自旋锁，引用计数表，弱引用表。SideTables()实际上是一个哈希表，通过对象的地址来计算该对象的引用计数在哪个sideTable中。
+SideTables表在64位系统中，有64张SideTable表
+每一张SideTable主要是由三部分组成。自旋锁、引用计数表、弱引用表。
+全局的引用计数之所以不存在同一张表中，是为了避免资源竞争，解决效率的问题。
+引用计数表中引入了分离锁的概念，将一张表分拆成多个部分，对他们分别加锁，可以实现并发操作，提升执行效率
+
+#### SideTables和AutorealesePool
+???
+ 
+#### 64bit和32bit占用内存
+64bit和32bit下long和char所占字节是不同的
+char:1字节(ASCII2=256个字符)
+char*(即指针变量):4个字节(32位的寻址空间是2,即32个bit，也就是4个字节。同理 64 位编译器为 8 个字节)
+int:4个字节范围-2147483648~>2147483647
+long:4个字节 范围和int一样 64位下8个字节，范围
+-9223372036854775808~9223372036854775807
+longlong:8个字节范围-9223372036854775808~9223372036854775807
+float:4个字节
+double:8个字节
+
+#### 讲一下@dynamic和@synthesize关键字?
+@property有两个对应的词，一个是@synthesize，一个是@dynamic。如果@synthesize和@dynamic都没写，那么默认的就是@syntheszie var = _var;
+创造一个带下划线前缀的实例变量名，同时使用这个属性生成getter和setter方法。如果不想自动合成就用@dynamic告诉编译器,属性的setter与getter方法由用户自己实现，不自动生成。这里就涉及到Runtime的动态添加方法的知识点。
+
