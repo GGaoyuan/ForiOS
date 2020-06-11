@@ -226,8 +226,8 @@ strong 对应的所有修饰符是 __strong
 assign 对应的所有修饰符是 __unsafe_unretain
 weak   对应的所有修饰符是 __weak
 strong持有该对象，引用计数+1
-weak指向对象但是不持有对象，引用计数也不会加1，weak不可以修饰基础数据类型
-assign是指针赋值修饰基本数据类型，如NSInterger和CGFloat，也可以修饰对象，会有警告，脱离作用域就被释放了，再访问assgin修饰的对象会报野指针
+weak指向对象但是不持有对象，引用计数也不会变，weak不可以修饰基础数据类型
+assign是指针赋值修饰基本数据类型，如NSInterger和CGFloat，也可以修饰对象，会有警告，new后就会被释放了，再访问assgin修饰的对象会报野指针
 copy关键字和strong类似，copy多用于修饰有可变类型的不可变对象NSString,NSArray,NSDictionary上，计数设置为1。（引用场景：类似于重新创造了一只狗，并给这只狗套上了一条绳）
 __unsafe_unretain可以类似比较assign，不安全
 __autoreleasing就是把对象扔autoreeasepool中
