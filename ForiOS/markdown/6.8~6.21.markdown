@@ -372,7 +372,43 @@ struct weak_entry_t {
     }
 }
 ```
-
-
 https://www.jianshu.com/p/ef6d9bf8fe59
 
+### OC底层
+#### 苹果如何实现远程推送的
+1.应用服务提供商从服务器端把要发送的消息和设备令牌(Token啊，令牌啥的用户信息)发送给苹果的消息推送服务器 。
+2.根据设备令牌在已注册的设备(iPhone、iPad、iTouch、mac 等)查找对应的设备，将消息发送给相 应的设备。 
+3.客户端设备接将接收到的消息传递给相应的应用程序，应用程序根据用户设置弹出通知消息。
+
+#### 属性关键字
+1.读写权限:readonly, readwrite(默认)
+2.原子性:atomic(默认)，nonatomic。但是不能保证线程安全（苹果自己说的）且效率低(比如如果修饰的是数组，那么对数组的读写是安全的，但如果是操作数组进行添加移除其中对象的还，就不保证安全了)
+```
+- (void)viewDidLoad {
+   [super viewDidLoad];
+   //开启一个线程对intA的值+1
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       for (int i = 0;i < 100000;i ++){
+           self.intA = self.intA + 1;
+       }
+       NSLog(@"intA : %ld",(long)self.intA);
+   });
+   
+   //开启一个线程对intA的值+1
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       for (int i = 0;i < 100000;i ++){
+           self.intA = self.intA + 1;
+       }
+       NSLog(@"intA : %ld",(long)self.intA);
+   });   
+}
+————————————————
+2020-06-15 23:59:43.167850+0800 ForiOS[26601:6348256] intA : 86015  --- <NSThread: 0x600003f4ec80>{number = 1, name = (null)}
+2020-06-15 23:59:43.168317+0800 ForiOS[26601:6348259] intA : 102046  --- <NSThread: 0x600003f4ec80>{number = 1, name = (null)}
+```
+首先atomic只是在get/set方法上加了@synchronized(self)
+苹果开发文档已经明确指出：Atomic不能保证对象多线程的安全。所以Atomic不能保证对象多线程的安全。它只是能保证你访问的时候给你返回一个完好无损的Value而已。举个例子：
+如果线程A调了getter，与此同时线程B、线程C都调了setter——那最后线程A get到的值，有3种可能：可能是B、Cset之前原始的值，也可能是B set 的值，也可能是C set的值。同时，最终这个属性的值，可能是B set的值，也有可能是C set的值。所以atomic可并不能保证对象的线程安全。
+
+
+https://blog.csdn.net/u012903898/article/details/82984959

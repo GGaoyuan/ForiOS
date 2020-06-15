@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) KVOObject *kvoObj;
 @property (nonatomic, copy) NSMutableArray *array;
+@property (atomic, assign) NSInteger intA;   //有一个atomic的属性,表示是原子的
+
 @end
 
 @implementation ViewController
@@ -107,6 +109,36 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    //开启一个线程对intA的值+1
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (int i = 0;i < 100000;i ++){
+            self.intA = self.intA + 1;
+        }
+        NSLog(@"intA : %ld  --- %@",(long)self.intA, [NSThread mainThread]);
+    });
+    
+    //开启一个线程对intA的值+1
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (int i = 0;i < 100000;i ++){
+            self.intA = self.intA + 1;
+        }
+        NSLog(@"intA : %ld  --- %@",(long)self.intA, [NSThread mainThread]);
+    });
+    //开启一个线程对intA的值+1
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (int i = 0;i < 100000;i ++){
+            self.intA = self.intA + 1;
+        }
+        NSLog(@"intA : %ld  --- %@",(long)self.intA, [NSThread mainThread]);
+    });
+    //开启一个线程对intA的值+1
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        for (int i = 0;i < 100000;i ++){
+            self.intA = self.intA + 1;
+        }
+        NSLog(@"intA : %ld  --- %@",(long)self.intA, [NSThread mainThread]);
+    });
+    return;
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.backgroundColor = [UIColor redColor];
     [btn addTarget:self action:@selector(btnAction) forControlEvents:UIControlEventTouchUpInside];
