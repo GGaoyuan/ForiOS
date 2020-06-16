@@ -386,7 +386,7 @@ UIEvent
 Autorelease
 NSObject中关于时间的方法，比如performDelay，performcancel，performOnMainThread等等
 CADisplayLink:每画一帧给一个回调
-CAAnimation
+CAAnimation(kCFRunLoopAfterWaiting之后，收集了所有的动画后再执行)
 CATransition
 dispatch_get_main_queue
 NSURLConnection
@@ -396,6 +396,9 @@ AFN
 AFN中的runloop和NSMachPort一起实现线程常驻
 tableView因为下载图片变卡，可以用performdelay:0 mode:default来做，当tableView彻底停下之后再下载图片
 Crash时候收到Signal后会杀死runloop，手动开启runloop让app回光返照
+
+#### runloop完全文章
+https://www.jianshu.com/p/215db502b09d
 
 --------------------------------------------
 ## runtime

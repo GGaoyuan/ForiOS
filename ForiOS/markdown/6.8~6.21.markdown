@@ -312,7 +312,7 @@ double:8个字节
 @property有两个对应的词，一个是@synthesize，一个是@dynamic。如果@synthesize和@dynamic都没写，那么默认的就是@syntheszie var = _var;
 创造一个带下划线前缀的实例变量名，同时使用这个属性生成getter和setter方法。如果不想自动合成就用@dynamic告诉编译器,属性的setter与getter方法由用户自己实现，不自动生成。这里就涉及到Runtime的动态添加方法的知识点。
 
-## 6.11
+## 6.15
 ### 内存相关问题
 #### 访问__weak修饰的变量，是否已经被注册在了@autoreleasePool中?为什么?
 会扔到autoreleasepool中，不然创建之后也就会销毁（之前做过assign的demo，生成之后就被释放），为了延长它的生命周期，必须注册到 @autoreleasePool中，以延缓释放。
@@ -409,6 +409,128 @@ https://www.jianshu.com/p/ef6d9bf8fe59
 首先atomic只是在get/set方法上加了@synchronized(self)
 苹果开发文档已经明确指出：Atomic不能保证对象多线程的安全。所以Atomic不能保证对象多线程的安全。它只是能保证你访问的时候给你返回一个完好无损的Value而已。举个例子：
 如果线程A调了getter，与此同时线程B、线程C都调了setter——那最后线程A get到的值，有3种可能：可能是B、Cset之前原始的值，也可能是B set 的值，也可能是C set的值。同时，最终这个属性的值，可能是B set的值，也有可能是C set的值。所以atomic可并不能保证对象的线程安全。
-
-
 https://blog.csdn.net/u012903898/article/details/82984959
+
+
+## 6.16
+### OC底层
+#### 分类能添加成员变量吗?
+不能。只能通过关联对象(objc_setAssociatedObject)来模拟实现成员变量，但其实质是关联内容，所有对象的关联内容都放在同一个全局容器哈希表中:AssociationsHashMap,由 AssociationsManager统一管理。
+
+#### 如果工程里有两个CategoryA和B，两个Category中有一个同名的方法，哪个方法最终生效?
+取决于谁在后面被编译，最后编译的生效，她会覆盖之前的方法。这个覆盖并不是真正的覆盖，之前编译的方法都在只是访问不到。因为category动态编译的方法是倒叙遍历，所以最后编译的方法在最上层能被调用到
+
+#### 通过直接赋值成员变量会触发KVO吗
+不会。
+因为kvo是通过isa-swizzling来实现的，被观察对象被runtimeNew一个出来，然后通过swizzling在seter方法上加上一个通知实现的
+即使是用setter方法，也会触发KVO（看代码）
+使用KVC也会，KVC也会调用setter方法
+```
+- (void)setName:(NSString *)name {
+    _NSSetObjectValueAndNotify();
+}
+void _NSSetObjectValueAndNotify() {
+    [self willChangeValue:"xxx"];
+    [super setValue:value];
+    [self didChangeValue:"xxx"];    //在这个didChange里面发送的通知
+}
+```
+通过代码可以知道，其实要手动触发的话也得用willChangeValueForKey和didChangeValueForKey方法才行
+
+#### KVC
+KVC 就是指iOS的开发中，可以允许开发者通过Key名直接访问对象的属性，或者给对象的属性赋值。而不需要调用明确的存取方法。这样就可以在运行时动态地访问和修改对象的属性。而不是在编译时确定。不过看过EOC之后，里面说这个东西最好别用
+
+#### 当调用setValue:forKey:的代码时,底层的执行机制是啥
+假如是改name值：[setValue:@"111" forKey:@"name"]
+1.首先调用setName方法（就是setter)
+2.如果没有找到setName方法，就去调用+(BOOL)accessInstanceVariablesDirectly，这个方法默认是返回YES。然后接着去找类似的变量_name，_isName，name，isName这样的顺序 
+但是如果重写让他返回NO，就直接setValue:forUndefinedKey然后崩溃（一般没人这个做）
+找的过程中就不管是公有方法还是私有方法了，所以会出现KVC被拒的情况。。。。因为用了苹果私有API
+3.如果前面都没找到，就掉setValue:forUndefinedKey抛异常
+
+#### valueForKey:@"name"的底层机制
+和set类似，找getName，如果没有的话就按照_name，_isName，name，isName这样的顺序继续找，找不到就抛出异常
+还会调用一些countOfName,enumaratorOfName之类的方法，记不清了
+
+#### objectForKey和valueForKey区别
+objectForKey文档上说The value associated with aKey, or nil if no value is associated with aKey
+valueForKey文档上说The value for the property identified by key
+也就是说
+(id)valueForKey:(NSString *)key是KVC（key-value coding）的，如果没有找到对应的key会调用-(id)valueForUndefinedKey:(NSString )key从而抛出NSUndefinedKeyException异常，而objectForKey一般会返回一个nil
+所以在使用NSDictionary取值时，尽量使用objectForKey
+
+### UI相关
+#### 件传递与视图响应链
+需要做demo和查查文档，比如扩大按钮的点击范围
+
+#### 图像显示原理
+- CPU提交位图
+    1.Layout: UI 布局，文本计算 
+    2.Display: 绘制
+    3.Prepare: 图片解码 
+    4.Commit:提交位图
+- GPU图层渲染，纹理合成，把结果放到帧缓冲区(frame buffer)中
+- 再由视频控制器根据 vsync 信号在指定时间之前去提取帧缓冲区的屏幕显示内容
+- 显示到屏幕上
+
+iOS设备的硬件时钟会发出Vsync(垂直同步信号)
+然后App的CPU会去计算屏幕要显示的内容，
+之后将计算好的内容提交到GPU去渲染。
+随后GPU将渲染结果提交到帧缓冲区，等到下一个VSync到来时将缓冲区的帧显示到屏幕上。
+也就是说，一帧的显示是由CPU和GPU共同决定的。
+YY的博客里有说过这个东西
+
+#### UI卡顿掉帧原因
+一帧的显示是由CPU和GPU共同决定的。页面滑动流畅是60fps，也就是1s有60帧更新，如果CPU和GPU共同处理的时间超过了1/60秒，就会感受到卡顿
+
+#### 滑动优化方案
+CPU：
+可以吧这些东西放到子线程中：
+1.耗时对象的创建与销毁，耗时操作都放在子线程
+2.对一些计算，排版进行预处理（tableView的缓存高度）
+3.预渲染（文本的异步绘制，图片的异步解码）
+
+GPU:
+是否受到CPU或者GPU的限制? 
+是否有不必要的CPU渲染? 
+是否有太多的离屏渲染操作? 
+是否有太多的图层混合操作? 
+是否有奇怪的图片格式或者尺寸? 
+是否涉及到昂贵的view或者效果? 
+view的层次结构是否合理?
+文本渲染：屏幕上能看到的所有文本内容控件，包括UIWebView，在底层都是通过CoreText排版、绘制为位图显示的。常见的文本控件，其排版与绘制都是在主线程进行的，显示大量文本是，CPU压力很大。对此解决方案唯一就是自定义文本控件，用CoreText对文本异步绘制。（很麻烦，开发成本高）
+当用UIImage或CGImageSource创建图片时，图片数据并不会立刻解码。图片设置到UIImageView或CALayer.contents中去，并且CALayer被提交到GPU前，CGImage中的数据才会得到解码。这一步是发生在主线程的，并且不可避免。SD_WebImage处理方式：在后台线程先把图片绘制到CGBitmapContext中，然后从Bitmap直接创建图片。
+图像绘制：图像的绘制通常是指用那些以CG开头的方法把图像绘制到画布中，然后从画布创建图片并显示的一个过程。CoreGraphics方法是线程安全的，可以异步绘制，主线程回调。
+
+
+
+
+
+#### iOS从磁盘加载一张图片，使用UIImageVIew显示在屏幕上，需要经过步骤
+1.从磁盘拷贝数据到内核缓冲区
+2.从内核缓冲区复制数据到用户空间
+3.生成UIImageView，把图像数据赋值给UIImageView
+如果图像数据为未解码的PNG/JPG，解码为位图数据
+4.CATransaction捕获到UIImageView layer树的变化
+5.主线程Runloop提交CATransaction，开始进行图像渲染
+6.1 如果数据没有字节对齐，Core Animation会再拷贝一份数据，进行字节对齐。
+6.2 GPU处理位图数据，进行渲染。
+
+
+#### UI绘制原理
+1.当我们调用[UIView setNeedsDisplay]这个方法时，其实并没有立即进行绘制工作，系统会立即调用CALayer的同名方法，并且在当前layer上打上一个标记，然后会在当前runloop将要结束的时候调用[CALayer display]这个方法，然后进入视图的真正绘制过程
+2.在[CALayer display]这个方法的内部实现中会判断这个layer的delegate是否响应displaylayer这个方法，如果不响应这个方法，就回到系统绘制流程中，如果响应这个方法，那么就会为我们提供异步绘制的入口
+[self.layer.delegate displayLayer: ]
+
+#### 异步绘制的实现
+1、假如我们在某一时机调用了[view setNeedsDisplay]这个方法，系统会在当前runloop将要结束的时候调用[CALayer display]方法，然后如果我们这个layer代理实现了displaylayer这个方法
+2、然后切换到子线程去做位图的绘制，主线程可以去做其他的操作
+3、在自吸纳成中创建一个位图的上下文，然后通过CoregraphIC API可以做当前UI控件的一些绘制工作，最后再通过CGBitmapContextCreateImage()函数来生成一直CGImage图片
+4、最后回到主线程来提交这个位图，设置layer的contents 属性，这样就完成了一个UI控件的异步绘制
+具体做法：
+先创建一个CALayer子类，重写display方法，添加displayAsync方法。这样只要外部创建添加了该layer后调用setNeedsDisplay方法，就会运行display方法。
+在displayAsync方法中，我们创建了一个串行队列，添加了一个异步任务来画图片
+
+## 6.17
+### UI相关
+#### 离屏渲染
