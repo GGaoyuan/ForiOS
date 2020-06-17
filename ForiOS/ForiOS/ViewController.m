@@ -106,9 +106,31 @@
         });
 }
 
+- (void)btnAction11 {
+    NSLog(@"btn1");
+}
+
+- (void)btnAction22 {
+    NSLog(@"btn2");
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn1.backgroundColor = [UIColor redColor];
+    [btn1 addTarget:self action:@selector(btnAction11) forControlEvents:UIControlEventTouchUpInside];
+    btn1.frame = CGRectMake(100, 100, 100, 100);
+    [self.view addSubview:btn1];
+    
+    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn2.backgroundColor = [UIColor blueColor];
+    [btn2 addTarget:self action:@selector(btnAction22) forControlEvents:UIControlEventTouchUpInside];
+    btn2.frame = CGRectMake(150, 100, 100, 100);
+    [self.view addSubview:btn2];
+    
+    
+    return
     //开启一个线程对intA的值+1
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         for (int i = 0;i < 100000;i ++){
@@ -145,11 +167,11 @@
     btn.frame = CGRectMake(100, 100, 100, 100);
     [self.view addSubview:btn];
     
-    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn2.backgroundColor = [UIColor blueColor];
-    [btn2 addTarget:self action:@selector(btn2Action) forControlEvents:UIControlEventTouchUpInside];
-    btn2.frame = CGRectMake(100, 200, 100, 100);
-    [self.view addSubview:btn2];
+//    UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+//    btn2.backgroundColor = [UIColor blueColor];
+//    [btn2 addTarget:self action:@selector(btn2Action) forControlEvents:UIControlEventTouchUpInside];
+//    btn2.frame = CGRectMake(100, 200, 100, 100);
+//    [self.view addSubview:btn2];
     
     SwiftMain *main = [SwiftMain new];
     [main webImageWithVc:self];

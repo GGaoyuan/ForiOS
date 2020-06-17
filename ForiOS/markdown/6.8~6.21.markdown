@@ -460,8 +460,22 @@ valueForKey文档上说The value for the property identified by key
 所以在使用NSDictionary取值时，尽量使用objectForKey
 
 ### UI相关
-#### 件传递与视图响应链
-需要做demo和查查文档，比如扩大按钮的点击范围
+#### 事件传递与视图响应链
+如果点击一个视图，那么会吧事件加入到UIApplication的任务事件队列里
+UIApplication将任务事件队列最前端的事件分发到UIWindow
+UIWindow查找能响应的子视图UIView
+UIView会判断1.自己是否能触摸事件  2.是否触摸在自己身上
+```
+// 此方法返回的View是本次点击事件需要的最佳View
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+
+// 判断一个点是否落在范围内
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+
+//这俩方法都可以用来扩大按钮的点击范围
+```
+如果可以，就会继续遍历子视图，重复上面的步骤
+直到没有找到，那么自己就是事件处理者。如果如果自己不能处理，那么不做任何处理。
 
 #### 图像显示原理
 - CPU提交位图
@@ -488,7 +502,8 @@ CPU：
 可以吧这些东西放到子线程中：
 1.耗时对象的创建与销毁，耗时操作都放在子线程
 2.对一些计算，排版进行预处理（tableView的缓存高度）
-3.预渲染（文本的异步绘制，图片的异步解码）
+3.预渲染，异步绘制（文本的异步绘制，图片的异步解码，CoreGraphic是线程安全，CALayer和UIView不是）
+4.用轻量级的控件，比如CALayer替换UIView
 
 GPU:
 是否受到CPU或者GPU的限制? 
@@ -501,8 +516,6 @@ view的层次结构是否合理?
 文本渲染：屏幕上能看到的所有文本内容控件，包括UIWebView，在底层都是通过CoreText排版、绘制为位图显示的。常见的文本控件，其排版与绘制都是在主线程进行的，显示大量文本是，CPU压力很大。对此解决方案唯一就是自定义文本控件，用CoreText对文本异步绘制。（很麻烦，开发成本高）
 当用UIImage或CGImageSource创建图片时，图片数据并不会立刻解码。图片设置到UIImageView或CALayer.contents中去，并且CALayer被提交到GPU前，CGImage中的数据才会得到解码。这一步是发生在主线程的，并且不可避免。SD_WebImage处理方式：在后台线程先把图片绘制到CGBitmapContext中，然后从Bitmap直接创建图片。
 图像绘制：图像的绘制通常是指用那些以CG开头的方法把图像绘制到画布中，然后从画布创建图片并显示的一个过程。CoreGraphics方法是线程安全的，可以异步绘制，主线程回调。
-
-
 
 
 
@@ -534,3 +547,19 @@ view的层次结构是否合理?
 ## 6.17
 ### UI相关
 #### 离屏渲染
+当前屏幕渲染：GPU的渲染操作是在用于当前屏幕显示的缓冲区进行的
+离屏渲染：在当前缓冲区外开辟一个新的缓冲区进行渲染（这个是要尽量避免的）
+离屏渲染代价高昂的原因：
+1.开辟新的缓冲区
+2.切换渲染的上下文。因为要从当前屏和离屏之间切换，涉及到上下文切换，这一部分很消耗时间，会消耗大量GPU资源，有可能会导致CPU+GPU处理时间超过1/60秒导致掉帧
+离屏渲染触发条件：
+1.设置layer.cornerRadius
+2.设置遮罩layer.mask
+3.设置layer.opacity
+4.设置layer.shadow
+优化方案：
+使用贝塞尔曲线UIBezierPath和Core Graphics框架画出一个圆角
+UI流畅和优化相关的文章看YY的文章http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/#6
+
+#### UIButton的继承链
+UIButton -> UIControl -> UIView -> UIResponder -> NSObject
