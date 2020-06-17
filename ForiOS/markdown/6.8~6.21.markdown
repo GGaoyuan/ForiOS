@@ -332,7 +332,7 @@ SideTables表就会个哈希表（方便快速查找，防止循环遍历），�
 这个SideTable里面有：
 slock(自旋锁)：苹果在这里用了分离锁，对象有很多，给整个SideTables加锁的话效率太低了，所以在SideTable加锁。而自旋锁的效率很高，适合较快的操作，可以实现并发操作，提升执行效率
 RefCount:一个C++的map，真正的对象存引用计数的地方，这个里面可以存很多个结构体，每个结构体对应一个对象，里面有对象的引用计数
-weak_table_t:一个结构体，里面是一个数组和维护这个数组大小的值。数组里存的又是结构体，这个结构体里又有存的是对象的弱引用的地址，还有一个指向对象的弱引用数组（referrers），当对象释放后，这个数组里面的对象全部置为nil
+weak_table_t:一个结构体，里面是一个数组和维护这个数组大小的值。weak_entry_t *weak_entries就是这个数组，用来存储weak_table_t的数据元素weak_entry_t。数组里存的又是结构体，这个结构体里又有存的是对象的弱引用的地址，还有一个指向对象的弱引用数组（referrers），当对象释放后，这个数组里面的对象全部置为nil
 ```
 struct SideTable {
 // 保证原子操作的自旋锁
@@ -356,7 +356,7 @@ struct weak_table_t {
 
 typedef objc_object ** weak_referrer_t;
 struct weak_entry_t {
-    DisguisedPtrobjc_object> referent;
+    DisguisedPtr<objc_object> referent;
     union {
         struct {
             weak_referrer_t *referrers;
@@ -588,6 +588,20 @@ UIButton -> UIControl -> UIView -> UIResponder -> NSObject
 串行队列(Serial):FIFO，同一时间一个队列的任务只能执行一个，完事了之后才能执行下一个
 并发队列(Concurrent):FIFO同时允许多个任务并发执行。(可以开启多个线程，并且同时执行任务)。并发队列的并发功能只有在异步任务(dispatch_async)函数下才有效
 两者区别：执行顺序不同，以及开启线程数不同。
+
+系统获得队列的方式有三个：
+mainQueue:主线程串行队列
+globalQueue:系统提供的全局并发队列，存在着高、中、低三种优先级
+自定义队列:dispatch_queue_create
+
+
+#### GCD对比NSOprationQueue
+GCD是C语言，NSOprationQueue是GCD的OC封装
+NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(isExecuted)、是否结束(isFinished)、是否取消(isCanceld)
+相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
+
+#### 死锁
+死锁就是队列引起的循环等待
 
 
 

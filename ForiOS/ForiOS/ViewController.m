@@ -22,32 +22,28 @@
     
 }
 
+- (void)test {
+    NSLog(@"111aa --- %@", [NSThread currentThread]);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(queue, ^{
-        for (int i = 0; i < 1000000; i++) {
-            if (i == 999999) {
-                NSLog(@"111 --- %@", [NSThread currentThread]);
-            }
-        }
-    });
-    
-    dispatch_async(queue, ^{
-        for (int i = 0; i < 1000000; i++) {
-            if (i == 999999) {
-                NSLog(@"222 --- %@", [NSThread currentThread]);
-            }
-        }
-    });
-    
-    dispatch_async(queue, ^{
-        for (int i = 0; i < 1000000; i++) {
-            if (i == 999999) {
-                NSLog(@"333 --- %@", [NSThread currentThread]);
-            }
-        }
+        [self performSelector:@selector(test) withObject:self afterDelay:0];
+        [[NSRunLoop currentRunLoop] run];
     });
 }
 
 @end
+
+
+/*
+ dispatch_async(queue, ^{
+     for (int i = 0; i < 1000000; i++) {
+         if (i == 999999) {
+             NSLog(@"333 --- %@", [NSThread currentThread]);
+         }
+     }
+ });
+ */
