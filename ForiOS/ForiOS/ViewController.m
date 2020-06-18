@@ -33,6 +33,7 @@
         [self performSelector:@selector(test) withObject:self afterDelay:0];
         [[NSRunLoop currentRunLoop] run];
     });
+    self.view.backgroundColor = UIColor.clearColor;
 }
 
 @end

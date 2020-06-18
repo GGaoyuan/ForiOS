@@ -553,10 +553,11 @@ view的层次结构是否合理?
 1.开辟新的缓冲区
 2.切换渲染的上下文。因为要从当前屏和离屏之间切换，涉及到上下文切换，这一部分很消耗时间，会消耗大量GPU资源，有可能会导致CPU+GPU处理时间超过1/60秒导致掉帧
 离屏渲染触发条件：
-1.设置layer.cornerRadius
+1.设置layer.cornerRadius和masksToBounds
 2.设置遮罩layer.mask
 3.设置layer.opacity
 4.设置layer.shadow
+5.shouldRasterize（光栅化）
 优化方案：
 使用贝塞尔曲线UIBezierPath和Core Graphics框架画出一个圆角
 UI流畅和优化相关的文章看YY的文章http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/#6
@@ -600,10 +601,47 @@ GCD是C语言，NSOprationQueue是GCD的OC封装
 NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(isExecuted)、是否结束(isFinished)、是否取消(isCanceld)
 相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
 
-#### 死锁
-死锁就是队列引起的循环等待
-
-
-
 ## 6.17
 ### 多线程
+先停一停，有点难
+### 性能优化
+
+#### 图层混合
+当两个不完全透明的视图叠加在一起的时候(当alpha在0和1之间的时候)，GPU会做大量的计算，这种操作越多，那么消耗的性能越大。当alpha为1的时候，GPU会直接把最上层的渲染出来，不用换下面的图层
+
+#### opaque的坑
+opaque在苹果文档里有说明，如果opaque设置为YES，绘图系统会将view看为完全不透明，这样绘图系统就可以优化一些绘制操作以提升性能。如果设置为NO，那么绘图系统结合其它内容来处理view。默认情况下，这个属性是YES。
+这个东西和图层混合的道理差不多，如果为NO（他是透明），那么系统会以为他盖住的layer也要展示，会做很多计算所以可以将opaque设置为YES，同时，设置为clear，美滋滋
+UIView是默认的YES，UIButton是NO
+
+#### 如何对代码进行性能优化
+静态分析Analyze
+还有在Instrument里找对应的需要优化的选项CoreAnimation看离屏渲染，图层混合，Leak看泄露，僵尸对象
+
+#### TableView优化
+正确使用reuseIdentifier来重用cells
+避免过于庞大的XIB
+.....太多了。。
+
+#### UIImage加载图片性能问题
+imageNamed系统会缓存，imageWithContentsOfFile不会，所以小图可以用imageName,如果大图还用会内存长得快
+
+不要在UIImageView使用的时候去缩放图片，你应保证图片的大小和UIImageView的大小相同，在ScrollView搞这个东西非常耗性能，如果一个图片需要缩放，最好在子线程中缩放好了再给他放到UIImageView里
+
+#### 光栅化
+位图：图像没有被栅格化之前任意放大，都不会失帧。而栅格化化之后如果随着放大的倍数在增加，失帧会随着倍数的增加而增加。故：栅格化本身就是生成一个固定像素的图像。
+
+光栅化概念：将图转化为一个个栅格组成的图象（就是位图，又称栅格图或点阵图）。
+shouldRasterize = YES在其他属性触发离屏渲染的同时，会将光栅化后的内容缓存起来，如果对应的layer及其sublayers没有发生改变，在下一帧的时候可以直接复用。shouldRasterize = YES，这将隐式的创建一个位图，各种阴影遮罩等效果也会保存到位图中并缓存起来，从而减少渲染的频度
+比如某个页面卡，可以开启光栅化。让位图缓存复用，如果能成功复用，就会有性能提升。性能的提升取决于多少被复用了。具体的复用在instrument看
+因此栅格化仅适用于较复杂的、静态的效果，别再TableView里用，离屏渲染过多性能消耗会得不偿失，而且有时候使用光栅化经常出现未命中缓存的情况
+
+#### 如何高性能的画一个圆角
+视图和圆角的大小对帧率并没有什么卵影响，数量才是伤害的核心输出
+如果能够只用cornerRadius解决问题，就不用优化。
+如果必须设置masksToBounds，可以参考圆角视图的数量，如果数量较少(一页只有几个)也可以考虑不用优化
+最后可以用贝塞尔曲线画圆角
+
+#### 启动优化
+
+
