@@ -28,12 +28,44 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT);
-    dispatch_async(queue, ^{
-        [self performSelector:@selector(test) withObject:self afterDelay:0];
-        [[NSRunLoop currentRunLoop] run];
+    __block NSInteger tickets = 50;
+    // queue1 代表北京火车票售卖窗口
+    dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
+    // queue2 代表上海火车票售卖窗口
+    dispatch_queue_t shanghai = dispatch_queue_create("shanghai", DISPATCH_QUEUE_SERIAL);
+    
+    dispatch_semaphore_t sm = dispatch_semaphore_create(1);
+    
+    dispatch_async(beijing, ^{
+        while (1) {
+            dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
+            if (tickets > 0) {  //如果还有票，继续售卖
+                tickets--;
+                NSLog(@"北京卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
+                [NSThread sleepForTimeInterval:0.2];
+                dispatch_semaphore_signal(sm);
+            } else { //如果已卖完，关闭售票窗口
+                NSLog(@"北京卖，所有火车票均已售完");
+                dispatch_semaphore_signal(sm);
+                break;
+            }
+        }
     });
-    self.view.backgroundColor = UIColor.clearColor;
+    dispatch_async(shanghai, ^{
+        while (1) {
+            dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
+            if (tickets > 0) {  //如果还有票，继续售卖
+                tickets--;
+                NSLog(@"上海卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
+                [NSThread sleepForTimeInterval:0.2];
+                dispatch_semaphore_signal(sm);
+            } else { //如果已卖完，关闭售票窗口
+                NSLog(@"北京卖，所有火车票均已售完");
+                dispatch_semaphore_signal(sm);
+                break;
+            }
+        }
+    });
 }
 
 @end
