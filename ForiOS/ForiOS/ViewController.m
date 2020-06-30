@@ -19,15 +19,15 @@
 @implementation ViewController
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    NSLog(@"%@", FPSMonitor.monitor.fpsThread);
     
-}
-
-- (void)test {
-    NSLog(@"111aa --- %@", [NSThread currentThread]);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [FPSMonitor start];
+    
+//    return;
     __block NSInteger tickets = 50;
     // queue1 代表北京火车票售卖窗口
     dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
@@ -69,14 +69,3 @@
 }
 
 @end
-
-
-/*
- dispatch_async(queue, ^{
-     for (int i = 0; i < 1000000; i++) {
-         if (i == 999999) {
-             NSLog(@"333 --- %@", [NSThread currentThread]);
-         }
-     }
- });
- */
