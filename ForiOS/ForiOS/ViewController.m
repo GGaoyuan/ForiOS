@@ -26,7 +26,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [FPSMonitor start];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"1");
+    });
 //    return;
     __block NSInteger tickets = 50;
     // queue1 代表北京火车票售卖窗口
