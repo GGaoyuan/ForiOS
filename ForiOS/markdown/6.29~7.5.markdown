@@ -25,7 +25,20 @@
 当App收到ApplicationHandleEventQueue分发的IOEvent之后，会先canle掉当前的touchesBegin/Move/End的回调，并将对应的UIGestureRecognizer标记为待处理。
 当runloop为将要进入休眠的时候（Beforewaiting），会获取到所有的UIGestureRecognizer，然后执行所有的手势识别
 #### 解释一下页面的渲染的过程
-渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting和AfterWaiting之间），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。然后layer会调用[CALyer display]，进入到真正的绘制过程。接下来就是通过判断代理看是否是异步绘制
+渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting和AfterWaiting之间），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。
+layer会调用[CALyer display]，进入到真正的绘制过程。接下来就是通过判断看是否是异步绘制代理方法func display(_ layer: CALayer)，如果有异步绘制的代理方法，则走异步绘制func display(_ layer: CALayer)方法
+如果没有的话走系统绘制方法。
+系统绘制：
+layer会创建backingStore获取上下文CGContextRef,
+接下来判断是否有layer.delegate代理
+如果有：
+调用layer.delegate drawLayer:inContext:，
+接着返回UIVew drawRect回调，让我们在系统绘制的基础上，再做一些其他的事情
+如果没有：CALayer drawInContext
+走完后，CALayer上传backingStore给GPU，结束
+异步绘制：
+直接走func display(_ layer: CALayer)方法，里面dispatchAsyncGlobal，然后再dispatch到Main的过程中吧异步生成的东西赋值给layer.contents，结束
+
 #### 什么是异步绘制
 layer会创建backingStore获取上下文CGContextRef,
 接下来判断是否有代理

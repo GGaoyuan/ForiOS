@@ -25,7 +25,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [FPSMonitor start];
+//    [FPSMonitor start];
+    
+    AsyncLabel *label = [[AsyncLabel alloc] init];
+    label.backgroundColor = [UIColor redColor];
+    label.frame = CGRectMake(100, 100, 100, 100);
+    [self.view addSubview:label];
+    return
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"1");
     });
