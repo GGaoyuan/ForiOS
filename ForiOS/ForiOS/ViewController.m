@@ -31,15 +31,16 @@
     [super viewDidLoad];
 //    [FPSMonitor start];
     
-    AsyncLabel *label = [[AsyncLabel alloc] init];
-    label.backgroundColor = [UIColor redColor];
-    label.frame = CGRectMake(100, 100, 100, 100);
-    [self.view addSubview:label];
-    return
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"1");
-    });
+//    AsyncLabel *label = [[AsyncLabel alloc] init];
+//    label.backgroundColor = [UIColor redColor];
+//    label.frame = CGRectMake(100, 100, 100, 100);
+//    [self.view addSubview:label];
+//    return
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"1");
+//    });
 //    return;
+    
     __block NSInteger tickets = 50;
     // queue1 代表北京火车票售卖窗口
     dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
