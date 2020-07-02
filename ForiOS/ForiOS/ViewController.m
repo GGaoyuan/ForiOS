@@ -19,7 +19,11 @@
 @implementation ViewController
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    NSLog(@"%@", FPSMonitor.monitor.fpsThread);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
+    });
+    
+    
     
 }
 
