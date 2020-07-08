@@ -19,12 +19,19 @@
 @implementation ViewController
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
+        [[NSRunLoop currentRunLoop] run];
+        [self performSelector:@selector(test123) withObject:nil afterDelay:0];
+        
     });
     
     
     
+}
+
+- (void)test123 {
+    NSLog(@"111");
 }
 
 - (void)viewDidLoad {
@@ -39,7 +46,18 @@
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        NSLog(@"1");
 //    });
-//    return;
+    
+    dispatch_queue_t queueA = dispatch_queue_create("queueA", NULL);
+    dispatch_queue_t queueB = dispatch_queue_create("queueB", NULL);
+    NSLog(@"A======%@， B=====%@",queueA, queueB);
+    dispatch_sync(queueA, ^{
+        NSLog(@"A-------%@", dispatch_get_current_queue());
+        dispatch_sync(queueB, ^{
+            NSLog(@"B-------%@", dispatch_get_current_queue());
+            //do something
+        });
+    });
+    return;
     
     __block NSInteger tickets = 50;
     // queue1 代表北京火车票售卖窗口
