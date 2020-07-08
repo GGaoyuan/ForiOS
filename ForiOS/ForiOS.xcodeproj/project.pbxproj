@@ -12,6 +12,7 @@
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
+		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
 		30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5B124401FD10090BFA4 /* ViewController.m */; };
@@ -58,6 +59,8 @@
 		3033B42D248953B5003A5A9B /* KVOObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOObject.m; sourceTree = "<group>"; };
 		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
+		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
+		30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ViewController+AAA.m"; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AFC5AA24401FD10090BFA4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		30AFC5AB24401FD10090BFA4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -175,6 +178,8 @@
 				30D7B57324725BAF00F9CD69 /* Swift */,
 				3033B42C248953B5003A5A9B /* KVOObject.h */,
 				3033B42D248953B5003A5A9B /* KVOObject.m */,
+				30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */,
+				30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -427,6 +432,7 @@
 				30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */,
 				30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */,
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
+				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
 				30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				3033B42E248953B5003A5A9B /* KVOObject.m in Sources */,

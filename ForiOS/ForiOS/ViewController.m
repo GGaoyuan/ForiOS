@@ -11,24 +11,29 @@
 #import "NewDictionary.h"
 #import "UIImageView+WebCache.h"
 #import "KVOObject.h"
+#import "ViewController+AAA.h"
 @interface ViewController ()
 
+@property (nonatomic, strong) KVOObject *test;
 
 @end
 
 @implementation ViewController
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+   NSLog(@"observeValueForKeyPath");
+}
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
-    });
-    
-    
-    
+    self.test.name = @"111";
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.test = [KVOObject new];
+    [self addObserver:self.test forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
+    return;
 //    [FPSMonitor start];
     
 //    AsyncLabel *label = [[AsyncLabel alloc] init];
