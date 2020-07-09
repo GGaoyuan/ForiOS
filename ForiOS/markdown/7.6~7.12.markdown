@@ -45,3 +45,16 @@ https://juejin.im/post/5e5fc16df265da575155723b
 
 
 https://github.com/colourful987/bytedance-alibaba-interview
+
+
+
+label的图层混合
+如果label的内容是英文，只需要设置backgroundColor就行，但是如果是中文，苹果会单独加上一个layer显示中文，这时候简单设置backgroundColor并不生效，得加上clipsToBounds才能生效，但是如果这个时候label如果有圆角，就不要在意图层混合了，离屏的消耗比混合更大
+
+CoreGraphic是线程安全的，给UIImage加圆角的时候可以用异步可以大大加速性能
+
+https://www.jianshu.com/p/c9b1c45f7c2a
+
+优化绘本卡顿
+2.20需求修改完成
+2.20bug修复
