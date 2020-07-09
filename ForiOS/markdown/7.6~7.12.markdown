@@ -55,6 +55,8 @@ CoreGraphic是线程安全的，给UIImage加圆角的时候可以用异步可�
 
 https://www.jianshu.com/p/c9b1c45f7c2a
 
+Runtime源码 —— 对象、类和isa     https://www.jianshu.com/p/a8eade8a1c6d
+
 优化绘本卡顿
 2.20需求修改完成
 2.20bug修复
