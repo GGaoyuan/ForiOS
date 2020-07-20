@@ -43,7 +43,7 @@
     
     self.test = [KVOObject new];
     [self addObserver:self.test forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
-    
+    NSLog(@"2222");
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"111");
     });
