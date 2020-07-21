@@ -55,8 +55,15 @@ union isa_t {
     Class cls;
     uintptr_t bits;
     struct {
-        uintptr_t extra_rc  : 8;    //有8位，2^7-1
-        ...
+        uintptr_t nonpointer : 1;   //0代表普通指针，1表示优化过的
+        uintptr_t has_assoc : 1;    //是否有关联对象
+        uintptr_t has_cxx_dtor : 1; //是否有c++析构函数
+        uintptr_t shiftcls : 33; // 内存地址信息MACH_VM_MAX_ADDRESS 0x1000000000
+        uintptr_t magic : 6;    //调试
+        uintptr_t weakly_referenced : 1;    //是否有鶸引用指向
+        uintptr_t deallocating : 1; //是否正在释放
+        uintptr_t has_sidetable_rc : 1;     //是否引用计数过大无法存在isa中
+        uintptr_t extra_rc  : 8;    //有8位，2^7-1，引用计数过大这里会有值
     };
     ... //乱七八糟的信息
 }
