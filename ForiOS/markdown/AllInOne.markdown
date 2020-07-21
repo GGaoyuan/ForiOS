@@ -82,6 +82,19 @@ struct objc_class : objc_object {
         Class nextSiblingClass;
     };
 }
+struct cache_t {
+    struct bucket_t *_buckets;  //bucket_t则是存放着imp和key
+    mask_t _mask;       //mask是缓存池的最大容量
+    mask_t _occupied;   //occupied是缓存池缓存的方法数量
+    struct bucket_t *buckets();
+    mask_t mask();
+    mask_t occupied();
+    mask_t capacity();  //容量
+    bool canBeFreed();
+    void expand();
+    ........
+}
+
 ```
 ##### 为什么要设计metaclass
 万物皆对象，类对象也能使用消息机制
@@ -512,7 +525,7 @@ Exit(即将退出Loop)时调用_objc_autoreleasePoolPop()来释放自动释放�
 当App收到ApplicationHandleEventQueue分发的IOEvent之后，会先canle掉当前的touchesBegin/Move/End的回调，并将对应的UIGestureRecognizer标记为待处理。
 当runloop为将要进入休眠的时候（Beforewaiting），会获取到所有的UIGestureRecognizer，然后执行所有的手势识别
 ##### 解释一下页面的渲染的过程
-渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting的时候然后就是唤醒后的刷新UI，执行动画等等），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。
+渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting的时候），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。
 layer会调用[CALyer display]，进入到真正的绘制过程。接下来就是通过判断看是否是异步绘制代理方法func display(_ layer: CALayer)，如果有异步绘制的代理方法，则走异步绘制func display(_ layer: CALayer)方法
 如果没有的话走系统绘制方法。
 系统绘制：
