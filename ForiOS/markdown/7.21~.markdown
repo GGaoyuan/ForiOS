@@ -54,8 +54,14 @@ find查找大概就是是把散列表头尾连起来，从index开始，遍历�
 这里面有详细的源码
 https://www.jianshu.com/p/fcf8d17121e3
 
+##### Notification和多线程
+接收通知处理代码线程 由发出通知的线程决定
+如果发送线程是在异步，则接收的线程也是在异步
+这里有一个NotificationQueue的东西，没有用过，但是写的是一个双向链表，用于管理通知发送时机(异步发送)，比如runloop空闲发送，尽快发送，立刻发送。Queue依赖runloop，子线程的话得要run.runloop,最终还是通过NSNotificationCenter进行发送通知。所谓异步，指的是非实时发送而是在合适的时机发送，并没有开启异步线程
 
-
+##### 在方法调用的时候，方法查询-> 动态解析-> 消息转发 之前做了什么
+这个问题其实是问一个对象，调用他的方法是什么步骤
+首先是看rw_t里的cache是否有对应的方法，如果找到就调用，没找到会往cache里加方法（这里涉及到cache的缓存），然后从methodlist里找，找不到再往父方法里面找，还不行就开始走转发流程（转发三部曲）
 
 ##### 出自
 https://blog.csdn.net/AAjjx/article/details/106282568

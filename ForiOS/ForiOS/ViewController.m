@@ -33,13 +33,19 @@
 //        [self performSelector:@selector(test123) withObject:nil afterDelay:0];
 //
 //    });
-    [NewDictionary new];
-    [NewDictionary2 new];
-    
-    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSLog(@"发送:%@",[NSThread currentThread]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"noti" object:nil];
+    });
+
 }
 
-
+- (void)notificationCode{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//       //更新 UI 操作
+//    });
+    NSLog(@"notificationCode:%@",[NSThread currentThread]);
+}
 
 - (void)test123 {
     NSLog(@"111");
@@ -51,6 +57,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationCode) name:@"noti" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"noti" object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        /**处理通知代码**/
+        NSLog(@"usingBlock:%@",[NSThread currentThread]);
+    }];
+    return;
     
     self.test = [KVOObject new];
     [self addObserver:self.test forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
