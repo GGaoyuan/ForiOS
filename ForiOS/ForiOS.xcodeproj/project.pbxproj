@@ -13,6 +13,7 @@
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
+		30A90BB324C7475700B47D50 /* NewDictionary2.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BB224C7475700B47D50 /* NewDictionary2.m */; };
 		30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AB24401FD10090BFA4 /* AppDelegate.m */; };
 		30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5AE24401FD10090BFA4 /* SceneDelegate.m */; };
 		30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30AFC5B124401FD10090BFA4 /* ViewController.m */; };
@@ -61,6 +62,8 @@
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
 		30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ViewController+AAA.m"; sourceTree = "<group>"; };
+		30A90BB124C7475700B47D50 /* NewDictionary2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewDictionary2.h; sourceTree = "<group>"; };
+		30A90BB224C7475700B47D50 /* NewDictionary2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewDictionary2.m; sourceTree = "<group>"; };
 		30AFC5A724401FD10090BFA4 /* ForiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ForiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AFC5AA24401FD10090BFA4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		30AFC5AB24401FD10090BFA4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -175,6 +178,8 @@
 				30AFC5BC24401FD30090BFA4 /* main.m */,
 				3033B4292489530D003A5A9B /* NewDictionary.h */,
 				3033B42A2489530E003A5A9B /* NewDictionary.m */,
+				30A90BB124C7475700B47D50 /* NewDictionary2.h */,
+				30A90BB224C7475700B47D50 /* NewDictionary2.m */,
 				30D7B57324725BAF00F9CD69 /* Swift */,
 				3033B42C248953B5003A5A9B /* KVOObject.h */,
 				3033B42D248953B5003A5A9B /* KVOObject.m */,
@@ -420,6 +425,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */,
+				30A90BB324C7475700B47D50 /* NewDictionary2.m in Sources */,
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
 				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,

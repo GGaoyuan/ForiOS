@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "ForiOS-Swift.h"
 #import "NewDictionary.h"
+#import "NewDictionary2.h"
 #import "UIImageView+WebCache.h"
 #import "KVOObject.h"
 #import "ViewController+AAA.h"
@@ -25,24 +26,38 @@
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    self.test.name = @"111";
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
-        [[NSRunLoop currentRunLoop] run];
-        [self performSelector:@selector(test123) withObject:nil afterDelay:0];
-        
-    });
+//    self.test.name = @"111";
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+////        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
+//        [[NSRunLoop currentRunLoop] run];
+//        [self performSelector:@selector(test123) withObject:nil afterDelay:0];
+//
+//    });
+    [NewDictionary new];
+    [NewDictionary2 new];
+    
+    
 }
+
+
 
 - (void)test123 {
     NSLog(@"111");
 }
+
+//automaticallyNotifiesObserversForKey
+
+//- (BOOL)shouldAutomaticallyForwardAppearanceMethods
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.test = [KVOObject new];
     [self addObserver:self.test forKeyPath:@"name" options:NSKeyValueObservingOptionNew context:nil];
+    NSLog(@"2222");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"111");
+    });
     return;
 //    [FPSMonitor start];
     

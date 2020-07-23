@@ -19,6 +19,10 @@
 
 @dynamic string, number, date, opaqueObject;
 
++ (void)initialize {
+    NSLog(@"NewDictionary initialize");
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

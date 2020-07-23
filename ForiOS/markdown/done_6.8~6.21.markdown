@@ -1,0 +1,647 @@
+[toc]
+## 6.9
+#### SEL和IMP的区别
+SEL是方法编号，也是方法名，在dyld加载镜像到内存时，通过_read_image方法加载到内存的表中了
+IMP是函数实现指针，找IMP就是找函数实现的过程
+SEL和IMP的关系就可以解释为：
+SEL就相当于书本的⽬录标题
+IMP就是书本的⻚码
+函数就是具体页码对应的内容
+#### autoreleasepool实现原理
+objc_autoreleasePoolPush和objc_autoreleasePoolPop方法，实际调用的是AutoreleasePoolPage的Push和Pop方法。
+AutoreleasePoolPage是一个双向链表的节点，里面有字段
+magic表示是否完整
+child,parent父节点和子节点
+thread:当前线程
+next表示autorelease对象的下一个位置，next == begin()时为空，next == end()时为pool满了
+当前 page 存在且没有满时，直接将对象添加到当前 page 中，即 next 指向的位置；
+当前 page 存在且已满时next == end()，创建一个新的 page ，并将对象添加到新创建的 page 中；
+当前 page 不存在时，即还没有 page 时，创建第一个 page，next == begin() ，并将对象添加到新创建的 page
+哨兵对象：
+POOL_BOUNDARY 是一个边界对象 nil,之前的源代码变量名是 POOL_SENTINEL哨兵对象,用来区别每个page即每个 AutoreleasePoolPage 边界
+#### NSThread、NSRunLoop 和 NSAutoreleasePool
+苹果不允许直接创建 RunLoop，它只提供了两个自动获取的函数：CFRunLoopGetMain()和 CFRunLoopGetCurrent()。 这两个函数内部的逻辑大概是
+线程和 RunLoop 之间是一一对应的，其关系是保存在一个全局的 Dictionary 里。线程刚创建时并没有 RunLoop，如果你不主动获取，那它一直都不会有。RunLoop 的创建是发生在第一次获取时，RunLoop 的销毁是发生在线程结束时。你只能在一个线程的内部获取其 RunLoop（主线程除外）
+NSAutoreleasePool 中还提到，每一个线程都会维护自己的 autoreleasepool 堆栈。换句话说 autoreleasepool 是与线程紧密相关的，每一个 autoreleasepool 只对应一个线程。(runloop也是一个)
+总而言之：每一个 autoreleasepool 只对应一个线程。每一个线程拥有一个专属的 NSRunLoop 对象。
+
+## 6.10
+### runtime相关问题
+#### runtime的内存模型（isa、对象、类、metaclass、结构体的存储信息等）
+```
+typedef struct objc_class *Class;
+
+struct objc_class {
+    Class isa  OBJC_ISA_AVAILABILITY;
+#if !__OBJC2__
+    Class super_class                      OBJC2_UNAVAILABLE;  // 父类
+    const char *name                        OBJC2_UNAVAILABLE;  // 类名
+    long version                            OBJC2_UNAVAILABLE;  // 类的版本信息，默认为0
+    long info                              OBJC2_UNAVAILABLE;  // 类信息，供运行期使用的一些位标识
+    long instance_size                      OBJC2_UNAVAILABLE;  // 该类的实例变量大小
+    struct objc_ivar_list *ivars            OBJC2_UNAVAILABLE;  // 该类的成员变量链表
+    struct objc_method_list **methodLists  OBJC2_UNAVAILABLE;  // 方法定义的链表
+    struct objc_cache *cache                OBJC2_UNAVAILABLE;  // 方法缓存
+    struct objc_protocol_list *protocols    OBJC2_UNAVAILABLE;  // 协议链表
+#endif
+
+} OBJC2_UNAVAILABLE;
+
+}
+```
+isa :需要注意的是在Objective-c中，所有类自身也是一个对象，因为这个对象Class里面也有一个isa指针，它指向mateClass(元类)
+里面有图https://developer.aliyun.com/ask/282811
+
+元类（Meta Class）：是一个类对象的类，即：Class的类，这里保存了类方法等相关信息
+NSObject的metaClass的isa指向的是自己本身，
+而NSObject的metaClass的superClass指向的是NSObject
+#### 为什么要设计metaclass
+万物皆对象啊，这样类作为对象也能用消息机制，让每一个类都有自己的metaclass有利于单一职责，不然就全写在NSObjct的Metaclass了
+#### id的本质是什么呢
+```
+/// An opaque type that represents an Objective-C class.
+typedef struct objc_class *Class;
+
+/// Represents an instance of a class.
+struct objc_object {
+    Class isa  OBJC_ISA_AVAILABILITY;
+};
+
+/// A pointer to an instance of a class.
+typedef struct objc_object *id;
+```
+id也就是这个struct objc_object结构体的指针
+它包括一个isa指针，指向的是这个对象的类对象,一个对象实例就是通过这个isa找到它自己的Class，而这个Class中存储的就是这个实例的方法列表、属性列表、成员变量列表等相关信息的。
+#### class_copyIvarList & class_copyPropertyList区别
+```
+{
+    NSString *str;
+}
+@property NSString *property;
+
+//class_copyIvarList
+str
+_property
+//class_copyPropertyList
+property
+```
+class_copyIvarList:能够获取.h和.m中的所有属性以及大括号中声明的变量，获取的属性名称有下划线(大括号中的除外)。
+class_copyPropertyList:只能获取由property声明的属性，包括.m中的，获取的属性名称不带下划线。
+所以OC中没有真正的私有属性
+#### category如何被加载的,两个category的load方法的加载顺序，两个category的同名方法的加载顺序呢，initialize,在继承关系中他们有什么区别
++load 方法是main加载的时候调用。不管这个类会不会用都会被调用。
+先调用父类的load，然后是自己的
+category的load是按照编译顺序来的，先编译的先调用，后编译的后调用
+
+initialize其实是类第一次被使用到的时候会被调用在main之后
+依旧是先调用父类的initialize，然后是自己的
+category的initialize是按照编译顺序来的，所有的initialize只调用一次，也就是最后编译的那个category中的initialize方法
+
+还能看出如果在A中load里调用B对象，那么B对象会先load，然后调用B的initialize，这个initialize是在main之前调用，用的消息转发机制
+```
+2020-06-11 00:17:05.142181+0800 CMDTest[18977:6172550] mainStart load
+2020-06-11 00:17:05.142721+0800 CMDTest[18977:6172550] SuperClass load
+2020-06-11 00:17:05.142753+0800 CMDTest[18977:6172550] main load
+2020-06-11 00:17:05.142786+0800 CMDTest[18977:6172550] num1 load
+2020-06-11 00:17:05.142817+0800 CMDTest[18977:6172550] num2 load
+main Start
+2020-06-11 00:17:05.142969+0800 CMDTest[18977:6172550] SuperClass initialize
+2020-06-11 00:17:05.143013+0800 CMDTest[18977:6172550] num2 initialize
+2020-06-11 00:17:05.143042+0800 CMDTest[18977:6172550] ggsimida
+Program ended with exit code: 0
+```
+#### category & extension区别，能给NSObject添加Extension吗，结果如何
+category:
+运行时添加分类属性/协议/方法
+分类添加的方法会“覆盖”原类方法，因为方法查找的话是从头至尾，一旦查找到了就停止了
+同名分类方法谁生效取决于编译顺序，读取的信息是倒叙的，所以编译越靠后的越先读入
+extension:
+编译时决议
+只有.h文件，只以声明的形式存在，所以不能为系统类添加扩展
+这东西就是用来访问自己写的类的私有方法的
+#### 消息转发机制，消息转发机制和其他语言的消息机制优劣对比
+
+#### 在方法调用的时候，方法查询-> 动态解析-> 消息转发 之前做了什么
+检查selector是否需要忽略，比如retain和release这样的函数
+检查target是不是为nil，如果是nil的话msg_send就会被忽略掉
+之后就是在缓冲中找有没有方法，没有就去对象的method_list找，还没有就去父类中去找，还没找到就会到_objc_msgForward消息转发，还不行还有最后的一次机会包装NSInvocation给开发，还不行就崩溃了
+#### IMP、SEL、Method的区别和使用场景
+SEL是方法编号，也是方法名，在dyld加载镜像到内存时，通过_read_image方法加载到内存的表中了
+IMP是Method实现指针，找IMP就是找函数实现的过程
+SEL和IMP的关系就可以解释为：
+SEL就相当于书本的⽬录标题
+IMP就是书本的⻚码
+Method就是具体页码对应的内容
+#### 说说消息转发机制的优劣
+11
+#### weak的实现原理？SideTable的结构是什么样的
+为了管理所有对象的引用计数和weak指针，苹果创建了一个全局的SideTables，虽然名字后面有个不过他其实是一个全局的Hash表
+实现步骤
+1、初始化时：runtime会调用objc_initWeak函数，初始化一个新的weak指针指向对象的地址。
+2、添加引用时：objc_initWeak函数会调用 objc_storeWeak() 函数， objc_storeWeak() 的作用是更新指针指向，创建对应的弱引用表。
+3、释放时，调用clearDeallocating函数。clearDeallocating函数首先根据对象地址获取所有weak指针地址的数组，然后遍历这个数组把其中的数据设为nil，最后把这个entry从weak表中删除，最后清理对象的记录。
+```
+struct SideTable {
+// 因为对象引用计数相关操作应该是原子性的。不然如果多个线程同时去写一个对象的引用计数，那就会造成数据错乱，失去了内存管理的意义
+    spinlock_t slock;
+    // 引用计数的 hash 表
+    RefcountMap refcnts;
+    // weak 引用全局 hash 表
+    weak_table_t weak_table;
+}
+```
+
+https://www.jianshu.com/p/ef6d9bf8fe59
+#### 关联对象的应用？系统如何实现关联对象的
+13
+#### 关联对象的如何进行内存管理的？关联对象如何实现weak属性
+14
+#### Autoreleasepool的原理？所使用的的数据结构是什么
+15
+
+
+
+#### ARC的实现原理？ARC下对retain & release做了哪些优化
+16
+#### ARC下哪些情况会造成内存泄漏
+17
+#### Method Swizzle注意事项
+18
+#### 属性修饰符atomic的内部实现是怎么样的?能保证线程安全吗
+19
+#### iOS 中内省的几个方法有哪些？内部实现原理是什么
+20
+#### class、objc_getClass、object_getclass 方法有什么区别?
+21
+https://github.com/colourful987/bytedance-alibaba-interview
+
+## 6.11
+### 内存相关问题
+#### 有哪些检测内存泄露的方式
+Xcode自带的Analyze
+Instrument的Allocation和Leak
+第三方腾讯出的MLeaksFinder
+
+#### MRC下的Setter和Getter如何重写
+set是先释放旧值，再retain新值
+```
+- (void)setName:(NSString *)name {
+    if (_name != name) {
+        [_name release];
+        _name = [brand retain];
+    }
+}
+```
+get是先retain，然后再autorelease，保证再取值的时候有值，在不需要之后释放
+```
+- (NSString *)name {
+    return [[_name retain] autorelease];
+}
+```
+重写dealloc,但是不要调用，会崩溃
+```
+- (void)dealloc {
+    [_name release];
+    [super dealloc];
+}
+```
+
+#### 容易造成内存泄露的情况和处理情况
+循环引用实质：多个对象之间相互强引用而不能释放
+delegate：用weak修饰delegate
+block：用__weak，或者用__block在合适的时候置为nil。在block中使用__strong是怕在block中对象被释放掉，让在Block期间被持有，block结束后再释放
+NSTimer：在控制器内Timer作为属性的时候会强引用控制器，所以会相互引用，只需要在合适的时候将将定时器 invalidate 并置为 nil 即可
+try/catch：EOC
+
+#### 野指针和悬垂指针
+OC野指针和悬垂指针(迷途指针都是一回事)，即指针指向的对象已经被回收掉了
+C语言分悬垂指针和野指针：
+悬垂指针：指针指向的内存已经被释放了，但是指针还在，这个就是悬垂指针（）
+野指针：指针指向的对象已经被回收掉了.这个指针就叫做野指针.
+
+#### 说一下对strong,copy,assign,weak关键字的理解
+copy   对应的所有修饰符是 __strong
+retain 对应的所有修饰符是 __strong
+strong 对应的所有修饰符是 __strong
+assign 对应的所有修饰符是 __unsafe_unretain
+weak   对应的所有修饰符是 __weak
+strong持有该对象，引用计数+1
+weak指向对象但是不持有对象，引用计数也不会变，weak不可以修饰基础数据类型
+assign是指针赋值修饰基本数据类型，如NSInterger和CGFloat，也可以修饰对象，会有警告，new后就会被释放了，再访问assgin修饰的对象会报野指针
+copy关键字和strong类似，copy多用于修饰有可变类型的不可变对象NSString,NSArray,NSDictionary上，计数设置为1。（引用场景：类似于重新创造了一只狗，并给这只狗套上了一条绳）
+__unsafe_unretain可以类似比较assign，不安全
+__autoreleasing就是把对象扔autoreeasepool中
+
+#### 是否了解深拷贝和浅拷贝的概念，集合类深拷贝如何实现
+对不可变的非集合对象，copy 是指针拷贝，mutablecopy 是内容拷贝
+对于可变的非集合对象，copy，mutablecopy 都是内容拷贝
+对不可变的数组、字典、集合等集合类对象，copy 是指针拷贝，mutablecopy 是内容拷贝
+对于可变的数组、字典、集合等集合类对象，copy，mutablecopy 都是内容拷贝
+集合类深拷贝用
+```
+[[NSArray alloc] initWithArray:@[] copyItems:YES];
+```
+
+#### 使用自动引用计数应遵循的原则
+不能使用retain、release、retainCount、autorelease
+不可以使用NSAllocateObject、NSDeallocateObject
+不需要显示的调用Dealloc。
+使用@autoreleasePool来代替NSAutoreleasePool
+不可以使用区域NSZone。
+显示转换id和void*。
+
+#### 能不能简述一下Dealloc 的实现机制
+Dealloc的实现机制是内容管理部分的重点，把这个知识点弄明白，对于全方位的理解内存管理的只是很有必要。
+dealloc时调用
+1._objc_rootDealloc
+2.rootDealloc()
+接下来是几种判断，判断过了会继续走下去
+3.object_dispose()
+4.objc_destructInstance()
+    4.1:object_cxxDestruct:判断有没有关联Cpp的东西，删除掉
+    4.2:_object_remove_assocations:去除和这个对象assocate的对象
+    4.3:objc_clear_deallocating:清空引用计数表并清除弱引用表，将
+    所有weak引用指nil（这也就是weak变量能安全置空的所在）
+5.C的free()
+
+#### 内存中的5大区分别是什么
+栈区(stack):由编译器自动分配释放存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。
+堆区(heap):一般由程序员分配释放，若程序员不释放，程序结束时可能由OS回收。注意它与 数据结构中的堆是两回事，分配方式倒是类似于链表。
+全局区(静态区)(static):全局变量和静态变量的存储是放在一块的，初始化的全局变量和静态变量在一块区域，未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。程序结束后由系统释放。
+常量区:常量就是放在这里的。程序结束后由系统释放。
+程序代码区:存放函数体的二进制代码。
+
+#### 内存管理默认的关键字是什么
+MRC：atomic, readwrite, retain
+ARC：atomic, readwrite, strong
+
+#### 内存管理方案
+taggedPointer:由于NSNumber、NSDate一类的变量本身的值需要占用的内存大小常常不需要8个字节，所以将一个对象的指针拆成两部分，一部分直接保存数据，另一部分作为特殊标记，表示这是一个特别的指针，不指向任何一个地址，将值直接存储到了指针本身里。但是TaggedPointer因为并不是真正的对象，而是一个伪对象，所以你如果完全把它当成对象来使，可能会让它露马脚。所有对象都有 isa指针，而TaggedPointer其实是没有的
+具体的看文章https://www.jianshu.com/p/c9089494fb6c
+
+NONPOINTER_ISA--(非指针型的 isa):在64位架构下，isa指针是占64比特位的，实际上只有30多位就已经够用了，为了提高利用率，剩余的比特位存储了内存管理的相关数据内容
+第一位的0或1代表是纯地址型isa指针，还是NONPOINTER_ISA指针。
+第二位代表是否有关联对象
+第三位代表是否有C++代码。
+接下来33位代表指向的内存地址
+接下来有弱引用的标记
+接下来有是否delloc的标记....等等
+感觉很像taggedPointer
+
+散列表:复杂的数据结构，包括了引用计数表和弱引用表通过SideTables()结构来实现的，SideTables()结构下，有很多 SideTable 的数据结构。而sideTable 当中包含了自旋锁，引用计数表，弱引用表。SideTables()实际上是一个哈希表，通过对象的地址来计算该对象的引用计数在哪个sideTable中。
+SideTables表在64位系统中，有64张SideTable表
+每一张SideTable主要是由三部分组成。自旋锁、引用计数表、弱引用表。
+全局的引用计数之所以不存在同一张表中，是为了避免资源竞争，解决效率的问题。
+引用计数表中引入了分离锁的概念，将一张表分拆成多个部分，对他们分别加锁，可以实现并发操作，提升执行效率
+
+#### AutorealesePool的数据结构
+简单说是双向链表，每张链表头尾相接，有parent、child指针每创建一个池子，会在首部创建一个 哨兵 对象,作为标记，最外层池子的顶端会有一个 next指针。当链表容量满了，就会在链表的顶端，并指向下一张表。
+ 
+#### 64bit和32bit占用内存
+64bit和32bit下long和char所占字节是不同的
+char:1字节(ASCII2=256个字符)
+char*(即指针变量):4个字节(32位的寻址空间是2,即32个bit，也就是4个字节。同理 64 位编译器为 8 个字节)
+int:4个字节范围-2147483648~>2147483647
+long:4个字节 范围和int一样 64位下8个字节，范围
+-9223372036854775808~9223372036854775807
+longlong:8个字节范围-9223372036854775808~9223372036854775807
+float:4个字节
+double:8个字节
+
+#### 讲一下@dynamic和@synthesize关键字?
+@property有两个对应的词，一个是@synthesize，一个是@dynamic。如果@synthesize和@dynamic都没写，那么默认的就是@syntheszie var = _var;
+创造一个带下划线前缀的实例变量名，同时使用这个属性生成getter和setter方法。如果不想自动合成就用@dynamic告诉编译器,属性的setter与getter方法由用户自己实现，不自动生成。这里就涉及到Runtime的动态添加方法的知识点。
+
+## 6.15
+### 内存相关问题
+#### 访问__weak修饰的变量，是否已经被注册在了@autoreleasePool中?为什么?
+会扔到autoreleasepool中，不然创建之后也就会销毁（之前做过assign的demo，生成之后就被释放），为了延长它的生命周期，必须注册到 @autoreleasePool中，以延缓释放。
+
+#### BAD_ACCESS在什么情况下出现
+就是野指针呗，访问一个已经被销毁的内存空间就会出现，调试方法用僵尸对象
+
+#### autoReleasePool什么时候释放?
+孙源的Runloop分享里说过，在当前runloop结束之后和下一次runloop结束之前调用drain方法
+
+#### ARC在编译时做了哪些工作 
+根据代码执行的上下文语境，在适当的位置插入 retain，release
+
+#### ARC的retainCount怎么存储的（引用计数是怎么存储的）?
+SideTables表在64位系统中，有64张SideTables表
+SideTables表就会个哈希表（方便快速查找，防止循环遍历），然后里面有很多的SideTable结构体，key就是对象的内存地址
+这个SideTable里面有：
+slock(自旋锁)：苹果在这里用了分离锁，对象有很多，给整个SideTables加锁的话效率太低了，所以在SideTable加锁。而自旋锁的效率很高，适合较快的操作，可以实现并发操作，提升执行效率
+RefCount:一个C++的map，真正的对象存引用计数的地方，这个里面可以存很多个结构体，每个结构体对应一个对象，里面有对象的引用计数
+weak_table_t:一个结构体，里面是一个数组和维护这个数组大小的值。weak_entry_t *weak_entries就是这个数组，用来存储weak_table_t的数据元素weak_entry_t。数组里存的又是结构体，这个结构体里又有存的是对象的弱引用的地址，还有一个指向对象的弱引用数组（referrers），当对象释放后，这个数组里面的对象全部置为nil
+```
+struct SideTable {
+// 保证原子操作的自旋锁
+    spinlock_t slock;
+    // 引用计数的 hash 表
+    RefcountMap refcnts;
+    // weak 引用全局 hash 表
+    weak_table_t weak_table;
+}
+
+struct weak_table_t {
+    // 保存了所有指向指定对象的 weak 指针
+    weak_entry_t *weak_entries;
+    // 存储空间
+    size_t    num_entries;
+    // 参与判断引用计数辅助量
+    uintptr_t mask;
+    // hash key 最大偏移值
+    uintptr_t max_hash_displacement;
+};
+
+typedef objc_object ** weak_referrer_t;
+struct weak_entry_t {
+    DisguisedPtr<objc_object> referent;
+    union {
+        struct {
+            weak_referrer_t *referrers;
+            uintptr_t        out_of_line : 1;
+            uintptr_t        num_refs : PTR_MINUS_1;
+            uintptr_t        mask;
+            uintptr_t        max_hash_displacement;
+        };
+        struct {
+            // out_of_line=0 is LSB of one of these (don't care which)
+            weak_referrer_t  inline_referrers[WEAK_INLINE_COUNT];
+        };
+    }
+}
+```
+https://www.jianshu.com/p/ef6d9bf8fe59
+
+### OC底层
+#### 苹果如何实现远程推送的
+1.应用服务提供商从服务器端把要发送的消息和设备令牌(Token啊，令牌啥的用户信息)发送给苹果的消息推送服务器 。
+2.根据设备令牌在已注册的设备(iPhone、iPad、iTouch、mac 等)查找对应的设备，将消息发送给相 应的设备。 
+3.客户端设备接将接收到的消息传递给相应的应用程序，应用程序根据用户设置弹出通知消息。
+
+#### 属性关键字
+1.读写权限:readonly, readwrite(默认)
+2.原子性:atomic(默认)，nonatomic。但是不能保证线程安全（苹果自己说的）且效率低(比如如果修饰的是数组，那么对数组的读写是安全的，但如果是操作数组进行添加移除其中对象的还，就不保证安全了)
+```
+- (void)viewDidLoad {
+   [super viewDidLoad];
+   //开启一个线程对intA的值+1
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       for (int i = 0;i < 100000;i ++){
+           self.intA = self.intA + 1;
+       }
+       NSLog(@"intA : %ld",(long)self.intA);
+   });
+   
+   //开启一个线程对intA的值+1
+   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       for (int i = 0;i < 100000;i ++){
+           self.intA = self.intA + 1;
+       }
+       NSLog(@"intA : %ld",(long)self.intA);
+   });   
+}
+————————————————
+2020-06-15 23:59:43.167850+0800 ForiOS[26601:6348256] intA : 86015  --- <NSThread: 0x600003f4ec80>{number = 1, name = (null)}
+2020-06-15 23:59:43.168317+0800 ForiOS[26601:6348259] intA : 102046  --- <NSThread: 0x600003f4ec80>{number = 1, name = (null)}
+```
+首先atomic只是在get/set方法上加了@synchronized(self)
+苹果开发文档已经明确指出：Atomic不能保证对象多线程的安全。所以Atomic不能保证对象多线程的安全。它只是能保证你访问的时候给你返回一个完好无损的Value而已。举个例子：
+如果线程A调了getter，与此同时线程B、线程C都调了setter——那最后线程A get到的值，有3种可能：可能是B、Cset之前原始的值，也可能是B set 的值，也可能是C set的值。同时，最终这个属性的值，可能是B set的值，也有可能是C set的值。所以atomic可并不能保证对象的线程安全。
+https://blog.csdn.net/u012903898/article/details/82984959
+
+
+## 6.16
+### OC底层
+#### 分类能添加成员变量吗?
+不能。只能通过关联对象(objc_setAssociatedObject)来模拟实现成员变量，但其实质是关联内容，所有对象的关联内容都放在同一个全局容器哈希表中:AssociationsHashMap,由 AssociationsManager统一管理。
+
+#### 如果工程里有两个CategoryA和B，两个Category中有一个同名的方法，哪个方法最终生效?
+取决于谁在后面被编译，最后编译的生效，她会覆盖之前的方法。这个覆盖并不是真正的覆盖，之前编译的方法都在只是访问不到。因为category动态编译的方法是倒叙遍历，所以最后编译的方法在最上层能被调用到
+
+#### 通过直接赋值成员变量会触发KVO吗
+不会。
+因为kvo是通过isa-swizzling来实现的，被观察对象被runtimeNew一个出来，然后通过swizzling在seter方法上加上一个通知实现的
+即使是用setter方法，也会触发KVO（看代码）
+使用KVC也会，KVC也会调用setter方法
+```
+- (void)setName:(NSString *)name {
+    _NSSetObjectValueAndNotify();
+}
+void _NSSetObjectValueAndNotify() {
+    [self willChangeValue:"xxx"];
+    [super setValue:value];
+    [self didChangeValue:"xxx"];    //在这个didChange里面发送的通知
+}
+```
+通过代码可以知道，其实要手动触发的话也得用willChangeValueForKey和didChangeValueForKey方法才行
+
+#### KVC
+KVC 就是指iOS的开发中，可以允许开发者通过Key名直接访问对象的属性，或者给对象的属性赋值。而不需要调用明确的存取方法。这样就可以在运行时动态地访问和修改对象的属性。而不是在编译时确定。不过看过EOC之后，里面说这个东西最好别用
+
+#### 当调用setValue:forKey:的代码时,底层的执行机制是啥
+假如是改name值：[setValue:@"111" forKey:@"name"]
+1.首先调用setName方法（就是setter)
+2.如果没有找到setName方法，就去调用+(BOOL)accessInstanceVariablesDirectly，这个方法默认是返回YES。然后接着去找类似的变量_name，_isName，name，isName这样的顺序 
+但是如果重写让他返回NO，就直接setValue:forUndefinedKey然后崩溃（一般没人这个做）
+找的过程中就不管是公有方法还是私有方法了，所以会出现KVC被拒的情况。。。。因为用了苹果私有API
+3.如果前面都没找到，就掉setValue:forUndefinedKey抛异常
+
+#### valueForKey:@"name"的底层机制
+和set类似，找getName，如果没有的话就按照_name，_isName，name，isName这样的顺序继续找，找不到就抛出异常
+还会调用一些countOfName,enumaratorOfName之类的方法，记不清了
+
+#### objectForKey和valueForKey区别
+objectForKey文档上说The value associated with aKey, or nil if no value is associated with aKey
+valueForKey文档上说The value for the property identified by key
+也就是说
+(id)valueForKey:(NSString *)key是KVC（key-value coding）的，如果没有找到对应的key会调用-(id)valueForUndefinedKey:(NSString )key从而抛出NSUndefinedKeyException异常，而objectForKey一般会返回一个nil
+所以在使用NSDictionary取值时，尽量使用objectForKey
+
+### UI相关
+#### 事件传递与视图响应链
+如果点击一个视图，那么会吧事件加入到UIApplication的任务事件队列里
+UIApplication将任务事件队列最前端的事件分发到UIWindow
+UIWindow查找能响应的子视图UIView
+UIView会判断1.自己是否能触摸事件  2.是否触摸在自己身上
+```
+// 此方法返回的View是本次点击事件需要的最佳View
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+
+// 判断一个点是否落在范围内
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+
+//这俩方法都可以用来扩大按钮的点击范围
+```
+如果可以，就会继续遍历子视图，重复上面的步骤
+直到没有找到，那么自己就是事件处理者。如果如果自己不能处理，那么不做任何处理。
+
+#### 图像显示原理
+- CPU提交位图
+    1.Layout: UI 布局，文本计算 
+    2.Display: 绘制
+    3.Prepare: 图片解码 
+    4.Commit:提交位图
+- GPU图层渲染，纹理合成，把结果放到帧缓冲区(frame buffer)中
+- 再由视频控制器根据 vsync 信号在指定时间之前去提取帧缓冲区的屏幕显示内容
+- 显示到屏幕上
+
+iOS设备的硬件时钟会发出Vsync(垂直同步信号)
+然后App的CPU会去计算屏幕要显示的内容，
+之后将计算好的内容提交到GPU去渲染。
+随后GPU将渲染结果提交到帧缓冲区，等到下一个VSync到来时将缓冲区的帧显示到屏幕上。
+也就是说，一帧的显示是由CPU和GPU共同决定的。
+YY的博客里有说过这个东西
+
+#### UI卡顿掉帧原因
+一帧的显示是由CPU和GPU共同决定的。页面滑动流畅是60fps，也就是1s有60帧更新，如果CPU和GPU共同处理的时间超过了1/60秒，就会感受到卡顿
+
+#### 滑动优化方案
+CPU：
+可以吧这些东西放到子线程中：
+1.耗时对象的创建与销毁，耗时操作都放在子线程
+2.对一些计算，排版进行预处理（tableView的缓存高度）
+3.预渲染，异步绘制（文本的异步绘制，图片的异步解码，CoreGraphic是线程安全，CALayer和UIView不是）
+4.用轻量级的控件，比如CALayer替换UIView
+
+GPU:
+是否受到CPU或者GPU的限制? 
+是否有不必要的CPU渲染? 
+是否有太多的离屏渲染操作? 
+是否有太多的图层混合操作? 
+是否有奇怪的图片格式或者尺寸? 
+是否涉及到昂贵的view或者效果? 
+view的层次结构是否合理?
+文本渲染：屏幕上能看到的所有文本内容控件，包括UIWebView，在底层都是通过CoreText排版、绘制为位图显示的。常见的文本控件，其排版与绘制都是在主线程进行的，显示大量文本是，CPU压力很大。对此解决方案唯一就是自定义文本控件，用CoreText对文本异步绘制。（很麻烦，开发成本高）
+当用UIImage或CGImageSource创建图片时，图片数据并不会立刻解码。图片设置到UIImageView或CALayer.contents中去，并且CALayer被提交到GPU前，CGImage中的数据才会得到解码。这一步是发生在主线程的，并且不可避免。SD_WebImage处理方式：在后台线程先把图片绘制到CGBitmapContext中，然后从Bitmap直接创建图片。
+图像绘制：图像的绘制通常是指用那些以CG开头的方法把图像绘制到画布中，然后从画布创建图片并显示的一个过程。CoreGraphics方法是线程安全的，可以异步绘制，主线程回调。
+
+
+
+#### iOS从磁盘加载一张图片，使用UIImageVIew显示在屏幕上，需要经过步骤
+1.从磁盘拷贝数据到内核缓冲区
+2.从内核缓冲区复制数据到用户空间
+3.生成UIImageView，把图像数据赋值给UIImageView
+如果图像数据为未解码的PNG/JPG，解码为位图数据
+4.CATransaction捕获到UIImageView layer树的变化
+5.主线程Runloop提交CATransaction，开始进行图像渲染
+6.1 如果数据没有字节对齐，Core Animation会再拷贝一份数据，进行字节对齐。
+6.2 GPU处理位图数据，进行渲染。
+
+
+#### UI绘制原理
+1.当我们调用[UIView setNeedsDisplay]这个方法时，其实并没有立即进行绘制工作，系统会立即调用CALayer的同名方法，并且在当前layer上打上一个标记，然后会在当前runloop将要结束的时候调用[CALayer display]这个方法，然后进入视图的真正绘制过程
+2.在[CALayer display]这个方法的内部实现中会判断这个layer的delegate是否响应displaylayer这个方法，如果不响应这个方法，就回到系统绘制流程中，如果响应这个方法，那么就会为我们提供异步绘制的入口
+[self.layer.delegate displayLayer: ]
+
+#### 异步绘制的实现
+1、假如我们在某一时机调用了[view setNeedsDisplay]这个方法，系统会在当前runloop将要结束的时候调用[CALayer display]方法，然后如果我们这个layer代理实现了displaylayer这个方法
+2、然后切换到子线程去做位图的绘制，主线程可以去做其他的操作
+3、在自吸纳成中创建一个位图的上下文，然后通过CoregraphIC API可以做当前UI控件的一些绘制工作，最后再通过CGBitmapContextCreateImage()函数来生成一直CGImage图片
+4、最后回到主线程来提交这个位图，设置layer的contents 属性，这样就完成了一个UI控件的异步绘制
+具体做法：
+先创建一个CALayer子类，重写display方法，添加displayAsync方法。这样只要外部创建添加了该layer后调用setNeedsDisplay方法，就会运行display方法。
+在displayAsync方法中，我们创建了一个串行队列，添加了一个异步任务来画图片
+
+## 6.17
+### UI相关
+#### 离屏渲染
+当前屏幕渲染：GPU的渲染操作是在用于当前屏幕显示的缓冲区进行的
+离屏渲染：在当前缓冲区外开辟一个新的缓冲区进行渲染（这个是要尽量避免的）
+离屏渲染代价高昂的原因：
+1.开辟新的缓冲区
+2.切换渲染的上下文。因为要从当前屏和离屏之间切换，涉及到上下文切换，这一部分很消耗时间，会消耗大量GPU资源，有可能会导致CPU+GPU处理时间超过1/60秒导致掉帧
+离屏渲染触发条件：
+1.设置layer.cornerRadius和masksToBounds
+2.设置遮罩layer.mask
+3.设置layer.opacity
+4.设置layer.shadow
+5.shouldRasterize（光栅化）
+优化方案：
+使用贝塞尔曲线UIBezierPath和Core Graphics框架画出一个圆角
+UI流畅和优化相关的文章看YY的文章http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/#6
+
+#### UIButton的继承链
+UIButton -> UIControl -> UIView -> UIResponder -> NSObject
+
+### 多线程
+#### 进程和线程
+进程：
+进程是一个程序执行的过程，一个程序至少有一个进程，
+进程是操作系统资源分配的基本单位
+进程是一个独立单位，进程有自己的内存空间，拥有独立运行所需的全部资源
+线程：
+程序执行流的最小单元，线程是进程中的一个实体.
+一个进程要想执行任务,必须至少有一条线程.应用程序启动的时候，系统会默认开启一条线程,也就是主线程
+进程和线程的关系：
+线程是进程的执行单元，进程的所有任务都在线程中执行
+线程是CPU分配资源和调度的最小单位
+一个程序有多个进程，一个进程有多个线程
+同一个进程内的线程共享进程资源
+
+#### 任务和队列
+同步任务sync:
+阻塞当前线程，不具备开启新线程的能力
+异步任务async:
+不阻塞当前线程，具备开启新线程的能力(并不一定开启新线程)。如果不是添加到主队列上，异步会在子线程中执行任务
+
+串行队列(Serial):FIFO，同一时间一个队列的任务只能执行一个，完事了之后才能执行下一个
+并发队列(Concurrent):FIFO同时允许多个任务并发执行。(可以开启多个线程，并且同时执行任务)。并发队列的并发功能只有在异步任务(dispatch_async)函数下才有效
+两者区别：执行顺序不同，以及开启线程数不同。
+
+系统获得队列的方式有三个：
+mainQueue:主线程串行队列
+globalQueue:系统提供的全局并发队列，存在着高、中、低三种优先级
+自定义队列:dispatch_queue_create
+
+
+#### GCD对比NSOprationQueue
+GCD是C语言，NSOprationQueue是GCD的OC封装
+NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(isExecuted)、是否结束(isFinished)、是否取消(isCanceld)
+相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
+
+## 6.17
+### 多线程
+先停一停，有点难
+### 性能优化
+
+#### 图层混合
+当两个不完全透明的视图叠加在一起的时候(当alpha在0和1之间的时候)，GPU会做大量的计算，这种操作越多，那么消耗的性能越大。当alpha为1的时候，GPU会直接把最上层的渲染出来，不用换下面的图层
+
+#### opaque的坑
+opaque在苹果文档里有说明，如果opaque设置为YES，绘图系统会将view看为完全不透明，这样绘图系统就可以优化一些绘制操作以提升性能。如果设置为NO，那么绘图系统结合其它内容来处理view。默认情况下，这个属性是YES。
+这个东西和图层混合的道理差不多，如果为NO（他是透明），那么系统会以为他盖住的layer也要展示，会做很多计算所以可以将opaque设置为YES，同时，设置为clear，美滋滋
+UIView是默认的YES，UIButton是NO
+
+#### 如何对代码进行性能优化
+静态分析Analyze
+还有在Instrument里找对应的需要优化的选项CoreAnimation看离屏渲染，图层混合，Leak看泄露，僵尸对象
+
+#### TableView优化
+正确使用reuseIdentifier来重用cells
+避免过于庞大的XIB
+.....太多了。。
+
+#### UIImage加载图片性能问题
+imageNamed系统会缓存，imageWithContentsOfFile不会，所以小图可以用imageName,如果大图还用会内存长得快
+
+不要在UIImageView使用的时候去缩放图片，你应保证图片的大小和UIImageView的大小相同，在ScrollView搞这个东西非常耗性能，如果一个图片需要缩放，最好在子线程中缩放好了再给他放到UIImageView里
+
+#### 光栅化
+位图：图像没有被栅格化之前任意放大，都不会失帧。而栅格化化之后如果随着放大的倍数在增加，失帧会随着倍数的增加而增加。故：栅格化本身就是生成一个固定像素的图像。
+
+光栅化概念：将图转化为一个个栅格组成的图象（就是位图，又称栅格图或点阵图）。
+shouldRasterize = YES在其他属性触发离屏渲染的同时，会将光栅化后的内容缓存起来，如果对应的layer及其sublayers没有发生改变，在下一帧的时候可以直接复用。shouldRasterize = YES，这将隐式的创建一个位图，各种阴影遮罩等效果也会保存到位图中并缓存起来，从而减少渲染的频度
+比如某个页面卡，可以开启光栅化。让位图缓存复用，如果能成功复用，就会有性能提升。性能的提升取决于多少被复用了。具体的复用在instrument看
+因此栅格化仅适用于较复杂的、静态的效果，别再TableView里用，离屏渲染过多性能消耗会得不偿失，而且有时候使用光栅化经常出现未命中缓存的情况
+
+#### 如何高性能的画一个圆角
+视图和圆角的大小对帧率并没有什么卵影响，数量才是伤害的核心输出
+如果能够只用cornerRadius解决问题，就不用优化。
+如果必须设置masksToBounds，可以参考圆角视图的数量，如果数量较少(一页只有几个)也可以考虑不用优化
+最后可以用贝塞尔曲线画圆角CoreGraphics
+
+#### 启动优化
+
+

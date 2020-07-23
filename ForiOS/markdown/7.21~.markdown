@@ -1,0 +1,58 @@
+[toc]
+##### 编译链接的过程
+1.预处理：把宏替换，删除注释，展开头文件，产生 .i 文件。
+2.编译：把之前的 .i 文件转换成汇编语言，产生 .s文件。
+3.汇编：把汇编语言文件转换为机器码文件，产生 .o 文件。
+4.链接：在一个文件中可能会到其他文件，因此，还需要将编译生成的目标文件和系统提供的文件组合到一起，这个过程就是链接。经过链接，最后生成可执行文件
+
+##### weak属性如何自动置nil的
+请回顾对象的释放过程，dealloc的实现机制
+objc_rootdealooc
+rootdealloc
+objct_dispose
+objc_destructInstance
+    object_cxxDestruct:判断有没有关联Cpp的东西，删除掉
+    _object_remove_assocations:去除和这个对象assocate的对象
+    objc_clear_deallocating
+就是这个objc_clear_deallocing，会去查找sideTables里对应存储的表，并且清除对象
+
+##### 如何手动取消KVO
+实现automaticallyNotifiesObservers方法
+
+##### 方法cache表是如何存储方法的（缓存策略）得好好用笔模拟下
+```
+struct cache_t {
+    struct bucket_t *_buckets;  //bucket_t则是存放着imp和key，用来缓存方法的散列/哈希表
+    mask_t _mask;       //mask是缓存池的最大容量， 这个值=散列表长度 - 1
+    mask_t _occupied;   //occupied是缓存池缓存的方法数量
+    struct bucket_t *buckets();
+    mask_t mask();
+    mask_t occupied();
+    mask_t capacity();  //容量
+    bool canBeFreed();
+    void expand();
+    ........
+}
+struct bucket_t {
+private:
+    cache_key_t _key;
+    IMP _imp;
+}
+```
+这里简要介绍一下散列表。首先散列表本质上就是一个数组
+在往散列表里面添加成员的时候，首先需要借助key计算出一个index，也就是cache_hash函数，然后再将元素插入散列表的index位置
+根据key计算出index值的这个算法称作散列算法，这个算法可以由你自己设计，总之目的就是尽可能减少不同的key得出相同index的情况出现，这种情况被称作哈希碰撞，同时还要保证得出的index值在合理的范围。index越大，意味着对应的散列表的长度越长，这是需要占用实际物理空间的，而我们的内存是有限的。散列表是一种通过牺牲一定空间，来换取时间效率的设计思想。
+我们通过key计算出的index大小是随机的，无顺序的，因此在方法缓存的过程中，插入的顺序也是无顺序的
+而且可以预见的是，散列表里面再实际使用中会有很多位置是空着的，比如散列表长度为16，最终值存储了10个方法，散列表长度为64，最终可能只会存储40个方法，有一部分空间终究是要被浪费的。但是却提高查找的效率。这既是所谓的空间换时间。
+进入正题：
+再介绍一下苹果这里所采用的散列算法，其实很简单，如下
+index = @selector(XXXX) & mask
+根据&运算的特点，可以得知最终index <= mask，而mask = 散列表长度 - 1，也就是说 0 <= index <= 散列表长度 - 1，这实际上覆盖了散列表的索引范围。
+而刚刚我们还提到过一个问题——哈希碰撞，也就是不同的key得到相同的index，这个问题处理就是find方法
+find查找大概就是是把散列表头尾连起来，从index开始，遍历一遍查找，当走过一圈之后，如果没有找到则返回0（bucket->key() == 0），就说明该位置上是空的，没有缓存过方法，是一个unused slot(未使用的槽口)，因此可以进行插入操作bucket->set(key, imp);，也就是将方法缓存到这个位置上
+开辟方法不仅仅是在老缓存池基础上进行扩容，开辟新的buckets，释放老的buckets，因为苹果是通过哈希表进行缓存，并且散列算法是index = @selector(XXXX) & mask，扩容后mask发生了变化，所以里面缓存方法的index也都要发生变化，为了提高缓存效率，创建了新的buckets，老的buckets就会被释放掉，所以当容量达到最大值的3/4时，开始2倍扩容，扩容时会完全抹除旧的buckets，并且创建新的buckets代替，之后把最近一次临界的imp和key缓存进来
+这里面有详细的源码
+https://www.jianshu.com/p/fcf8d17121e3
+
+##### 出自
+https://blog.csdn.net/AAjjx/article/details/106282568

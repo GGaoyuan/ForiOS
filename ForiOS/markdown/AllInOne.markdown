@@ -3,7 +3,7 @@
 ##### 计算机计量单位换算
 1Byte = 8 Bit 
 1KB    = 1,024 Bytes
-1MB   = 1,024 KB
+1MB   = 1,024 KBww
 #### 底层
 ##### IMP、SEL、Method的区别
 SEL是方法编号，也是方法名
@@ -55,8 +55,15 @@ union isa_t {
     Class cls;
     uintptr_t bits;
     struct {
-        uintptr_t extra_rc  : 8;    //有8位，2^7-1
-        ...
+        uintptr_t nonpointer : 1;   //0代表普通指针，1表示优化过的
+        uintptr_t has_assoc : 1;    //是否有关联对象
+        uintptr_t has_cxx_dtor : 1; //是否有c++析构函数
+        uintptr_t shiftcls : 33; // 内存地址信息MACH_VM_MAX_ADDRESS 0x1000000000
+        uintptr_t magic : 6;    //调试
+        uintptr_t weakly_referenced : 1;    //是否有鶸引用指向
+        uintptr_t deallocating : 1; //是否正在释放
+        uintptr_t has_sidetable_rc : 1;     //是否引用计数过大无法存在isa中
+        uintptr_t extra_rc  : 8;    //有8位，2^7-1，引用计数过大这里会有值
     };
     ... //乱七八糟的信息
 }
@@ -82,6 +89,19 @@ struct objc_class : objc_object {
         Class nextSiblingClass;
     };
 }
+struct cache_t {
+    struct bucket_t *_buckets;  //bucket_t则是存放着imp和key
+    mask_t _mask;       //mask是缓存池的最大容量
+    mask_t _occupied;   //occupied是缓存池缓存的方法数量
+    struct bucket_t *buckets();
+    mask_t mask();
+    mask_t occupied();
+    mask_t capacity();  //容量
+    bool canBeFreed();
+    void expand();
+    ........
+}
+
 ```
 ##### 为什么要设计metaclass
 万物皆对象，类对象也能使用消息机制
@@ -160,7 +180,33 @@ https://www.jianshu.com/p/ef6d9bf8fe59
 2.NONPOINTER_ISA--(非指针型的 isa) -> 感觉很像taggedPointer
 3.SideTables
 https://www.jianshu.com/p/c9089494fb6c
-#### KVO
+##### 访问__weak修饰的变量，是否已经被注册在了@autoreleasePool中?为什么?
+会扔到autoreleasepool中，不然创建之后也就会销毁（之前做过assign的demo，生成之后就被释放），为了延长它的生命周期，必须注册到 @autoreleasePool中，以延缓释放。
+##### BAD_ACCESS在什么情况下出现
+就是野指针呗，访问一个已经被销毁的内存空间就会出现，调试方法用僵尸对象
+
+#### 其他
+##### 苹果如何实现远程推送的
+1.应用服务提供商从服务器端把要发送的消息和设备令牌(Token啊，令牌啥的用户信息)发送给苹果的消息推送服务器 。
+2.根据设备令牌在已注册的设备(iPhone、iPad、iTouch、mac 等)查找对应的设备，将消息发送给相 应的设备。 
+3.客户端设备接将接收到的消息传递给相应的应用程序，应用程序根据用户设置弹出通知消息。
+##### atomic是线程安全的吗
+不是
+首先atomic只是在get/set方法上加了@synchronized(self)
+苹果开发文档已经明确指出：Atomic不能保证对象多线程的安全。它只是能保证你访问的时候给你返回一个完好无损的Value而已，线程安全需要开发者自己来保证。举个例子：
+假设有一个 atomic 的属性 "name"，如果线程 A 调[self setName:@"A"]，线程 B 调[self setName:@"B"]，线程 C 调[self name]，那么所有这些不同线程上的操作都将依次顺序执行——也就是说，如果一个线程正在执行 getter/setter，其他线程就得等待。因此，属性 name 是读/写安全的。
+但是，如果有另一个线程 D 同时在调[name release]，那可能就会crash，因为 release 不受 getter/setter 操作的限制。也就是说，这个属性只能说是读/写安全的，但并不是线程安全的，因为别的线程还能进行读写之外的其他操作。线程安全需要开发者自己来保证
+另外，UI的atomic更没必要写，毕竟UI都是在主线程里
+https://blog.csdn.net/u012903898/article/details/82984959
+
+#### Category
+##### Category能添加成员变量吗?
+不能。只能通过关联对象(objc_setAssociatedObject)来模拟实现成员变量，但其实质是关联内容，所有对象的关联内容都放在同一个全局容器哈希表中:AssociationsHashMap,由 AssociationsManager统一管理。
+##### 如果工程里有两个CategoryA和B，两个Category中有一个同名的方法，哪个方法最终生效?
+取决于谁在后面被编译，最后编译的生效，她会覆盖之前的方法。这个覆盖并不是真正的覆盖，之前编译的方法都在只是访问不到。因为category动态编译的方法是倒叙遍历，所以最后编译的方法在最上层能被调用到
+
+
+#### KVO，KVC
 ##### 如何手动调用KVO
 手动调用willChangeValueForKey和didChangeValueForKey方法
 被观察的属性会被重写，举个栗子：
@@ -172,6 +218,342 @@ https://www.jianshu.com/p/c9089494fb6c
 }
 ```
 只调用didChangeValueForKey方法不可以触发KVO方法，因为willChangeValueForKey记录旧的值，如果不记录旧的值，那就没有改变一说了
+
+##### KVC的的取值过程，原理是什么
+EOC中有写
+假如是改name值：[setValue:@"111" forKey:@"name"]
+1.首先调用setName方法（就是setter)
+2.如果没有找到setName方法，就去调用+(BOOL)accessInstanceVariablesDirectly，这个方法默认是返回YES。然后接着去找类似的变量_name，_isName，name，isName这样的顺序 
+但是如果重写让他返回NO，就直接setValue:forUndefinedKey然后崩溃（一般没人这个做）
+找的过程中就不管是公有方法还是私有方法了，所以会出现KVC被拒的情况。。。。因为用了苹果私有API
+3.如果前面都没找到，就掉setValue:forUndefinedKey抛异常
+
+##### valueForKey:@"name"的底层机制
+和set类似，找getName，如果没有的话就按照_name，_isName，name，isName这样的顺序继续找，找不到就抛出异常
+还会调用一些countOfName,enumaratorOfName之类的方法，记不清了
+
+##### objectForKey和valueForKey区别
+objectForKey文档上说The value associated with aKey, or nil if no value is associated with aKey
+valueForKey文档上说The value for the property identified by key
+也就是说
+(id)valueForKey:(NSString *)key是KVC（key-value coding）的，如果没有找到对应的key会调用-(id)valueForUndefinedKey:(NSString )key从而抛出NSUndefinedKeyException异常，而objectForKey一般会返回一个nil
+所以在使用NSDictionary取值时，尽量使用objectForKey
+
+##### 通过直接赋值成员变量会触发KVO吗，KVC会触发KVO吗
+不会。
+因为kvo是通过isa-swizzling来实现的，被观察对象被runtimeNew一个出来，然后通过swizzling在seter方法上加上一个通知实现的
+即使是用setter方法，也会触发KVO（看代码）
+使用KVC也会，KVC也会调用setter方法
+```
+- (void)setName:(NSString *)name {
+    _NSSetObjectValueAndNotify();
+}
+void _NSSetObjectValueAndNotify() {
+    [self willChangeValue:"xxx"];
+    [super setValue:value];
+    [self didChangeValue:"xxx"];    //在这个didChange里面发送的通知
+}
+```
+通过代码可以知道，其实要手动触发的话也得用willChangeValueForKey和didChangeValueForKey方法才行
+
+#### UI相关
+##### 图像显示原理
+- CPU提交位图
+    1.Layout: UI 布局，文本计算 
+    2.Display: 绘制
+    3.Prepare: 图片解码 
+    4.Commit:提交位图
+- GPU图层渲染，纹理合成，把结果放到帧缓冲区(frame buffer)中
+- 再由视频控制器根据 vsync 信号在指定时间之前去提取帧缓冲区的屏幕显示内容
+- 显示到屏幕上
+
+iOS设备的硬件时钟会发出Vsync(垂直同步信号)
+然后App的CPU会去计算屏幕要显示的内容，
+之后将计算好的内容提交到GPU去渲染。
+随后GPU将渲染结果提交到帧缓冲区，等到下一个VSync到来时将缓冲区的帧显示到屏幕上。
+也就是说，一帧的显示是由CPU和GPU共同决定的。
+YY的博客里有说过这个东西
+
+##### UI卡顿掉帧原因
+一帧的显示是由CPU和GPU共同决定的。页面滑动流畅是60fps，也就是1s有60帧更新，如果CPU和GPU共同处理的时间超过了1/60秒，就会感受到卡顿
+
+##### 滑动优化方案
+CPU：
+可以吧这些东西放到子线程中：
+1.耗时对象的创建与销毁，耗时操作都放在子线程
+2.对一些计算，排版进行预处理（tableView的缓存高度）
+3.预渲染，异步绘制（文本的异步绘制，图片的异步解码，CoreGraphic是线程安全，CALayer和UIView不是）
+4.用轻量级的控件，比如CALayer替换UIView
+
+GPU:
+是否受到CPU或者GPU的限制? 
+是否有不必要的CPU渲染? 
+是否有太多的离屏渲染操作? 
+是否有太多的图层混合操作? 
+是否有奇怪的图片格式或者尺寸? 
+是否涉及到昂贵的view或者效果? 
+view的层次结构是否合理?
+文本渲染：屏幕上能看到的所有文本内容控件，包括UIWebView，在底层都是通过CoreText排版、绘制为位图显示的。常见的文本控件，其排版与绘制都是在主线程进行的，显示大量文本是，CPU压力很大。对此解决方案唯一就是自定义文本控件，用CoreText对文本异步绘制。（很麻烦，开发成本高）
+当用UIImage或CGImageSource创建图片时，图片数据并不会立刻解码。图片设置到UIImageView或CALayer.contents中去，并且CALayer被提交到GPU前，CGImage中的数据才会得到解码。这一步是发生在主线程的，并且不可避免。SD_WebImage处理方式：在后台线程先把图片绘制到CGBitmapContext中，然后从Bitmap直接创建图片。
+图像绘制：图像的绘制通常是指用那些以CG开头的方法把图像绘制到画布中，然后从画布创建图片并显示的一个过程。CoreGraphics方法是线程安全的，可以异步绘制，主线程回调。
+##### iOS从磁盘加载一张图片，使用UIImageVIew显示在屏幕上，需要经过步骤
+1.从磁盘拷贝数据到内核缓冲区
+2.从内核缓冲区复制数据到用户空间
+3.生成UIImageView，把图像数据赋值给UIImageView
+如果图像数据为未解码的PNG/JPG，解码为位图数据
+4.CATransaction捕获到UIImageView layer树的变化
+5.主线程Runloop提交CATransaction，开始进行图像渲染
+6.1 如果数据没有字节对齐，Core Animation会再拷贝一份数据，进行字节对齐。
+6.2 GPU处理位图数据，进行渲染。
+##### UI绘制原理
+1.当我们调用[UIView setNeedsDisplay]这个方法时，其实并没有立即进行绘制工作，系统会立即调用CALayer的同名方法，并且在当前layer上打上一个标记，然后会在当前runloop将要结束(beforewaiting)的时候调用[CALayer display]这个方法，然后进入视图的真正绘制过程
+2.在[CALayer display]这个方法的内部实现中会判断这个layer的delegate是否响应displaylayer这个方法，如果不响应这个方法，就回到系统绘制流程中，如果响应这个方法，那么就会为我们提供异步绘制的入口
+[self.layer.delegate displayLayer: ]
+##### 异步绘制的实现
+1、假如我们在某一时机调用了[view setNeedsDisplay]这个方法，系统会在当前runloop将要结束的时候调用[CALayer display]方法，然后如果我们这个layer代理实现了displaylayer这个方法
+2、然后切换到子线程去做位图的绘制，主线程可以去做其他的操作
+3、在自吸纳成中创建一个位图的上下文，然后通过CoregraphIC API可以做当前UI控件的一些绘制工作，最后再通过CGBitmapContextCreateImage()函数来生成一直CGImage图片
+4、最后回到主线程来提交这个位图，设置layer的contents 属性，这样就完成了一个UI控件的异步绘制
+具体做法：
+先创建一个CALayer子类，重写display方法，添加displayAsync方法。这样只要外部创建添加了该layer后调用setNeedsDisplay方法，就会运行display方法。
+在displayAsync方法中，我们创建了一个串行队列，添加了一个异步任务来画图片
+##### 离屏渲染
+当前屏幕渲染：GPU的渲染操作是在用于当前屏幕显示的缓冲区进行的
+离屏渲染：在当前缓冲区外开辟一个新的缓冲区进行渲染（这个是要尽量避免的）
+离屏渲染代价高昂的原因：
+1.开辟新的缓冲区
+2.切换渲染的上下文。因为要从当前屏和离屏之间切换，涉及到上下文切换，这一部分很消耗时间，会消耗大量GPU资源，有可能会导致CPU+GPU处理时间超过1/60秒导致掉帧
+离屏渲染触发条件：
+1.设置layer.cornerRadius和masksToBounds
+2.设置遮罩layer.mask
+3.设置layer.opacity
+4.设置layer.shadow
+5.shouldRasterize（光栅化）
+优化方案：
+使用贝塞尔曲线UIBezierPath和Core Graphics框架画出一个圆角
+UI流畅和优化相关的文章看YY的文章http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/#6
+##### UIButton的继承链
+UIButton -> UIControl -> UIView -> UIResponder -> NSObject
+
+##### 图层混合
+当两个不完全透明的视图叠加在一起的时候(当alpha在0和1之间的时候)，GPU会做大量的计算，这种操作越多，那么消耗的性能越大。当alpha为1的时候，GPU会直接把最上层的渲染出来，不用换下面的图层
+
+##### opaque的坑（opaque不透明）
+opaque在苹果文档里有说明，如果opaque设置为YES，绘图系统会将view看为完全不透明，这样绘图系统就可以优化一些绘制操作以提升性能。如果设置为NO，那么绘图系统结合其它内容来处理view。默认情况下，这个属性是YES。
+这个东西和图层混合的道理差不多，如果为NO（他是透明），那么系统会以为他盖住的layer也要展示，会做很多计算所以可以将opaque设置为YES
+UIView是默认的YES，UIButton是NO
+
+##### 如何对代码进行性能优化
+静态分析Analyze
+debug->View Debuging里可以看离屏渲染，图层混合等等
+还有在Instrument里找对应的需要优化的选项CoreAnimation里看CPU/GPU的使用率，帧数等等，Leak看泄露，僵尸对象
+
+##### TableView优化
+正确使用reuseIdentifier来重用cells
+避免过于庞大的XIB
+.....太多了。。
+
+##### UIImage加载图片性能问题
+imageNamed系统会缓存，imageWithContentsOfFile不会，所以小图可以用imageName,如果大图还用会内存长得快
+
+不要在UIImageView使用的时候去缩放图片，你应保证图片的大小和UIImageView的大小相同，在ScrollView搞这个东西非常耗性能，如果一个图片需要缩放，最好在子线程中缩放好了再给他放到UIImageView里（绘本优化的时候遇到过）
+
+##### 光栅化
+位图：图像没有被栅格化之前任意放大，都不会失帧。而栅格化化之后如果随着放大的倍数在增加，失帧会随着倍数的增加而增加。故：栅格化本身就是生成一个固定像素的图像。
+
+光栅化概念：将图转化为一个个栅格组成的图象（就是位图，又称栅格图或点阵图）。
+shouldRasterize = YES在其他属性触发离屏渲染的同时，会将光栅化后的内容缓存起来，如果对应的layer及其sublayers没有发生改变，在下一帧的时候可以直接复用。shouldRasterize = YES，这将隐式的创建一个位图，各种阴影遮罩等效果也会保存到位图中并缓存起来，从而减少渲染的频度
+比如某个页面卡，可以开启光栅化。让位图缓存复用，如果能成功复用，就会有性能提升。性能的提升取决于多少被复用了。具体的复用在xcode的debug->viewDebuging里instrument看“Color Hits Green and Misses Red”
+因此栅格化仅适用于较复杂的、静态的效果，别再TableView里用，离屏渲染过多性能消耗会得不偿失，而且有时候使用光栅化经常出现未命中缓存的情况
+
+##### 如何高性能的画一个圆角
+视图和圆角的大小对帧率并没有什么卵影响，数量才是伤害的核心输出
+如果能够只用cornerRadius解决问题，就不用优化。
+如果必须设置masksToBounds，可以参考圆角视图的数量，如果数量较少(一页只有几个)也可以考虑不用优化
+最后可以用贝塞尔曲线画圆角CoreGraphics
+
+
+#### 多线程
+##### 进程和线程
+进程：
+进程是一个程序执行的过程，一个程序至少有一个进程，
+进程是操作系统资源分配的基本单位
+进程是一个独立单位，进程有自己的内存空间，拥有独立运行所需的全部资源
+线程：
+程序执行流的最小单元，线程是进程中的一个实体.
+一个进程要想执行任务,必须至少有一条线程.应用程序启动的时候，系统会默认开启一条线程,也就是主线程
+进程和线程的关系：
+线程是进程的执行单元，进程的所有任务都在线程中执行
+线程是CPU分配资源和调度的最小单位
+一个程序有多个进程，一个进程有多个线程
+同一个进程内的线程共享进程资源
+
+##### 任务和队列
+同步任务sync:
+阻塞当前线程，不具备开启新线程的能力
+异步任务async:
+不阻塞当前线程，具备开启新线程的能力(并不一定开启新线程)。如果不是添加到主队列上，异步会在子线程中执行任务
+
+串行队列(Serial):FIFO，同一时间一个队列的任务只能执行一个，完事了之后才能执行下一个
+并发队列(Concurrent):FIFO同时允许多个任务并发执行。(可以开启多个线程，并且同时执行任务)。并发队列的并发功能只有在异步任务(dispatch_async)函数下才有效
+两者区别：执行顺序不同，以及开启线程数不同。
+
+系统获得队列的方式有三个：
+mainQueue:主线程串行队列
+globalQueue:系统提供的全局并发队列，存在着高、中、低三种优先级
+自定义队列:dispatch_queue_create
+
+
+##### GCD对比NSOprationQueue
+GCD是C语言，NSOprationQueue是GCD的OC封装
+NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(isExecuted)、是否结束(isFinished)、是否取消(isCanceld)
+相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
+
+##### 自旋锁与互斥锁（mutex）的区别
+自旋锁和互斥锁的区别在于
+1:自旋锁时候忙等，就是说上一个线程被锁后，当前线程不会休眠，而是不停的去检查锁是否可用，当上一个线程完事后当前线程立即执行
+2:互斥锁是上一个线程被锁住后当前线程休眠，此时CPU会去执行其他任务。当上一个线程完成后，当前线程再被唤醒执行
+优缺点：
+自旋锁不会引起休眠，所以没有线程调度所以速度快，但是因为当前线程会不停检查是否解锁所以会占用CPU资源，所以自旋锁适合于那种很短时间的操作（sideTable,atomic），而不适合那种时间较长的锁。互斥锁正好反着
+自旋锁：gcd信号量（semp）
+互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
+
+#### runloop
+##### 循环的细节
+![](/images/runloop_001.png)
+```
+{
+    /// 1. 通知Observers，即将进入RunLoop
+    /// 此处有Observer会创建AutoreleasePool: _objc_autoreleasePoolPush();
+    __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopEntry);
+    do {
+
+        /// 2. 通知 Observers: 即将触发 Timer 回调。
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeTimers);
+        /// 3. 通知 Observers: 即将触发 Source (非基于port的,Source0) 回调。
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeSources);
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);
+
+        /// 4. 触发 Source0 (非基于port的) 回调。
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(source0);
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);
+
+        /// 6. 通知Observers，即将进入休眠
+        /// 此处有Observer释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeWaiting);
+
+        /// 7. sleep to wait msg.
+        mach_msg() -> mach_msg_trap();
+
+
+        /// 8. 通知Observers，线程被唤醒
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopAfterWaiting);
+
+        /// 9. 如果是被Timer唤醒的，回调Timer
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__(timer);
+
+        /// 9. 如果是被dispatch唤醒的，执行所有调用 dispatch_async 等方法放入main queue 的 block
+        __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__(dispatched_block);
+
+        /// 9. 如果如果Runloop是被 Source1 (基于port的) 的事件唤醒了，处理这个事件
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__(source1);
+
+
+    } while (...);
+
+    /// 10. 通知Observers，即将退出RunLoop
+    /// 此处有Observer释放AutoreleasePool: _objc_autoreleasePoolPop();
+    __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);
+}
+
+
+int32_t __CFRunLoopRun()
+{
+    //通知即将进入runloop
+    __CFRunLoopDoObservers(KCFRunLoopEntry);
+     
+    do
+    {
+        // 通知将要处理timer和source
+        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);         
+        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+         
+        __CFRunLoopDoBlocks();  //处理非延迟的主线程调用
+        __CFRunLoopDoSource0(); //处理UIEvent事件
+         
+        //GCD dispatch main queue
+        CheckIfExistMessagesInMainDispatchQueue();
+         
+        // 即将进入休眠
+        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+         
+        // 等待内核mach_msg事件
+        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+         
+        // Zzz...
+         
+        // 从等待中醒来
+        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+         
+        // 处理因timer的唤醒
+        if (wakeUpPort == timerPort)
+            __CFRunLoopDoTimers();
+         
+        // 处理异步方法唤醒,如dispatch_async
+        else if (wakeUpPort == mainDispatchQueuePort)
+            __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+             
+        // UI刷新,动画显示
+        else
+            __CFRunLoopDoSource1();
+         
+        // 再次确保是否有同步的方法需要调用
+        __CFRunLoopDoBlocks();
+         
+    } while (!stop && !timeout);
+     
+    //通知即将退出runloop
+    __CFRunLoopDoObservers(CFRunLoopExit);
+}
+```
+
+##### 线程保活的时候，用RunloopMode的时候能用CommonMode吗
+不可以
+我记得源码里有写，如果是commonMode会return掉，只能用default（7月18/19逻辑教育讲MachPort有源码，里面有说这个)
+
+##### AutoReleasePool什么时候释放?
+entry监听回调里会有_objc_autoreleasePoolPush() 创建自动释放池，且优先级最高，保证创建释放池发生在其他所有回调之前。
+BeforeWaiting(准备进入休眠)时调用_objc_autoreleasePoolPop()和_objc_autoreleasePoolPush()释放旧的池并创建新池
+Exit(即将退出Loop)时调用_objc_autoreleasePoolPop()来释放自动释放池。这个Observer优先级最低，保证其释放池子发生在其他所有回调之后
+孙源的Runloop分享里说过，在当前runloop结束之后和下一次runloop结束之前调用drain方法
+##### 解释下事件响应过程
+硬件的监听器发现有硬件的事件发生后（触摸，摇晃，锁屏等等），由IOKit生成一个IOEvent事件然后由MachPort转发给对应的App进程，然后source1会接受这个事件，调用ApplicationHandleEventQueue进行内部分发，然后将IOEvent包装成UIEvent进行处理分发，比如UIButton的点击，touchBegin等等
+##### 解释一下手势识别的过程
+当App收到ApplicationHandleEventQueue分发的IOEvent之后，会先canle掉当前的touchesBegin/Move/End的回调，并将对应的UIGestureRecognizer标记为待处理。
+当runloop为将要进入休眠的时候（Beforewaiting），会获取到所有的UIGestureRecognizer，然后执行所有的手势识别
+##### 解释一下页面的渲染的过程
+渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting的时候），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。
+layer会调用[CALyer display]，进入到真正的绘制过程。接下来就是通过判断看是否是异步绘制代理方法func display(_ layer: CALayer)，如果有异步绘制的代理方法，则走异步绘制func display(_ layer: CALayer)方法
+如果没有的话走系统绘制方法。
+系统绘制：
+layer会创建backingStore获取上下文CGContextRef,
+接下来判断是否有layer.delegate代理
+如果有：
+调用layer.delegate drawLayer:inContext:，
+接着返回UIVew drawRect回调，让我们在系统绘制的基础上，再做一些其他的事情
+如果没有：CALayer drawInContext
+走完后，CALayer上传backingStore给GPU，结束
+异步绘制：
+直接走func display(_ layer: CALayer)方法，里面dispatchAsyncGlobal，然后再dispatch到Main的过程中吧异步生成的东西赋值给layer.contents，结束
+
+##### 什么是异步绘制
+layer会创建backingStore获取上下文CGContextRef,
+接下来判断是否有代理
+如果有：
+调用layer.delegate drawLayer:inContext:，
+接着返回UIVew drawRect回调，让我们在系统绘制的基础上，再做一些其他的事情
+如果没有：CALayer drawInContext
+走完后，CALayer上传backingStore给GPU，结束
 
 #### 算法
 ##### 判断单向链表是否有环
