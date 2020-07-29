@@ -16,7 +16,7 @@
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
-
+@property (nonatomic, copy) NSMutableArray *aaa;
 @end
 
 @implementation ViewController
@@ -57,7 +57,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSInteger a = 10;
+    NSInteger b = 20;
     
+    self.aaa = [NSMutableArray array];
+    [self.aaa addObject:[NSObject new]];
+    
+    NSLog(@"%d,   %d", a, b);
+    a = a + b;
+    b = a - b;
+    a = a - b;
+    NSLog(@"%d,   %d", a, b);
+    return;
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationCode) name:@"noti" object:nil];
     [[NSNotificationCenter defaultCenter] addObserverForName:@"noti" object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         /**处理通知代码**/
