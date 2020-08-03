@@ -134,3 +134,13 @@ Transfer-Encoding:
 ##### Cookie和Session
 ...
 无状态是指协议对于事务处理没有记忆能力，协议的状态是指下一次传输可以“记住”这次传输信息的能力。
+
+
+
+
+
+
+
+
+OOM
+http://www.cocoachina.com/articles/485753
