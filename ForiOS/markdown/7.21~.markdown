@@ -261,6 +261,7 @@ https://halfrost.com/objc_runtime_isa_class/
 
 
 
-
+##### App的启动过程
+https://www.cnblogs.com/lxlx1798/p/9256649.html
 
 
