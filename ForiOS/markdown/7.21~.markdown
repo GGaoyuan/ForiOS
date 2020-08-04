@@ -242,3 +242,25 @@ client发送了第一个连接的请求报文，但是由于网络不好，这�
 ##### Cookie和Session
 ...
 无状态是指协议对于事务处理没有记忆能力，协议的状态是指下一次传输可以“记住”这次传输信息的能力。
+
+
+
+
+##### Runtime的内存优化
+1.类数据结构变化
+当类被Runtime加载之后，类的结构会发生一些变化，
+CleanMemory加载后不会发生更改的内存块，class_ro_t属于Clean Memory，因为它是只读的
+DirtyMemory运行时会进行更改的内存块，类一旦被加载，就会变成Dirty Memory，例如，我们可以在 Runtime 给类动态的添加方法
+在介绍优化方法之前，我们先来看一下，在类加载之后类的结构变化：
+在类加载到Runtime中后会被分配用于读取/写入数据的结构体class_rw_t
+Tips：class_ro_t是只读的，存放的是编译期间就确定的字段信息；而class_rw_t是在 runtime 时才创建的，它会先将class_ro_t的内容拷贝一份，再将类的分类的属性、方法、协议等信息添加进去，之所以要这么设计是因为 Objective-C 是动态语言，你可以在运行时更改它们方法，属性等，并且分类可以在不改变类设计的前提下，将新方法添加到类中
+优化可以吧rw里很多不会改变的方法放在一个新建的rw_ext里，rw_ext再指向ro，让一部分DirtyMemory变成CleanMemory
+
+
+https://halfrost.com/objc_runtime_isa_class/
+
+
+
+
+
+
