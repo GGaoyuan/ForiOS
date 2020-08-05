@@ -263,5 +263,22 @@ https://halfrost.com/objc_runtime_isa_class/
 
 ##### App的启动过程
 https://www.cnblogs.com/lxlx1798/p/9256649.html
+1.准备启动，系统调用exec()函数，根据exec函数指定的文件名找到可执行文件，就是在调用进程内部执行一个可执行文件。这里的可执行文件既可以是二进制文件，也可以是任何Unix下可执行的脚本文件
 
+2.完成了初始化准备工作后，启动dyld。dyld作用：
+    1.从kernel留下的原始调用栈引导和启动自己(调用dyldbootstrap::start()方法)
+    2.动态链接库和可执行文件递归载入到内存中（imageLoader）,链接可执行文件
+    3.找到main函数，准备参数并调用(返回了main函数地址，填入参数并调用main函数)
+![](/images/dyld_01.jpg)
+看到了栈底的dyldbootstrap::start()方法，继而调用了dyld::_main()方法，其中完成了刚才说的递归加载动态库过程，由于libSystem默认引入，栈中出现了libSystem_initializer的初始化方法。
+当libSystem_initializer逐步调用到了_objc_init，这里就是objc和runtime的初始化入口。除了runtime环境的初始化外，_objc_init中绑定了新image被加载后的callback
+![](/images/dyld_02.jpg)
+可见dyld担当了runtime和ImageLoader中间的协调者，当新image加载进来后交由runtime大厨去解析这个二进制文件的符号表和代码。继续上面的断点法，断住神秘的+load函数
+1.dyld开始将程序二进制文件初始化
+2.交由ImageLoader读取image，其中包含了我们的类、方法等各种符号
+3.由于runtime向dyld绑定了回调，当image加载到内存后，dyld会通知runtime进行处理
+4.runtime接手后调用map_images做解析和处理，接下来load_images中调用call_load_methods方法，遍历所有加载进来的Class，按继承层级依次调用Class的load方法和其Category的load方法
+至此，可执行文件中和动态库所有的符号（Class，Protocol，Selector，IMP，…）都已经按格式成功加载到内存中，被runtime所管理，再这之后，runtime的那些方法（动态添加Class、方法混合等等才能生效）
 
+##### 重载load时需要手动添加@autoreleasepool么
+不需要，在runtime调用load方法前后是加了objc_autoreleasePoolPush()和objc_autoreleasePoolPop()的。
