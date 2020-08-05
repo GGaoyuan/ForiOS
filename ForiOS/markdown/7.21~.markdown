@@ -284,5 +284,27 @@ https://www.cnblogs.com/lxlx1798/p/9256649.html
 不需要，在runtime调用load方法前后是加了objc_autoreleasePoolPush()和objc_autoreleasePoolPop()的。
 
 
+##### SD里在查询磁盘的时候为什么会有一个ioQueue(SD怎么保证查找安全)
+一个async(ioQueue)实现，一个传销队列，保证当前只有一个任务操作磁盘
+
+##### SD查找Disk为什么要autoreleasepool
+因为查询磁盘差的是NSData，得到一个UIImage，转换的时候会出现大量的临时变量
+
+##### SD如何判断是JPEG，PNG，或者其他格式的？
+通过二进制码，在磁盘缓存的时候拿到的是NSData，然后通过前缀0xFF,0x89等待，判断图片的格式
+
+##### 如何设计一个缓存
+
+##### SD是怎么做到URL不变，但是图片变化，让图片也变化的？
+在完成了拿图片之后，有一个RefreshCache的枚举，里面有提到CacheControl。这个东西可以在ResponseHeader里看到（青花瓷抓包）
+cache-control: max-age=31536000
+last-modified: Tue, 26 Mar 2019 14:16:09 GMT
+这俩就是这个问题的关键
+如果last-modified在事件内，是不会请求的，直接用缓存，主要就是设置“If-Modified-Since”
+这个字段得要后台支持，因为在Response的Header里
+
+##### SD为什么要重写NSOperation
+重写start方法要设置一些ResponseCache里的一些东西，是否要保存responseCache
+
 三方库源码解读
 https://github.com/huang303513/SourceCodeResearchAndExploration.git
