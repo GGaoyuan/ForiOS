@@ -58,6 +58,7 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
         validOperationKey = NSStringFromClass([self class]);
     }
     self.sd_latestOperationKey = validOperationKey;
+    //如果当前有operation正在运行，就取消掉，运行现在的
     [self sd_cancelImageLoadOperationWithKey:validOperationKey];
     self.sd_imageURL = url;
     
@@ -107,6 +108,7 @@ const int64_t SDWebImageProgressUnitCountUnknown = 1LL;
             }
         };
         @weakify(self);
+        //这里开始下载image
         id <SDWebImageOperation> operation = [manager loadImageWithURL:url options:options context:context progress:combinedProgressBlock completed:^(UIImage *image, NSData *data, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             @strongify(self);
             if (!self) { return; }

@@ -11,6 +11,11 @@
 #import "UIView+WebCacheOperation.h"
 #import "UIView+WebCache.h"
 
+
+/**
+流程:
+    UIImageView(WebCache) -> UIView(WebCache) -> SDWebImageManager -> SDImageCache -> SDWebImageDownloader
+ */
 @implementation UIImageView (WebCache)
 
 - (void)sd_setImageWithURL:(nullable NSURL *)url {

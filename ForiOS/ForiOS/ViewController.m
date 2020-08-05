@@ -13,6 +13,7 @@
 #import "UIImageView+WebCache.h"
 #import "KVOObject.h"
 #import "ViewController+AAA.h"
+#import "UIImageView+WebCache.h"
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -57,6 +58,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIImageView *imageView = [[UIImageView alloc] init];
+    imageView.frame = CGRectMake(100, 100, 100, 100);
+    imageView.backgroundColor = [UIColor yellowColor];
+    [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://service.ivydad.com/book/a193b33e-c704-9a5f-49a4-4126a5330daa/f204d16d6477a64b1e6abe461843791d.jpeg"]];
+    [self.view addSubview:imageView];
+//    [imageView sd_setImageWithURL:[NSURL URLWithString:@"http://service.ivydad.com/book/a193b33e-c704-9a5f-49a4-4126a5330daa/f204d16d6477a64b1e6abe461843791d.jpeg"] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//        NSLog(@"");
+//    }];
+    
+    return;
+    
+    
     NSInteger a = 10;
     NSInteger b = 20;
     
