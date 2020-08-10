@@ -14,6 +14,8 @@
 #import "KVOObject.h"
 #import "ViewController+AAA.h"
 #import "UIImageView+WebCache.h"
+#import "TestString.h"
+
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -58,6 +60,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+//    NSString *a1 = nil
+    @autoreleasepool {
+        NewDictionary *a1 = [NewDictionary new];
+    }
+    NSString *b1 = @"2";
+    
+    NSLog(@"");
+    return;
+    
     
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.frame = CGRectMake(100, 100, 100, 100);
