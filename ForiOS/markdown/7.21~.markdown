@@ -308,5 +308,9 @@ last-modified: Tue, 26 Mar 2019 14:16:09 GMT
 
 ##### NSString的内存问题
 
+##### DNS解析安全问题
+
+##### 如何解决DNS劫持
+
 三方库源码解读
 https://github.com/huang303513/SourceCodeResearchAndExploration.git
