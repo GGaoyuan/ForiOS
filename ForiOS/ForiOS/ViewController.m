@@ -60,6 +60,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self testSemaphore];
+    
+    return;
 //    NSString *a1 = nil
     @autoreleasepool {
         NewDictionary *a1 = [NewDictionary new];
@@ -118,19 +121,21 @@
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        NSLog(@"1");
 //    });
-    
-    dispatch_queue_t queueA = dispatch_queue_create("queueA", NULL);
-    dispatch_queue_t queueB = dispatch_queue_create("queueB", NULL);
-    NSLog(@"A======%@， B=====%@",queueA, queueB);
-    dispatch_sync(queueA, ^{
-        NSLog(@"A-------%@", dispatch_get_current_queue());
-        dispatch_sync(queueB, ^{
-            NSLog(@"B-------%@", dispatch_get_current_queue());
-            //do something
-        });
-    });
-    return;
-    
+}
+
+- (void)testSemaphore {
+//    dispatch_queue_t queueA = dispatch_queue_create("queueA", NULL);
+//    dispatch_queue_t queueB = dispatch_queue_create("queueB", NULL);
+//    NSLog(@"A======%@， B=====%@",queueA, queueB);
+//    dispatch_sync(queueA, ^{
+//        NSLog(@"A-------%@", dispatch_get_current_queue());
+//        dispatch_sync(queueB, ^{
+//            NSLog(@"B-------%@", dispatch_get_current_queue());
+//            //do something
+//        });
+//    });
+//    return;
+//
     __block NSInteger tickets = 50;
     // queue1 代表北京火车票售卖窗口
     dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
@@ -141,15 +146,19 @@
     
     dispatch_async(beijing, ^{
         while (1) {
-            dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
+//            long value1 = dispatch_semaphore_wait(sm, dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC));
+            long value1 = dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
+            NSLog(@"%ld", value1);
             if (tickets > 0) {  //如果还有票，继续售卖
                 tickets--;
                 NSLog(@"北京卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
                 [NSThread sleepForTimeInterval:0.2];
-                dispatch_semaphore_signal(sm);
+                long value2 = dispatch_semaphore_signal(sm);
+                NSLog(@"%ld", value2);
             } else { //如果已卖完，关闭售票窗口
                 NSLog(@"北京卖，所有火车票均已售完");
-                dispatch_semaphore_signal(sm);
+                long value2 = dispatch_semaphore_signal(sm);
+                NSLog(@"%ld", value2);
                 break;
             }
         }
