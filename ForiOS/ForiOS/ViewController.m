@@ -15,7 +15,7 @@
 #import "ViewController+AAA.h"
 #import "UIImageView+WebCache.h"
 #import "TestString.h"
-
+#import "AlgStart.h"
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -60,6 +60,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [AlgStart start];
+    
+    return;
     [self testSemaphore];
     
     return;

@@ -35,6 +35,8 @@
 		30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5842472928100F9CD69 /* HPMouse.swift */; };
 		30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5862472929100F9CD69 /* LogitechMouse.swift */; };
 		30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D7B5882472937600F9CD69 /* MouseFactory.swift */; };
+		30EEC5D424E3E04F00873596 /* AlgStart.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EEC5D324E3E04F00873596 /* AlgStart.m */; };
+		30EEC5D724E3E10B00873596 /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EEC5D624E3E10B00873596 /* TreeNode.m */; };
 		B81F5D86F206BA0C2BFD4892 /* libPods-ForiOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC879102B91C02D5B1BE845 /* libPods-ForiOS.a */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +103,10 @@
 		30D7B5842472928100F9CD69 /* HPMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPMouse.swift; sourceTree = "<group>"; };
 		30D7B5862472929100F9CD69 /* LogitechMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechMouse.swift; sourceTree = "<group>"; };
 		30D7B5882472937600F9CD69 /* MouseFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseFactory.swift; sourceTree = "<group>"; };
+		30EEC5D224E3E04F00873596 /* AlgStart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlgStart.h; sourceTree = "<group>"; };
+		30EEC5D324E3E04F00873596 /* AlgStart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlgStart.m; sourceTree = "<group>"; };
+		30EEC5D524E3E10B00873596 /* TreeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
+		30EEC5D624E3E10B00873596 /* TreeNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TreeNode.m; sourceTree = "<group>"; };
 		4DC879102B91C02D5B1BE845 /* libPods-ForiOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ForiOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B592F567E1D8B5D1E97E1A /* Pods-ForiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForiOS.debug.xcconfig"; path = "Target Support Files/Pods-ForiOS/Pods-ForiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		D9D2F329F101A1411EAD32B9 /* Pods-ForiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ForiOS.release.xcconfig"; path = "Target Support Files/Pods-ForiOS/Pods-ForiOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -269,6 +275,10 @@
 		30EEC5D124E3DF7F00873596 /* Alg */ = {
 			isa = PBXGroup;
 			children = (
+				30EEC5D224E3E04F00873596 /* AlgStart.h */,
+				30EEC5D324E3E04F00873596 /* AlgStart.m */,
+				30EEC5D524E3E10B00873596 /* TreeNode.h */,
+				30EEC5D624E3E10B00873596 /* TreeNode.m */,
 			);
 			path = Alg;
 			sourceTree = "<group>";
@@ -452,6 +462,7 @@
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
 				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
 				302F999524E2F13600DBEB5C /* TestLayer.m in Sources */,
+				30EEC5D724E3E10B00873596 /* TreeNode.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
 				302F999224E2F11E00DBEB5C /* TestView.m in Sources */,
@@ -470,6 +481,7 @@
 				3033B42E248953B5003A5A9B /* KVOObject.m in Sources */,
 				30AFC5BD24401FD30090BFA4 /* main.m in Sources */,
 				30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */,
+				30EEC5D424E3E04F00873596 /* AlgStart.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
