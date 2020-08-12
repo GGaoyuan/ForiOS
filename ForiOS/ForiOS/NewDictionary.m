@@ -23,6 +23,10 @@
     NSLog(@"NewDictionary initialize");
 }
 
+- (void)dealloc {
+    NSLog(@"");
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

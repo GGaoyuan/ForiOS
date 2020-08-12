@@ -285,7 +285,7 @@ https://www.cnblogs.com/lxlx1798/p/9256649.html
 
 
 ##### SD里在查询磁盘的时候为什么会有一个ioQueue(SD怎么保证查找安全)
-一个async(ioQueue)实现，一个传销队列，保证当前只有一个任务操作磁盘
+一个async(ioQueue)实现，一个串行队列，保证当前只有一个任务操作磁盘
 
 ##### SD查找Disk为什么要autoreleasepool
 因为查询磁盘差的是NSData，得到一个UIImage，转换的时候会出现大量的临时变量
@@ -306,7 +306,239 @@ last-modified: Tue, 26 Mar 2019 14:16:09 GMT
 ##### SD为什么要重写NSOperation
 重写start方法要设置一些ResponseCache里的一些东西，是否要保存responseCache
 
+##### NSString的内存问题
+
+#### 网络安全
+##### 如何解决DNS劫持
+DNS解析发生在HTTP协议之前，DNS解析和DNS劫持和HTTP没有关系，DNS协议使用的是UDP协议向服务器的53端口进行请求。
+可以使用HttpDNS的方案:使用HTTP协议向DNS服务器的80端口进行请求,来规避DNS劫持
+在终端上，可以更换DNS服务器，不管手机还是电脑，都能手动配置DNS
+
+##### Cookie和Session
+cookie主要是用来记录用户状态，区分用户，状态保存在客户端
+1.如果不希望Cookie在HTTP等非安全协议中传输，可以设置Cookie的secure属性为true。浏览器只会在HTTPS和SSL等安全协议中传输此类Cookie
+2.此外，secure属性并不能对Cookie内容加密，因而不能保证绝对的安全性。如果需要高安全性，需要在程序中对Cookie内容加密、解密，以防泄密
+3.也可以设置cookie为HttpOnly，如果在cookie中设置了HttpOnly属性，那么通过js脚本将无法读取到cookie信息，这样能有效的防止 XSS(跨站脚本攻击)攻击
+
+Session 是另一种记录客户状态的机制，不同的是Cookie保存在客户端浏览器中，而Session保存在服务器上。客户端浏览器访问服务器的时候，服务器把客户端信息以某种形式记录在服务器上。这就是Session。客户端浏览器再次访问时只需要从该Session中查找该客户的状态就可以了
+
+Cookie和Session的区别:
+1、cookie数据存放在客户的浏览器上，session数据放在服务器上。
+2、cookie相比session不是很安全，别人可以分析存放在本地的cookie并进行cookie 欺骗,考虑到安全应当使用session。
+3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能,考虑到减轻服务器性能方面，应当使用cookie。
+4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。而session存储在服务端，可以无限量存储
+5、所以:将登录信息等重要信息存放为 session;其他信息如果需要保留，可以放在 cookie 中
+
+##### IPv4编址
+每个IP地址(IPv4)长度为32比特(4字节)，按点分十进制记法书写，即地址中的每个字节都用它的十进制形式书写，各字节间以点.隔开，比如193.32.122.30
+
 三方库源码解读
 https://github.com/huang303513/SourceCodeResearchAndExploration.git
+<<<<<<< HEAD
 ti 
 http://www.cocoachina.com/articles/899939?filter=rec
+
+1 腾讯
+最长回文字符串
+回文，是正读反读都能一样的字符串。例如“12321”，“abba”。现给一个字符串，找出其中长度最长的回文字符串。当存在长度一样的结果时，返回第一个结果。
+
+解决思路: 1 判断回文字符串; 2 两层 for 循环, 寻找最长字符串; 3 循环处理接收的字符串. 代码如下:
+
+def isHuiWen(str):
+    if not len(str):
+        return False
+    count = len(str)
+    if (count%2)==0:
+        mid=count//2
+        i=mid-1
+        j=mid        
+    else:
+        mid=count//2
+        i=mid-1
+        j=mid+1
+    res = True
+    while i>=0 and j<count:
+         if str[i]==str[j]:
+             i-=1
+             j+=1
+             continue
+         else:
+            res = False
+            break
+    return res
+def get_max_str(str):
+    if not len(str):
+        return 0
+    count = len(str)
+    res_str = ''
+    for i in range(0,count+1):
+        for j in range(0,i):
+            sub_str = str[j:i]
+            res = isHuiWen(sub_str)
+            if res and len(sub_str)>len(res_str):
+                res_str = sub_str
+    return res_str
+while True:
+    a = input()
+    res = get_max_str(a)
+    print(res)
+2 网易
+2.1 链表翻转？
+解决方式1
+
+class Node:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+def reverse_node(n):    
+    if not n:
+        retun None
+    pre = None
+    h = n
+    while h:
+        h2 = h.next
+        h.next = pre
+        pre = h
+        h = h2
+    return pre
+解决方式2: 使用递归方式
+
+def reverse_node(n):        
+    # 递归实现
+    if not n.next:
+        return n
+    else:
+        last = rever_node(n.next)
+        n.next.next = n
+        n.next = None
+        return last
+2.2 删除链表中倒数的某个节点
+
+def del_node(node, n):
+    if not node: 
+        return None    
+    h1 = node 
+    h2 = node
+    while n > 0:
+        h1 = h1.next
+        n -= 1
+    while h1.next:
+        h1 = h1.next
+        h2 = h2.next
+    h2.next = h2.next.next
+    return node
+3 快手
+字符串匹配。匹配字符串中：？表示一个字符；表示多个字符或者没有字符。给定一个匹配字符串和一个字符串，判断二者是否匹配。比如 输入“？a”和“ba”，返回True，输入“?a*”和“bb”，返回False 快手
+解决方式, 采用递归的思想:
+
+def find_match(str, exp):
+    # .代表一个
+    # * 代表前面有 0个 或者 多个
+    if len(str) == 0 and len(exp) == 0:
+        return True
+    if len(str) == 0:
+        if exp[0] == "*":
+            return True
+        else:
+            return False
+    if len(exp) == 0:
+        return True
+    
+    if exp[0] == ".":
+        return find_match(str[1:], exp[1:])
+    elif exp[0] == "*":
+        return find_match(str, exp[1:])
+    elif exp[0] == str[0]:
+        return find_match(str[1:], exp[1:])
+    else:
+        return False
+4 百度
+4.1 链表成环判断?
+
+def is_circle(node):
+    if not node:
+        return False
+    l1 = node
+    l2 = node
+    res = False
+    while l1.next != None and l2.next != None:
+        l1 = l1.next
+        if l2.next.next:
+            l2 = l2.next.next
+        if l1 == l2:
+            # print(l1.value, l2.value, sep="**")
+            res = True
+            break
+    return res
+由链表成环判断, 能够延伸到寻找成环入口节点:
+
+def get_circle_begin(node):
+    if not node:
+        return None
+    l1 = node
+    l2 = node
+    res = False
+    while l1.next != None and l2.next != None:
+        l1 = l1.next
+        if l2.next.next:
+            l2 = l2.next.next
+        if l1 == l2:
+            res = True
+            break
+    if res:
+        l1 = node
+        while l1.next != None and l2.next != None:
+            if l1 == l2:
+                return l1
+            l1 = l1.next
+            l2 = l2.next
+    return None
+4.2 链表共同节点
+
+def common_node(n1, n2):
+    if not n1 or not n2:
+        return
+    def get_length(node):
+        if not node:
+            return -1
+        count = 0
+        while node:
+            count += 1
+            node = node.next
+        return count
+    l1 = get_length(n1)
+    l2 = get_length(n2)
+    inter_count = l1 - l2
+
+    if inter_count > 0:
+        while l2:
+            if l1 == l2:
+                print(l1.value)
+            l2 = l2.next
+    else:
+        while l1:
+            if l1 == l2:
+                print(l1.value)
+            l1 = l2.next
+5 京东
+快排
+
+def quick_sort(nums, left, right):
+    if left < right:
+        index = get_index(nums, left, right)
+        quick_sort(nums, left, index - 1)
+        quick_sort(nums, index + 1, right)
+def get_index(nums, left, right):
+    base = nums[left]
+    i, j = left, right
+    while i < j :
+        '''直到不满足'''
+        while i < j and nums[j] > base:
+            j -= 1
+        nums[i] = nums[j]
+        while i < j and nums[i] < base:
+            i += 1
+        nums[j] = nums[i]
+    nums[i] = base
+    return i

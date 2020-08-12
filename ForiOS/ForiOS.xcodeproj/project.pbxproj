@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		302B322E24811263007AEA23 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322D24811263007AEA23 /* WebImage.swift */; };
+		302F998F24DB122D00DBEB5C /* TestString.m in Sources */ = {isa = PBXBuildFile; fileRef = 302F998E24DB122D00DBEB5C /* TestString.m */; };
+		302F999224E2F11E00DBEB5C /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 302F999124E2F11E00DBEB5C /* TestView.m */; };
+		302F999524E2F13600DBEB5C /* TestLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 302F999424E2F13600DBEB5C /* TestLayer.m */; };
 		3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42A2489530E003A5A9B /* NewDictionary.m */; };
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
@@ -54,6 +57,12 @@
 
 /* Begin PBXFileReference section */
 		302B322D24811263007AEA23 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
+		302F998D24DB122D00DBEB5C /* TestString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestString.h; sourceTree = "<group>"; };
+		302F998E24DB122D00DBEB5C /* TestString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestString.m; sourceTree = "<group>"; };
+		302F999024E2F11E00DBEB5C /* TestView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
+		302F999124E2F11E00DBEB5C /* TestView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
+		302F999324E2F13600DBEB5C /* TestLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLayer.h; sourceTree = "<group>"; };
+		302F999424E2F13600DBEB5C /* TestLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLayer.m; sourceTree = "<group>"; };
 		3033B4292489530D003A5A9B /* NewDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDictionary.h; sourceTree = "<group>"; };
 		3033B42A2489530E003A5A9B /* NewDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewDictionary.m; sourceTree = "<group>"; };
 		3033B42C248953B5003A5A9B /* KVOObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KVOObject.h; sourceTree = "<group>"; };
@@ -186,6 +195,12 @@
 				3033B42D248953B5003A5A9B /* KVOObject.m */,
 				30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */,
 				30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */,
+				302F998D24DB122D00DBEB5C /* TestString.h */,
+				302F998E24DB122D00DBEB5C /* TestString.m */,
+				302F999024E2F11E00DBEB5C /* TestView.h */,
+				302F999124E2F11E00DBEB5C /* TestView.m */,
+				302F999324E2F13600DBEB5C /* TestLayer.h */,
+				302F999424E2F13600DBEB5C /* TestLayer.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -436,8 +451,10 @@
 				30A90BB324C7475700B47D50 /* NewDictionary2.m in Sources */,
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
 				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
+				302F999524E2F13600DBEB5C /* TestLayer.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
+				302F999224E2F11E00DBEB5C /* TestView.m in Sources */,
 				30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */,
 				30D7B581247291D400F9CD69 /* MouseProtocol.swift in Sources */,
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
@@ -447,6 +464,7 @@
 				30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */,
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
+				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
 				30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				3033B42E248953B5003A5A9B /* KVOObject.m in Sources */,
