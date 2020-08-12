@@ -332,6 +332,15 @@ Cookie和Session的区别:
 ##### IPv4编址
 每个IP地址(IPv4)长度为32比特(4字节)，按点分十进制记法书写，即地址中的每个字节都用它的十进制形式书写，各字节间以点.隔开，比如193.32.122.30
 
+##### TableView的优化
+一个页面展示的会耗时的部分：
+1.CPU对视图进行Frame等的各种计算
+2.提交给GPU进行渲染
+3.图片的解码等
+4.打包图层并将它们发送到RenderServer
+优化也是随着这几个展开
+1.预排班，网络请求数据回来后在子线程中对布局的frame进行计算
+
 三方库源码解读
 https://github.com/huang303513/SourceCodeResearchAndExploration.git
 <<<<<<< HEAD
