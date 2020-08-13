@@ -340,7 +340,14 @@ Cookie和Session的区别:
 4.打包图层并将它们发送到RenderServer
 优化也是随着这几个展开
 1.预排班，网络请求数据回来后在子线程中对布局的frame进行计算
-
+2.预解码：
+针对的是图片加载。图片从磁盘加载过来是由DataBuffer(通过压缩算法得到的二进制数据，比如jpeg,png)，然后decode解码到像素缓冲区ImageBuffer。这个decode可能会很耗时，可以放到异步线程中去(电子书那个加圆角问题)
+3.按需加载：
+通过runloop，孙源的分享里有提到过，监听runloop的状态，因为滑动会切换mode，当runloop到了beforwaiting的时候，再开始加载。不过这个方法有个坑爹的效果就是快速滑动的时候会有很多的空白
+4.减少图层层级：
+（上面三个都难以解决的时候，可以用这个）
+CPU在计算的时候会很慢。可以吧这个东西画成一张图
+5.异步渲染
 三方库源码解读
 https://github.com/huang303513/SourceCodeResearchAndExploration.git
 <<<<<<< HEAD
