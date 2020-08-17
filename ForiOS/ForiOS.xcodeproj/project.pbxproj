@@ -13,6 +13,8 @@
 		302F999524E2F13600DBEB5C /* TestLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 302F999424E2F13600DBEB5C /* TestLayer.m */; };
 		3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42A2489530E003A5A9B /* NewDictionary.m */; };
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
+		3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644424E66DE400E0F369 /* ThreadTest.swift */; };
+		3034644724E673E200E0F369 /* GYOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644624E673E200E0F369 /* GYOperation.swift */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
@@ -69,6 +71,8 @@
 		3033B42A2489530E003A5A9B /* NewDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewDictionary.m; sourceTree = "<group>"; };
 		3033B42C248953B5003A5A9B /* KVOObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KVOObject.h; sourceTree = "<group>"; };
 		3033B42D248953B5003A5A9B /* KVOObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOObject.m; sourceTree = "<group>"; };
+		3034644424E66DE400E0F369 /* ThreadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTest.swift; sourceTree = "<group>"; };
+		3034644624E673E200E0F369 /* GYOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GYOperation.swift; sourceTree = "<group>"; };
 		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
@@ -155,6 +159,15 @@
 			path = WebImage;
 			sourceTree = "<group>";
 		};
+		3034644324E66DC700E0F369 /* Thread */ = {
+			isa = PBXGroup;
+			children = (
+				3034644424E66DE400E0F369 /* ThreadTest.swift */,
+				3034644624E673E200E0F369 /* GYOperation.swift */,
+			);
+			path = Thread;
+			sourceTree = "<group>";
+		};
 		30AFC59E24401FD10090BFA4 = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +193,7 @@
 		30AFC5A924401FD10090BFA4 /* ForiOS */ = {
 			isa = PBXGroup;
 			children = (
+				3034644324E66DC700E0F369 /* Thread */,
 				30EEC5D124E3DF7F00873596 /* Alg */,
 				30AFC5AA24401FD10090BFA4 /* AppDelegate.h */,
 				30AFC5AB24401FD10090BFA4 /* AppDelegate.m */,
@@ -476,12 +490,14 @@
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
 				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
+				3034644724E673E200E0F369 /* GYOperation.swift in Sources */,
 				30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				3033B42E248953B5003A5A9B /* KVOObject.m in Sources */,
 				30AFC5BD24401FD30090BFA4 /* main.m in Sources */,
 				30AFC5AF24401FD10090BFA4 /* SceneDelegate.m in Sources */,
 				30EEC5D424E3E04F00873596 /* AlgStart.m in Sources */,
+				3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

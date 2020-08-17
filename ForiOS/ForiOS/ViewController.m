@@ -16,6 +16,8 @@
 #import "UIImageView+WebCache.h"
 #import "TestString.h"
 #import "AlgStart.h"
+#import "YYCache.h"
+
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -59,6 +61,9 @@
 //- (BOOL)shouldAutomaticallyForwardAppearanceMethods
 
 - (void)viewDidLoad {
+    [ThreadTest test];
+    return;
+    
     [super viewDidLoad];
     [AlgStart start];
     
