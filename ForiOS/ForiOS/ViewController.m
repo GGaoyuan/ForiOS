@@ -61,6 +61,12 @@
 //- (BOOL)shouldAutomaticallyForwardAppearanceMethods
 
 - (void)viewDidLoad {
+    
+    YYCache *cache = [[YYCache alloc] initWithName:@"cache"];
+    [cache setValue:@"111" forKey:@"AAA"];
+    
+    return;
+    
     [ThreadTest test];
     return;
     

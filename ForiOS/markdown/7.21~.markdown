@@ -354,6 +354,10 @@ https://github.com/huang303513/SourceCodeResearchAndExploration.git
 ti 
 http://www.cocoachina.com/articles/899939?filter=rec
 
+缓存策略
+https://www.jianshu.com/p/3124e4c125cc
+
+
 1 腾讯
 最长回文字符串
 回文，是正读反读都能一样的字符串。例如“12321”，“abba”。现给一个字符串，找出其中长度最长的回文字符串。当存在长度一样的结果时，返回第一个结果。
