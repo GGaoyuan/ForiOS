@@ -16,7 +16,7 @@
 #import "UIImageView+WebCache.h"
 #import "TestString.h"
 #import "AlgStart.h"
-#import "YYCache.h"
+//#import "YYCache.h"
 
 @interface ViewController ()
 
@@ -61,9 +61,8 @@
 //- (BOOL)shouldAutomaticallyForwardAppearanceMethods
 
 - (void)viewDidLoad {
-    
-    YYCache *cache = [[YYCache alloc] initWithName:@"cache"];
-    [cache setValue:@"111" forKey:@"AAA"];
+    SwiftMain *swiftMain = [SwiftMain new];
+    [swiftMain enter];
     
     return;
     
