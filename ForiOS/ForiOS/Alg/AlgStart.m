@@ -13,6 +13,10 @@
 + (void)start {
     NSLog(@"111");
     
+    
+    
+    
+    
     TreeNode *root = [TreeNode createTreeWithValues:@[@4, @1, @6, @8, @7, @2, @3, @5, @9, @0]];
     NSLog(@"");
 //    [TreeNode preOrderTraverseTree:root];

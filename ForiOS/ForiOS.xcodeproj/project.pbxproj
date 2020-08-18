@@ -15,9 +15,6 @@
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
 		3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644424E66DE400E0F369 /* ThreadTest.swift */; };
 		3034644724E673E200E0F369 /* GYOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644624E673E200E0F369 /* GYOperation.swift */; };
-		3034645E24EA7E4800E0F369 /* YYCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034645D24EA7E4800E0F369 /* YYCache.swift */; };
-		3034646024EA86C800E0F369 /* YYDiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034645F24EA86C800E0F369 /* YYDiskCache.swift */; };
-		3034646224EA875800E0F369 /* YYMemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034646124EA875800E0F369 /* YYMemoryCache.swift */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
@@ -76,9 +73,6 @@
 		3033B42D248953B5003A5A9B /* KVOObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOObject.m; sourceTree = "<group>"; };
 		3034644424E66DE400E0F369 /* ThreadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTest.swift; sourceTree = "<group>"; };
 		3034644624E673E200E0F369 /* GYOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GYOperation.swift; sourceTree = "<group>"; };
-		3034645D24EA7E4800E0F369 /* YYCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YYCache.swift; sourceTree = "<group>"; };
-		3034645F24EA86C800E0F369 /* YYDiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YYDiskCache.swift; sourceTree = "<group>"; };
-		3034646124EA875800E0F369 /* YYMemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YYMemoryCache.swift; sourceTree = "<group>"; };
 		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
@@ -174,16 +168,6 @@
 			path = Thread;
 			sourceTree = "<group>";
 		};
-		3034644824EA7C0C00E0F369 /* YYCache */ = {
-			isa = PBXGroup;
-			children = (
-				3034645D24EA7E4800E0F369 /* YYCache.swift */,
-				3034645F24EA86C800E0F369 /* YYDiskCache.swift */,
-				3034646124EA875800E0F369 /* YYMemoryCache.swift */,
-			);
-			path = YYCache;
-			sourceTree = "<group>";
-		};
 		30AFC59E24401FD10090BFA4 = {
 			isa = PBXGroup;
 			children = (
@@ -209,7 +193,6 @@
 		30AFC5A924401FD10090BFA4 /* ForiOS */ = {
 			isa = PBXGroup;
 			children = (
-				3034644824EA7C0C00E0F369 /* YYCache */,
 				3034644324E66DC700E0F369 /* Thread */,
 				30EEC5D124E3DF7F00873596 /* Alg */,
 				30AFC5AA24401FD10090BFA4 /* AppDelegate.h */,
@@ -504,14 +487,11 @@
 				30C9D06F248676F200044171 /* UIImageView+WebImage.swift in Sources */,
 				30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */,
 				30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */,
-				3034646024EA86C800E0F369 /* YYDiskCache.swift in Sources */,
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
-				3034645E24EA7E4800E0F369 /* YYCache.swift in Sources */,
 				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
 				3034644724E673E200E0F369 /* GYOperation.swift in Sources */,
 				30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */,
-				3034646224EA875800E0F369 /* YYMemoryCache.swift in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				3033B42E248953B5003A5A9B /* KVOObject.m in Sources */,
 				30AFC5BD24401FD30090BFA4 /* main.m in Sources */,
