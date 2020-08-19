@@ -579,3 +579,6 @@ Disk分为File，SQLITE存储，还有MIX，是通过设置的存储对象的大
 随后还要设置一个定时的缓存清理，每间隔60s或者一个自定义事件，对比一下自己设置的缓存大小，时限，个数等等，对超过数值的缓存进行清理
 SD缓存策略
 https://blog.csdn.net/u013602835/article/details/70228555
+
+图片内存优化
+https://www.jianshu.com/p/cd8f2692e064
