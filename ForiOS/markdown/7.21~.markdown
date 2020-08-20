@@ -584,3 +584,12 @@ https://blog.csdn.net/u013602835/article/details/70228555
 https://www.jianshu.com/p/cd8f2692e064
 mst
 http://www.cocoachina.com/articles/900215?filter=rec
+
+##### 性能优化
+tableView对于滑动的图片，可以使用prefetching+aync downSample方法，来实现异步的提前准备图片的数据，这个downsample是针对图片decode中的dataBuffer->imageBuffer的优化
+
+##### 内存优化
+图片压缩->ImageIO,downSample方法
+
+##### 二进制重拍
+http://www.zyiz.net/tech/detail-127196.html
