@@ -17,6 +17,7 @@
 #import "TestString.h"
 #import "AlgStart.h"
 //#import "YYCache.h"
+#import <dlfcn.h>
 
 @interface ViewController ()
 
@@ -25,6 +26,28 @@
 @end
 
 @implementation ViewController
+
+void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
+                                                    uint32_t *stop) {
+  static uint64_t N;  // Counter for the guards.
+  if (start == stop || *start) return;  // Initialize only once.
+  printf("INIT: %p %p\n", start, stop);
+  for (uint32_t *x = start; x < stop; x++)
+    *x = ++N;  // Guards should start from 1.
+}
+
+void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
+    if (!*guard) return;  // Duplicate the guard check.
+     
+    void *PC = __builtin_return_address(0); //PC就是指向各个函数调用完__sanitizer_cov_trace_pc_guard之后的下一行代码的内存地址
+    Dl_info info;
+    dladdr(PC, &info);
+     
+    printf("fname=%s \nfbase=%p \nsname=%s\nsaddr=%p \n",info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);
+     
+    char PcDescr[1024];
+    printf("guard: %p %x PC %s\n", guard, *guard, PcDescr);
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
    NSLog(@"observeValueForKeyPath");
