@@ -9,10 +9,8 @@
 import UIKit
 
 class SwiftMain: NSObject {
+    
     @objc func enter() {
-        let cache = YYCache.init(name: "")
-        return
-        
         let designPatter = DesignPatternEntrance()
         designPatter.start()
     }

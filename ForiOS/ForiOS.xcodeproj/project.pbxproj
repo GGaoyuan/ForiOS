@@ -675,6 +675,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"-fsanitize-coverage=trace-pc-guard",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = gaoyuan.ForiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ForiOS/Swift/ForiOS-Bridging-Header.h";
@@ -696,6 +706,16 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"-fsanitize-coverage=trace-pc-guard",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = gaoyuan.ForiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";

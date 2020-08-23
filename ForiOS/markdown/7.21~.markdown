@@ -579,3 +579,17 @@ Disk分为File，SQLITE存储，还有MIX，是通过设置的存储对象的大
 随后还要设置一个定时的缓存清理，每间隔60s或者一个自定义事件，对比一下自己设置的缓存大小，时限，个数等等，对超过数值的缓存进行清理
 SD缓存策略
 https://blog.csdn.net/u013602835/article/details/70228555
+
+图片内存优化
+https://www.jianshu.com/p/cd8f2692e064
+mst
+http://www.cocoachina.com/articles/900215?filter=rec
+
+##### 性能优化
+tableView对于滑动的图片，可以使用prefetching+aync downSample方法，来实现异步的提前准备图片的数据，这个downsample是针对图片decode中的dataBuffer->imageBuffer的优化
+
+##### 内存优化
+图片压缩->ImageIO,downSample方法
+
+##### 二进制重拍
+http://www.zyiz.net/tech/detail-127196.html
