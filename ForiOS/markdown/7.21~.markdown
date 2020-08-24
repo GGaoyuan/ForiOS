@@ -333,7 +333,10 @@ Cookie和Session的区别:
 每个IP地址(IPv4)长度为32比特(4字节)，按点分十进制记法书写，即地址中的每个字节都用它的十进制形式书写，各字节间以点.隔开，比如193.32.122.30
 
 ##### TableView的优化
-一个页面展示的会耗时的部分：
+*一个页面展示的会耗时的部分：
+UIImage->DataBuffer->ImageBuffer->UIImageView->Render
+DataBuffer到ImageBuffer的这个过程，就是Decode过程。DataBuffer代表了图片文件在内存中的表示，是图片的元数据，不同格式的图片文件有不同的编码格式，而ImageBuffer代表了图片在内存中的表示，每个元素代表一个像素点的颜色，ImageBuffer大小与图像大小成正比。而Decode是一个CPU密集的操作，而且大小和图片原始大小有关，和View无关，所以，优化的思路就是在Decode部分
+所以可以在异步线程里进行图片缩减，这样可以大大的减少内存的消耗，提高运算速度。鉴于页面是CollectionView来实现，可以实现一个prefetching这个代理，实现他的代理方法。在这个方法里，异步使用压缩，再将原来的那个图片切图里的GraphicsBeginImageContext改成苹果推荐的GraphicsImageRender。在Prefetching里使用异步方法一定要用串行队列，因为滑动的快，并行队列会疯狂加线程，速度反而会下降。在prefetching其实还可以干很多事，他的设计思想就是在里面处理各种麻烦的数据
 1.CPU对视图进行Frame等的各种计算
 2.提交给GPU进行渲染
 3.图片的解码等
@@ -348,14 +351,82 @@ Cookie和Session的区别:
 （上面三个都难以解决的时候，可以用这个）
 CPU在计算的时候会很慢。可以吧这个东西画成一张图
 5.异步渲染
+
+##### YYCache和SD缓存策略（设计一个缓存）
+磁盘缓存的文件夹是Cache文件夹
+YYCache：
+通过Memory和Disk来进行缓存
+对于缓存内容的增删改查要同步进行（加锁）
+查的过程中先查memory再查Disk
+接下来就是缓存策略
+Memory缓存因为缓存的数据大小有限，所以要注意设置缓存的大小，时间限制，缓存对象的个数等等限制，还要注意监听内存warning
+然后就是如何能快速查找，可以使用Dic，在淘汰的时候，使用的是LRU算法进行淘汰
+Disk分为File，SQLITE存储，还有MIX，是通过设置的存储对象的大小来判断，这里面没有什么复杂的内容，就是加锁，存，解锁
+但是对于数据库的 wal 模式”、“数据库 synchronous 的模式选择与区别”不太明白。只知道是加锁
+随后还要设置一个定时的缓存清理，每间隔60s或者一个自定义事件，对比一下自己设置的缓存大小，时限，个数等等，对超过数值的缓存进行清理
+SDWebImage:
+SDWebImage使用NSCache类来实现内存缓存。
+在加载图片的时候，SDWebImage调用SDImageCache先读取内存缓存，如果内存缓存没有，就会使用GCD开启异步线程去读取磁盘缓存，如果找到磁盘缓存，则同步到内存缓存中去，使用GCD在主线程中设置图片，如果都没有，下载后会缓存到内存和磁盘上(可选)。
+SDWebImage 默认会有一个对上次加载失败的图片拒绝再次加载的机制。 也就是说，一张图片在本次会话加载失败了，如果再次加载就会直接拒绝。(额外知识)
+SDWebImage 会在每次 APP 结束的时候执行清理任务。 清理缓存的规则分两步进行。 第一步先清除掉过期的缓存文件。 如果清除掉过期的缓存之后，空间还不够。 那么就继续按文件时间从早到晚排序，先清除最早的缓存文件，直到剩余空间达到要求。具体点，SDWebImage 是怎么控制哪些缓存过期，以及剩余空间多少才够呢？maxCacheAge是文件缓存的时长,maxCacheAge 的默认值，注释上写的很清楚，缓存一周,SDWebImage 在默认情况下不会对缓存空间maxCacheSize设限制。分别在应用进入后台和结束的时候，遍历所有的缓存文件，如果缓存文件超过 maxCacheAge 中指定的时长，就会被删除掉。(额外知识)
+
+##### 内存优化
+
+##### 二进制重排
+一些理论基础：
+cpu寻址过程
+引入虚拟内存后,cpu在通过虚拟内存地址访问数据的过程如下:
+1.通过虚拟内存地址,找到对应进程的映射表.
+2.通过映射表找到其对应的真实物理地址,进而找到数据.
+这个过程被称为地址翻译,这个过程是由操作系统以及cpu上集成的一个硬件单元MMU协同来完成的 
+虚拟内存和物理内存通过映射表进行映射，但是这个映射并不可能是一一对应的，那样就太过浪费内存了，为了解决效率问题，实际上真实物理内存是分页的，而映射表同样是以页为单位的
+iOS系统中,一页为16KB
+当应用被加载到内存中时，并不会将整个应用加载到内存中，只会放用到的那一部分，也就是懒加载的概念，换句话说就是应用使用多少，实际物理内存就实际存储多少，
+当应用访问到某个地址，映射表中为，也就是说并没有被加载到物理内存中时，系统就会立刻阻塞整个进程，触发一个我们所熟知的缺页中断 - Page Fault .
+当一个缺页中断被触发，操作系统会从磁盘中重新读取这页数据到物理内存上，然后将映射表中虚拟内存指向对应
+二进制重排：
+App启动的时候会加载很多的类，分类，库等等到内存中，所以Page Fault越多，那么耗时就越大。举个栗子：
+Page1:              Page2:
+Method1             Method5
+Method2             Method6
+Method3             Method7
+Method4             Method8
+比如在启动的时候需要Method1和Method8，那么分别在两个不同Page上的，现在已经加载了Page1，需要Page2的Method8，从而触发1次中断
+实际项目中的做法是将启动时需要调用的函数放到一起(比如前10页中)以尽可能减少page fault, 达到优化目的.而这个做法就叫做:二进制重排
+
+查看中断可以在Instrument的System Trace里看
+
+http://www.zyiz.net/tech/detail-127196.html
+
+
+
+
+
+
+
+
+
 三方库源码解读
 https://github.com/huang303513/SourceCodeResearchAndExploration.git
-<<<<<<< HEAD
-ti 
+面试总结
 http://www.cocoachina.com/articles/899939?filter=rec
+http://www.cocoachina.com/articles/900215?filter=rec
 
 缓存策略
 https://www.jianshu.com/p/3124e4c125cc
+
+SD缓存策略
+https://blog.csdn.net/u013602835/article/details/70228555
+
+图片内存优化
+https://www.jianshu.com/p/cd8f2692e064
+
+
+
+
+
+
+
 
 
 1 腾讯
@@ -563,33 +634,3 @@ def get_index(nums, left, right):
     nums[i] = base
     return i
 
-
-
-
-YYCache
-设计一个缓存的思路：
-通过Memory和Disk来进行缓存
-对于缓存内容的增删改查要同步进行
-查的过程中先查memory再查Disk
-接下来就是缓存策略
-Memory缓存因为缓存的数据大小有限，所以要注意设置缓存的大小，时间限制，缓存对象的个数等等限制，还要注意监听内存warning
-然后就是如何能快速查找，可以使用Dic，在淘汰的时候，使用的是LRU算法进行淘汰
-Disk分为File，SQLITE存储，还有MIX，是通过设置的存储对象的大小来判断，这里面没有什么复杂的内容，就是加锁，存，解锁
-但是对于数据库的 wal 模式”、“数据库 synchronous 的模式选择与区别”不太明白。只知道是加锁
-随后还要设置一个定时的缓存清理，每间隔60s或者一个自定义事件，对比一下自己设置的缓存大小，时限，个数等等，对超过数值的缓存进行清理
-SD缓存策略
-https://blog.csdn.net/u013602835/article/details/70228555
-
-图片内存优化
-https://www.jianshu.com/p/cd8f2692e064
-mst
-http://www.cocoachina.com/articles/900215?filter=rec
-
-##### 性能优化
-tableView对于滑动的图片，可以使用prefetching+aync downSample方法，来实现异步的提前准备图片的数据，这个downsample是针对图片decode中的dataBuffer->imageBuffer的优化
-
-##### 内存优化
-图片压缩->ImageIO,downSample方法
-
-##### 二进制重拍
-http://www.zyiz.net/tech/detail-127196.html
