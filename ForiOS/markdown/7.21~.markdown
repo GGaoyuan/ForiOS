@@ -263,7 +263,7 @@ https://halfrost.com/objc_runtime_isa_class/
 
 ##### App的启动过程
 https://www.cnblogs.com/lxlx1798/p/9256649.html
-1.准备启动，系统调用exec()函数，根据exec函数指定的文件名找到可执行文件，就是在调用进程内部执行一个可执行文件。这里的可执行文件既可以是二进制文件，也可以是任何Unix下可执行的脚本文件
+1.准备启动，系统调用exec()函数，根据exec函数指定的文件名找到可执行文件(Mach-O)，就是在调用进程内部执行一个可执行文件。这里的可执行文件既可以是二进制文件，也可以是任何Unix下可执行的脚本文件
 
 2.完成了初始化准备工作后，启动dyld。dyld作用：
     1.从kernel留下的原始调用栈引导和启动自己(调用dyldbootstrap::start()方法)
@@ -371,6 +371,21 @@ SDWebImage 默认会有一个对上次加载失败的图片拒绝再次加载的
 SDWebImage 会在每次 APP 结束的时候执行清理任务。 清理缓存的规则分两步进行。 第一步先清除掉过期的缓存文件。 如果清除掉过期的缓存之后，空间还不够。 那么就继续按文件时间从早到晚排序，先清除最早的缓存文件，直到剩余空间达到要求。具体点，SDWebImage 是怎么控制哪些缓存过期，以及剩余空间多少才够呢？maxCacheAge是文件缓存的时长,maxCacheAge 的默认值，注释上写的很清楚，缓存一周,SDWebImage 在默认情况下不会对缓存空间maxCacheSize设限制。分别在应用进入后台和结束的时候，遍历所有的缓存文件，如果缓存文件超过 maxCacheAge 中指定的时长，就会被删除掉。(额外知识)
 
 ##### 内存优化
+
+
+#### 启动优化
+main之前做的事情：
+递归加载Mach-O文件/脚本，准备dyld启动
+dyld(动态链接器)与imageLoader加载链接libSystem用来初始化objc和runtime
+dyld初始化二进制文件
+dyld完成初始化后通知ImageLoader加载可执行性文件进内存
+dyld通知runtime处理ImageLoader加载进的文件，并且做解析，加载load方法等等，然后回调dyld继续初始化二进制文件
+dyld就是ImageLoader和runtime的协调者
+1.还是Instruments里，可以看到load方法的耗时。对于耗时的load方法，可以吧load方法改为initialize方法，清理一些不用的类和文件
+2.有一个__attrbute的方法，具体忘记了
+3.二进制重排，但是不能用hook Objc_msgSend。因为hook无法捕捉c++,block，还有swift，得用clang插桩来获取符号表
+main之后做的事情：
+1.Instruments的TimeProfile可以看耗时的操作，可以在这里看一下，优化耗时的方法
 
 ##### 二进制重排
 一些理论基础：
