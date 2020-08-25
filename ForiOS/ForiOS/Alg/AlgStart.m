@@ -8,13 +8,16 @@
 
 #import "AlgStart.h"
 #import "TreeNode.h"
+#import "ForiOS-Swift.h"
+
 @implementation AlgStart
     
 + (void)start {
     NSLog(@"111");
-    
-    
-    
+    //快速排序
+    FastSort *fastSort = [FastSort new];
+    [fastSort sortWithArray:@[@10, @1, @22, @19, @9, @4, @15]];
+    return;
     
     
     TreeNode *root = [TreeNode createTreeWithValues:@[@4, @1, @6, @8, @7, @2, @3, @5, @9, @0]];

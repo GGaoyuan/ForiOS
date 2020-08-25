@@ -15,6 +15,7 @@
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
 		3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644424E66DE400E0F369 /* ThreadTest.swift */; };
 		3034644724E673E200E0F369 /* GYOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644624E673E200E0F369 /* GYOperation.swift */; };
+		308397DE24F503AE0054FED7 /* FastSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308397DD24F503AE0054FED7 /* FastSort.swift */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
@@ -73,6 +74,7 @@
 		3033B42D248953B5003A5A9B /* KVOObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOObject.m; sourceTree = "<group>"; };
 		3034644424E66DE400E0F369 /* ThreadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTest.swift; sourceTree = "<group>"; };
 		3034644624E673E200E0F369 /* GYOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GYOperation.swift; sourceTree = "<group>"; };
+		308397DD24F503AE0054FED7 /* FastSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSort.swift; sourceTree = "<group>"; };
 		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				30EEC5D324E3E04F00873596 /* AlgStart.m */,
 				30EEC5D524E3E10B00873596 /* TreeNode.h */,
 				30EEC5D624E3E10B00873596 /* TreeNode.m */,
+				308397DD24F503AE0054FED7 /* FastSort.swift */,
 			);
 			path = Alg;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 				30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */,
 				30A90BB324C7475700B47D50 /* NewDictionary2.m in Sources */,
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
+				308397DE24F503AE0054FED7 /* FastSort.swift in Sources */,
 				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
 				302F999524E2F13600DBEB5C /* TestLayer.m in Sources */,
 				30EEC5D724E3E10B00873596 /* TreeNode.m in Sources */,
