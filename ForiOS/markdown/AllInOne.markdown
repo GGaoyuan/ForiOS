@@ -4,6 +4,319 @@
 1Byte = 8 Bit 
 1KB    = 1,024 Bytes
 1MB   = 1,024 KBww
+
+
+
+
+------
+
+
+
+
+
+#### 内存
+##### 理解属性这一概念
+实例变量，加上get/set方法
+@dynamic告诉编译器不要自动创建set/get方法，还有实例变量
+@synthesize可以指定实例变量的名字（这个最好少用，不然代码让人看不懂）
+默认情况下属性是atomic，是自动加了一个同步锁(synchronized)，这个历史遗留问题iOS同步锁的开销很大，而且atomic也不一定能保证线程安全，所以大部分都是nonatomic，再用其他的锁保证线程安全
+
+##### 类对象的能否继承，重写
+可以
+
+##### iOS中内存泄漏的场景
+NSTimer
+Block
+代理
+通知
+try/catch:出现异常用@throw可能会出现内存泄漏的情况，通常不是那种致命错误，用返回nil或者NSError，如果非要用try/catch那么要注意在final里释放资源（比如数据库）
+
+##### 如何理解NSCopying
+对象想要拷贝必须实现NSCopying协议，如果是想要深拷贝是实现NSMutableCopying协议，默认的拷贝都是浅拷贝
+copywithzone方法里的zone参数是历史遗留问题，不必理会
+
+##### 用assign修饰对象会怎样
+会崩溃
+assign和weak修饰类似，weak对应的关键修饰符是__weak，assign是__unsafe_unretained，俩的差别就是__weak释放后会置nil，assign会出现野指针，而用他们俩修饰，简单的allocinit编译后带代码是会发送消息让对象直接释放
+
+##### 如何检测项目中的野指针（BAD_ACCESS）
+开启僵尸对象模式
+开启僵尸对象调试后，原本要被系统回收的对象系统就不会将他们回收，而是转化成僵尸对象，所占用的内存也不会被复写，当他们收到消息的时候，就会抛出异常。
+僵尸对象的生成类似KVO，当设置了僵尸对象，系统会在dealloc的时候swizzle，new出来的新的僵尸Object，并指向原本的Object，原本的Object不会释放，当僵尸对象收到消息，就能找到原本将收到消息的对象了并抛出异常
+
+##### nil，Nil，Null，NSNull
+nil：指向oc中对象的空指针
+Nil：指向oc中类的空指针
+NULL：指向其他类型的空指针，如一个c类型的内存指针
+NSNull：在集合对象中，表示空值的对象
+
+##### id的实质(联系block为什么是一个OC对象)
+```
+//id为一个objc_object结构体的指针类型
+typedef struct objc_object {
+    Class isa;
+} *id;
+
+//Class为objc_class结构体的指针类型
+typedef struct objc_class *Class;
+struct objc_class {
+    Class isa;
+};
+```
+而block的结构体
+```
+struct __block_impl {
+    void *isa;
+    int Flags;
+    int Reserved;
+    void *FuncPtr;
+}
+```
+一个普通对象
+```
+struct TestObject {
+    Class isa;
+    int val0;
+    int val1;
+}
+```
+对比一下，明白了吧？
+
+##### 理解引用计数ARC
+？？？
+##### 用autoreleasepool降低内存峰值
+？？？
+##### 向一个nill对象发送消息会发生什么？
+？？？
+##### AutoreleasePool的实现原理
+？？？
+
+
+
+
+------
+
+
+
+
+#### Block
+##### 理解Block
+Block就是带有局部变量的匿名函数(RB.P80)
+匿名函数：不带名称的函数。虽然说函数指针也是可以替换掉函数的，但是函数指针在赋值的时候也是需要知道函数名的
+```
+int (*funcptr)(int) = &func;
+int result = (*funcptr)(10); 
+```
+
+##### blcok的实质
+当一个block被转换为C代码后是这样的
+```
+//Block
+void(^blk)(void) = ^{
+    printf("Block\n");
+};
+blk();
+//转化后是这样
+struct __block_impl {
+    void *isa;
+    int Flags;
+    int Reserved;
+    void *FuncPtr;
+}
+//接下来是几个名叫__main_block_xxx_0的结构体和方法
+//这里用impl代替原本的__main_block_impl_0
+//这里用func代替原本的__main_block_func_0
+//这里用desc代替原本的__main_block_desc_0
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    //block的一个构造方法
+    impl0(void *fp ... ...) {
+        impl.isa = &StackBlock;
+        impl.FuncPtr = fp;
+    }
+}
+
+static void func0(struct impl *__cself) {
+    printf("Block\n");
+}
+
+static struct desc0 {    //这个里边就是关于版本，大小的数据
+    unsigned long reserved;
+    unsigned long Block_size;
+}
+//block的最终生成函数
+void(^blk)(void) = (void (*)(void)) &imp0((void *)func0 ... ...)
+//blk();转化
+(*blk->imp.FuncPtr)(blk);
+```
+(以下分别省去__main_block_0这个前缀和后缀)
+从源代码中就可以看出，其实Block内部最终的方法就是func里的内容。从这个方法的参数，又能联系到impl0这个结构体，在这个结构体里又有__block_impl这个结构体和desc这个结构体。
+然后看最后的block生成函数，一个block就是调用结构体的impl0的构造函数初始化一个impl0的struct，传入代表源block内部方法的func0，impl0里的impl又有关于impl0需要的信息和函数指针。由此看出impl0结构体，实际上就是我们的block。
+因为OC对象的实质就是个有isa指针的结构体，所以Block也可以看做一个OC对象(RB.P97~P99，这里有详细介绍id,即void *是什么个东西)
+最后使用Block的代码blk()转换后就是简单的函数调用
+
+##### blcok如何截获局部变量
+如代码所示，block是会截取局部变量的
+```
+void blockFunc() {
+    int val = 10;
+    void (^blk)(void) = ^{
+        printf("val in block = %d\n", val);
+    };
+    val = 20;
+    printf("now the val = %d\n", val);
+    blk();
+}
+```
+最后打印的结果是
+```
+now the val = 20
+val in block = 10
+Program ended with exit code: 0
+```
+因为block会捕获局部变量的瞬间值，所以在block捕获之后，val的值改变成多少，都和block捕获的变量无关
+
+```
+//Block
+int dmy = 20;
+int val = 10;
+const char *fmt = "val = %d\n";
+void(^blk)(void) = ^{
+    printf(fmt, val);
+};
+blk();
+//转化后代码合上面的block实质这部分差不多，不过下面这里不同
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    int val;
+    const char *fmt;
+    //block的一个构造方法
+    impl0(void *fp , int _val, char *_fmt ... ...) {
+        impl.isa = &StackBlock;
+        impl.FuncPtr = fp;
+    }
+}
+static void func0(struct impl *__cself) {
+    const char *fmt = __cself->fmt;
+    int val = __cself->val;
+    printf(fmt, val);
+}
+```
+从源码中可知，局部变量fmt和val会被作为impl0这个结构体的成员变量，但是dmy这个变量block没有使用，所以他是不会被追加进去的。
+```
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    int val;
+    const char *fmt;
+}
+```
+由此我们可以看出block是如何截取变量的。即使在Block内部使用了被截取的变量，也不会对原来的对象有影响
+所以所谓的截取成员变量，就是将成员变量值被保存到block的实例中（即impl0这个机构体之中）
+##### __block
+__block其实是和static将变量存在静态区，auto存在栈区等说明符一样，是指将变量放入某个特定的内存区域
+```
+__block int val = 10;
+void(^blk)(void) = ^{
+    val = 1;
+};
+```
+```
+__block int val = 10;
+//编译后
+struct __Block_byref_val_0 {
+    void *__isa;
+    __Block_byref_val_0 *__forwarding;
+    int __flags;
+    int __size;
+    int val;
+};
+```
+可以见得val加了__block之后成为了一个结构体，可以将它看成一个objc对象。其中，val就是真正的int val，而__forwarding是一个指向自己的指针,他存在的原因是因为->block都有哪几种类型的Block
+这个结构体可以用在几个block中。
+```
+struct impl0 {
+    struct __block_impl impl;
+    struct desc *Desc;
+    __Block_byref_val_0 *val;
+    //block的一个构造方法
+    impl0(void *fp, __Block_byref_val_0 *_val : val(val->__forwarding) ... ...) {
+        impl.isa = &StackBlock;
+        impl.FuncPtr = fp;
+    }
+}
+
+static void func0(struct impl *__cself) {
+    __Block_byref_val_0 *val = __cself->val;
+    val->__forwarding->val = 1;
+}
+```
+在这个func0中，我们可以看到，实际上，我们可以通过拿到当前Block结构体(即impl0)中的val，然后再通过val这个结构体(即__block编译出的结构体)找到最终的那个__block int val并赋值;
+##### block都有哪几种类型的Block，__block的变量存储域
+有Stack,Malloc,Global(数据区)
+在block初始化的时候结构体__block_impl的isa指针会指向对应的block类型
+```
+//NSConcreteGlobalBlock
+void(^blk)(void) = ^{printf("Global Block");};
+int main() {
+    //
+}
+//注意，全局Block是不能使用局部变量的
+```
+```
+//NSConcreteStackBlock
+int main() {
+    void(^blk)(void) = ^{printf("Stack Block");};
+}
+```
+GlobalBlock，任何地方都能访问，但是全局Block是不能使用局部变量的
+StackBlock在ARC下其实已经没有了，一生成就会被编译器自动copy到堆上成为堆Block。通过编译后的代码可以看出一个StackBlock会初始化后将自己copy到堆上，然后加入到autoreleasepool中。
+对于堆block，来说，是为了保证Block超出了作用域还能使用而存在的。如果一个Block是栈block，但是如果他需要在超过了作用域还需要存在，编译器会自动将他从栈复制到堆中。这个也是为啥Block的属性需要用copy，当然用strong也没什么问题，strong对应retain，block的retain实际上是由copy来实现。（苹果的原文copying block里说了，需要在作用域外使用block，copying block到heap）
+然鹅有时候会因为编译器在特殊情况下是无法识别Block是否需要被copy，这时候得手动调用copy方法。反正对于block来说，调用copy就行，准没错
+对于__block来说，当在栈上的时候，blk0和blk1使用它，如果blk0或blk1被复制到了堆上，那么__block这个被修饰的变量(即objc的对象)则会被一同复制过去的block持有，一个block持有引用计数+1，俩就+2。（因为__block的变量是对象）
+对于__block里的__forwarding正是为了解决copy到堆上的问题。当被copy到堆上之后，新的__forwarding还是指向自己，但是老的__forwarding会指向新的，这样就能永远只访问同一个变量
+##### block里面使用实例变量会造成循环引用吗
+看实例变量是否被是否被强引用，看block是都被其他对象强引用
+```
+Person *person = [[Person alloc]init];
+person.age = 20;
+person.block = ^{
+    NSLog(@"age is %d",person.age);
+};
+//编译后
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  Person *__strong person; // 对 person 产生了强引用
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, Person *__strong _person, int flags=0) : person(_person) {
+    impl.isa = &_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+```
+由此看出，block里使用了person，那么block会持有person这个对象。但是person对象又持有了Block，那么就会循环引用
+解决的办法有三个，__weak,_unsafe_unretain,还有__block
+而__block的代码是：
+```
+Person *person = [[Person alloc]init];
+__block Person *weakPerson = person;
+person.age = 20;
+person.block = ^{
+    NSLog(@"my age is %d",weakPerson.age);
+    //在 block 内部,把 person 对象置为nil
+    weakPerson = nil;
+};
+person.block();
+```
+##### block为啥要用copy
+文档说想要超过作用域使用，就要copy或者retain这个block，将他copying到heap中，这个是文档原文说的。所以Block和strong都可以，这个是MRC遗留下来的问题
+然鹅有时候会因为编译器在特殊情况下是无法识别Block是否需要被copy，这时候得手动调用copy方法。反正对于block来说，调用copy就行，准没错
+
+
 #### 底层
 ##### IMP、SEL、Method的区别
 SEL是方法编号，也是方法名
@@ -376,7 +689,16 @@ shouldRasterize = YES在其他属性触发离屏渲染的同时，会将光栅�
 最后可以用贝塞尔曲线画圆角CoreGraphics
 
 
-#### 多线程
+
+
+
+------
+
+
+
+
+
+#### 多线程与锁
 ##### 进程和线程
 进程：
 进程是一个程序执行的过程，一个程序至少有一个进程，
@@ -420,6 +742,38 @@ NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(
 自旋锁不会引起休眠，所以没有线程调度所以速度快，但是因为当前线程会不停检查是否解锁所以会占用CPU资源，所以自旋锁适合于那种很短时间的操作（sideTable,atomic），而不适合那种时间较长的锁。互斥锁正好反着
 自旋锁：gcd信号量（semp）
 互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
+
+##### 线程死锁的四个条件
+？？？
+##### 自旋锁和互斥锁的区别
+？？？
+##### 多进程间的通讯
+？？？
+##### 开启一条线程的方法
+？？？
+##### 线程可以取消吗
+？？？
+##### 那子线程中的autorelease变量什么时候释放？
+？？？
+##### 子线程里面，需要加autoreleasepool吗
+？？？
+##### GCD和NSOperation的区别？
+？？？
+##### 线程常驻
+AFN？？？
+##### 子线程与AutoreleasePool
+AFN？？？
+
+
+
+
+
+------
+
+
+
+
+
 
 #### runloop
 ##### 循环的细节
