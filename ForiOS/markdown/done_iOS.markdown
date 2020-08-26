@@ -7,16 +7,16 @@ OC对实例变量的地址偏移量处理放在类方法中去保管，在运行
 默认情况下属性是atomic，是自动加了一个同步锁(synchronized)，这个历史遗留问题iOS同步锁的开销很大，而且atomic也不一定能保证线程安全，所以大部分都是nonatomic，再用其他的锁保证线程安全
 #### 类对象的能否继承，重写
 可以
-#### iOS中内存泄漏的场景还有如何解决
+#### iOS中内存泄漏的场景
 NSTimer
 Block
 代理
 通知
 try/catch:出现异常用@throw可能会出现内存泄漏的情况，通常不是那种致命错误，用返回nil或者NSError，如果非要用try/catch那么要注意在final里释放资源（比如数据库）
-#### 理解NSCopying
+#### 如何理解NSCopying
 对象想要拷贝必须实现NSCopying协议，如果是想要深拷贝是实现NSMutableCopying协议，默认的拷贝都是浅拷贝
 copywithzone方法里的zone参数是历史遗留问题，不必理会
-#### 引用计数ARC
+#### 理解引用计数ARC
 1.苹果系统是内部有一个引用计数表来管理引用计数
 2.alloc/new/copy/mutableCopy生成的对象，这种对象会被当前的变量所持有，引用计数会加1，而其他的如array，mutibale等等需要在舒适化之后调用retain才能持有这个对象
 3.ARC中的修饰符
@@ -521,7 +521,6 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 #### 找链表的倒数第k个结点
 ？？？
 #### 二叉树的遍历
-前序，中序，后续，递归非递归
 ？？？
 #### 说一下hash算法
 ？？？
