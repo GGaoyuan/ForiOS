@@ -85,6 +85,15 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NewDictionary *dic = [NewDictionary new];
+    if ([dic isKindOfClass:[NSObject class]]) {
+        NSLog(@"");
+    } else {
+        NSLog(@"");
+    }
+    
+    
 //    SwiftMain *swiftMain = [SwiftMain new];
 //    [swiftMain enter];
 //    return;

@@ -942,6 +942,7 @@ globalQueue:系统提供的全局并发队列，存在着高、中、低三种�
 GCD是C语言，NSOprationQueue是GCD的OC封装
 NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(isExecuted)、是否结束(isFinished)、是否取消(isCanceld)
 相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
+NSOperation主要是重写start和main方法，一个是针对串行，一个是针对并行。Operation的cacel，并不是真正的停止，线程只要开始就不会停掉，只是不给你回调而已
 
 ##### 自旋锁与互斥锁（mutex）的区别
 自旋锁和互斥锁的区别在于
@@ -953,10 +954,6 @@ NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(
 互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
 
 ##### 线程死锁的四个条件
-？？？
-##### 自旋锁和互斥锁的区别
-？？？
-##### 多进程间的通讯
 ？？？
 ##### 开启一条线程的方法
 ？？？
@@ -1190,7 +1187,7 @@ layer会创建backingStore获取上下文CGContextRef,
 https://www.jianshu.com/p/215db502b09d
 
 
-
+￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥￥
 
 -----
 

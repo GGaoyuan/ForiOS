@@ -56,7 +56,7 @@ NSNull：在集合对象中，表示空值的对象
 2.NONPOINTER_ISA--(非指针型的 isa) -> 感觉很像taggedPointer
 3.SideTables
 https://www.jianshu.com/p/c9089494fb6c
-##### Autoreleasepool实现原理
+##### <span id="Autoreleasepool_jump">Autoreleasepool实现原理</span>
 autoReleasepool的两个核心方法：objc_autoreleasePoolPush和objc_autoreleasePoolPop
 自动释放池的释放过程大概就是objc_autoreleasePoolPush-> [objct autorelease] -> objc_autoreleasePoolPop
 再往里面看，每次AutoreleasePoolPush/pop就是调用Page的push/pop
@@ -286,13 +286,191 @@ https://www.jianshu.com/p/fcf8d17121e3
 -------------
 #### Runloop
 ##### NSThread、NSRunLoop 和 AutoreleasePool
-苹果不允许直接创建AutoreleasePool，但是可以获取Main和CurrentRunloop
+苹果不允许直接创建RunLoop，但是可以获取Main和CurrentRunloop
 线程和Runloop是一一对应的，保存在一个全局的Dictionary中。
 子线程默认是没有开启runloop的，需要自己手动run。当线程结束的时候，runloop被回收，可以通过runloop线程保活。
 线程会对应一个runloop
 线程在RunloopPage可以得知会对应一个autoreleasepool
+##### 循环的细节
+![](/images/runloop_001.png)
+```
+{
+    /// 1. 通知Observers，即将进入RunLoop
+    /// 此处有Observer会创建AutoreleasePool: _objc_autoreleasePoolPush();
+    __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopEntry);
+    do {
 
--------------
+        /// 2. 通知 Observers: 即将触发 Timer 回调。
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeTimers);
+        /// 3. 通知 Observers: 即将触发 Source (非基于port的,Source0) 回调。
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeSources);
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);
+
+        /// 4. 触发 Source0 (非基于port的) 回调。
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(source0);
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);
+
+        /// 6. 通知Observers，即将进入休眠
+        /// 此处有Observer释放并新建AutoreleasePool: _objc_autoreleasePoolPop(); _objc_autoreleasePoolPush();
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeWaiting);
+
+        /// 7. sleep to wait msg.
+        mach_msg() -> mach_msg_trap();
+
+
+        /// 8. 通知Observers，线程被唤醒
+        __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopAfterWaiting);
+
+        /// 9. 如果是被Timer唤醒的，回调Timer
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__(timer);
+
+        /// 9. 如果是被dispatch唤醒的，执行所有调用 dispatch_async 等方法放入main queue 的 block
+        __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__(dispatched_block);
+
+        /// 9. 如果如果Runloop是被 Source1 (基于port的) 的事件唤醒了，处理这个事件
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION__(source1);
+
+
+    } while (...);
+
+    /// 10. 通知Observers，即将退出RunLoop
+    /// 此处有Observer释放AutoreleasePool: _objc_autoreleasePoolPop();
+    __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopExit);
+}
+
+
+int32_t __CFRunLoopRun()
+{
+    //通知即将进入runloop
+    __CFRunLoopDoObservers(KCFRunLoopEntry);
+     
+    do
+    {
+        // 通知将要处理timer和source
+        __CFRunLoopDoObservers(kCFRunLoopBeforeTimers);         
+        __CFRunLoopDoObservers(kCFRunLoopBeforeSources);
+         
+        __CFRunLoopDoBlocks();  //处理非延迟的主线程调用
+        __CFRunLoopDoSource0(); //处理UIEvent事件
+         
+        //GCD dispatch main queue
+        CheckIfExistMessagesInMainDispatchQueue();
+         
+        // 即将进入休眠
+        __CFRunLoopDoObservers(kCFRunLoopBeforeWaiting);
+         
+        // 等待内核mach_msg事件
+        mach_port_t wakeUpPort = SleepAndWaitForWakingUpPorts();
+         
+        // Zzz...
+         
+        // 从等待中醒来
+        __CFRunLoopDoObservers(kCFRunLoopAfterWaiting);
+         
+        // 处理因timer的唤醒
+        if (wakeUpPort == timerPort)
+            __CFRunLoopDoTimers();
+         
+        // 处理异步方法唤醒,如dispatch_async
+        else if (wakeUpPort == mainDispatchQueuePort)
+            __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__()
+             
+        // UI刷新,动画显示
+        else
+            __CFRunLoopDoSource1();
+         
+        // 再次确保是否有同步的方法需要调用
+        __CFRunLoopDoBlocks();
+         
+    } while (!stop && !timeout);
+     
+    //通知即将退出runloop
+    __CFRunLoopDoObservers(CFRunLoopExit);
+}
+```
+##### runloop有几个mode
+runloop内部有几个mode,而mode里有timer，source，observer(？？？都是数组，一个mode能有好几个timer，source，observer？？？)
+timer:下面的都是这个的timer封装
+```
++ (NSTimer *)timerWithTimeInterval:(NSTimeInterval)ti invocation:(NSInvocation *)invocation repeats:(BOOL)yesOrNo;
+- (void)performSelector:(SEL)aSelector withObject:(nullable id)anArgument afterDelay:(NSTimeInterval)delay;
++ (CADisplayLink *)displayLinkWithTarget:(id)target selector:(SEL)sel;
+- (void)addToRunLoop:(NSRunLoop *)runloop forMode:(NSRunLoopMode)mode;
+```
+关于时间的封装几乎都和runloop有关
+source:runloop执行的输入源（一个protcol）
+只要符合protocol就可以随便跑(几乎不可能遇到)
+runloop自己定义了俩，就叫source0和source1
+source0:处理App内部事件，比如touch事件，socket
+source1:由runloop和内核管理，mach port驱动，如CFMachPort,CFMessagePort。（mach port用在进程通信）
+observer:告诉当前的runloop是设么状态，在干嘛
+```
+typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
+    kCFRunLoopEntry         = (1UL << 0), // 即将进入Loop
+    kCFRunLoopBeforeTimers  = (1UL << 1), // 即将处理 Timer
+    kCFRunLoopBeforeSources = (1UL << 2), // 即将处理 Source
+    kCFRunLoopBeforeWaiting = (1UL << 5), // 即将进入休眠
+    kCFRunLoopAfterWaiting  = (1UL << 6), // 刚从休眠中唤醒
+    kCFRunLoopExit          = (1UL << 7), // 即将退出Loop
+};
+```
+比如CAAnimation，会在kCFRunLoopBeforeWaiting || kCFRunLoopAfterWaiting后调用。runloop会搜集这一次runloop循环里的所有动画，然后再一块执行
+**runloopobserver和autorelease的关系**
+**在UITouch里dealloc加个断点，点击后进入断点可以看到，在runloop的一个observercallout后会走调用autoreleasepophandler，之后就是池的pop，具体的释放时间是在一个runloop结束了后sleep然后再继续跑，释放时间就是在两次的sleep的时间之间**
+
+每次更换mode的时候要停下当前mode，再重启loop，同一时间只能执行一个
+```
+NSDefaultRunLoopMode    //默认的，空闲状态
+UITrankingRunloopMode   //滑动scrollView
+NSRunLoopCommonModes    //上面俩的集合，俩的都能跑
+//还有个私有的，在启动的时候，不会用到
+```
+一般Timer都在default里，滑动的时候成了UITranking，所以timer不走了。要timer走得让timer用commonmodes
+
+这里说一句，gcd的timer是系统内核实现，由runloop回调，gcdtimer的实现和runloop无关
+##### 和runloop有关的东西(孙源)
+NSTimer：完全依赖runloop
+UIEvent
+Autorelease
+NSObject中关于时间的方法，比如performDelay，performcancel，performOnMainThread等等
+CADisplayLink:每画一帧给一个回调
+CAAnimation(kCFRunLoopAfterWaiting之后，收集了所有的动画后再执行)
+CATransition
+dispatch_get_main_queue
+NSURLConnection
+AFN
+##### runloop实践(孙源)
+AFN中的runloop和NSMachPort一起实现线程常驻
+tableView因为下载图片变卡，可以用performdelay:0 mode:default来做，当tableView彻底停下之后再下载图片
+Crash时候收到Signal后会杀死runloop，手动开启runloop让app回光返照
+##### 线程保活的时候，用RunloopMode的时候能用CommonMode吗
+不可以
+我记得源码里有写，如果是commonMode会return掉，只能用default（7月18/19逻辑教育讲MachPort有源码，里面有说这个)
+##### AutoReleasePool什么时候释放?
+entry监听回调里会有_objc_autoreleasePoolPush() 创建自动释放池，且优先级最高，保证创建释放池发生在其他所有回调之前。
+BeforeWaiting(准备进入休眠)时调用_objc_autoreleasePoolPop()和_objc_autoreleasePoolPush()释放旧的池并创建新池
+Exit(即将退出Loop)时调用_objc_autoreleasePoolPop()来释放自动释放池。这个Observer优先级最低，保证其释放池子发生在其他所有回调之后
+孙源的Runloop分享里说过，在当前runloop结束之后和下一次runloop结束之前调用drain方法
+##### 解释下事件响应过程
+硬件的监听器发现有硬件的事件发生后（触摸，摇晃，锁屏等等），由IOKit生成一个IOEvent事件然后由MachPort转发给对应的App进程，然后source1会接受这个事件，调用ApplicationHandleEventQueue进行内部分发，然后将IOEvent包装成UIEvent进行处理分发，比如UIButton的点击，touchBegin等等
+##### 解释一下手势识别的过程
+当App收到ApplicationHandleEventQueue分发的IOEvent之后，会先canle掉当前的touchesBegin/Move/End的回调，并将对应的UIGestureRecognizer标记为待处理。
+当runloop为将要进入休眠的时候（Beforewaiting），会获取到所有的UIGestureRecognizer，然后执行所有的手势识别
+##### 解释一下页面的渲染的过程
+渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting的时候），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。
+layer会调用[CALyer display]，进入到真正的绘制过程。接下来就是通过判断看是否是异步绘制代理方法func display(_ layer: CALayer)，如果有异步绘制的代理方法，则走异步绘制func display(_ layer: CALayer)方法
+如果没有的话走系统绘制方法。
+系统绘制：
+layer会创建backingStore获取上下文CGContextRef,
+接下来判断是否有layer.delegate代理
+如果有：
+调用layer.delegate drawLayer:inContext:，
+接着返回UIVew drawRect回调，让我们在系统绘制的基础上，再做一些其他的事情
+如果没有：CALayer drawInContext
+走完后，CALayer上传backingStore给GPU，结束
+异步绘制：
+直接走func display(_ layer: CALayer)方法，里面dispatchAsyncGlobal，然后再dispatch到Main的过程中吧异步生成的东西赋值给layer.contents，结束
+
 #### Category
 ##### Category如何被加载的
 在_objc_init->map_images->_read_images，然后将category的方法和类方法添加到对应的类里面。回顾[App启动过程](#AppLaunch_jump)，里面有写
@@ -584,6 +762,81 @@ void _NSSetObjectValueAndNotify() {
 
 ******************************************************************************
 
+### 多线程与锁
+#### 多线程
+##### 进程和线程
+进程：
+进程是一个程序执行的过程，一个程序至少有一个进程，
+进程是操作系统资源分配的基本单位
+进程是一个独立单位，进程有自己的内存空间，拥有独立运行所需的全部资源
+线程：
+程序执行流的最小单元，线程是进程中的一个实体.
+一个进程要想执行任务,必须至少有一条线程.应用程序启动的时候，系统会默认开启一条线程,也就是主线程
+进程和线程的关系：
+线程是进程的执行单元，进程的所有任务都在线程中执行
+线程是CPU分配资源和调度的最小单位
+一个程序有多个进程，一个进程有多个线程
+同一个进程内的线程共享进程资源
+
+##### 任务和队列
+同步任务sync:
+阻塞当前线程，不具备开启新线程的能力
+异步任务async:
+不阻塞当前线程，具备开启新线程的能力(并不一定开启新线程)。如果不是添加到主队列上，异步会在子线程中执行任务
+
+串行队列(Serial):FIFO，同一时间一个队列的任务只能执行一个，完事了之后才能执行下一个
+并发队列(Concurrent):FIFO同时允许多个任务并发执行。(可以开启多个线程，并且同时执行任务)。并发队列的并发功能只有在异步任务(dispatch_async)函数下才有效
+两者区别：执行顺序不同，以及开启线程数不同。
+
+系统获得队列的方式有三个：
+mainQueue:主线程串行队列
+globalQueue:系统提供的全局并发队列，存在着高、中、低三种优先级
+自定义队列:dispatch_queue_create
+
+##### GCD对比NSOprationQueue
+GCD是C语言，NSOprationQueue是GCD的OC封装
+NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(isExecuted)、是否结束(isFinished)、是否取消(isCanceld)
+相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
+NSOperation主要是重写start和main方法，一个是针对串行，一个是针对并行。Operation的cacel，并不是真正的停止，线程只要开始就不会停掉，只是不给你回调而已
+
+#### 锁
+##### 自旋锁与互斥锁（mutex）的区别
+自旋锁和互斥锁的区别在于
+1:自旋锁时候忙等，就是说上一个线程被锁后，当前线程不会休眠，而是不停的去检查锁是否可用，当上一个线程完事后当前线程立即执行
+2:互斥锁是上一个线程被锁住后当前线程休眠，此时CPU会去执行其他任务。当上一个线程完成后，当前线程再被唤醒执行
+优缺点：
+自旋锁不会引起休眠，所以没有线程调度所以速度快，但是因为当前线程会不停检查是否解锁所以会占用CPU资源，所以自旋锁适合于那种很短时间的操作（sideTable,atomic），而不适合那种时间较长的锁。互斥锁正好反着
+自旋锁：gcd信号量（semp）
+互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
+
+##### 线程死锁的四个条件
+？？？
+##### 线程可以取消吗
+只能取消未执行的，不能取消正在执行的
+##### 那子线程中的autorelease变量什么时候释放？
+每一个线程创建的时候就会有一个Autoreleasepool的创建，并且在线程退出的时候，清空整个Autoreleasepool。（ps:如果在子线程中设置一个循环，autorelease对象确实无法释放）这里可以参考[Autoreleasepool实现原理](#Autoreleasepool_jump)。里面是有pthread的，这个是最底层的thread。
+每一个线程创建的时候就会有一个autorelease pool的创建，并且在线程退出的时候，触发清空整个autoreleasepool
+##### 子线程里面，需要加autoreleasepool吗
+不用，会自动创建，但是可以自己加，在微信的Matrix框架里ping主线程，他们就加了pool
+##### 线程常驻
+Runloop加Machport
+##### Notification和多线程
+接收通知处理代码线程 由发出通知的线程决定
+如果发送线程是在异步，则接收的线程也是在异步
+这里有一个NotificationQueue的东西，没有用过，但是写的是一个双向链表，用于管理通知发送时机(异步发送)，比如runloop空闲发送，尽快发送，立刻发送。Queue依赖runloop，子线程的话得要run.runloop,最终还是通过NSNotificationCenter进行发送通知。所谓异步，指的是非实时发送而是在合适的时机发送，并没有开启异步线程
+
+******************************************************************************
+
+## 持久化
+##### iOS中的持久化方案有哪些
+？？？
+##### 你们的App是如何处理本地数据安全的(比如用户名的密码)
+？？？
+##### 事务的特征
+？？？
+
+******************************************************************************
+
 ### UI和优化
 #### UI部分
 ##### 一张图片的内存占用大小是由什么决定的
@@ -689,10 +942,22 @@ UIView是默认的YES，UIButton是NO
 shouldRasterize = YES在其他属性触发离屏渲染的同时，会将光栅化后的内容缓存起来，如果对应的layer及其sublayers没有发生改变，在下一帧的时候可以直接复用。shouldRasterize = YES，这将隐式的创建一个位图，各种阴影遮罩等效果也会保存到位图中并缓存起来，从而减少渲染的频度
 比如某个页面卡，可以开启光栅化。让位图缓存复用，如果能成功复用，就会有性能提升。性能的提升取决于多少被复用了。具体的复用在xcode的debug->viewDebuging里instrument看“Color Hits Green and Misses Red”
 因此栅格化仅适用于较复杂的、静态的效果，别再TableView里用，离屏渲染过多性能消耗会得不偿失，而且有时候使用光栅化经常出现未命中缓存的情况
-
+##### 什么是异步绘制
+layer会创建backingStore获取上下文CGContextRef,
+接下来判断是否有代理
+如果有：
+调用layer.delegate drawLayer:inContext:，
+接着返回UIVew drawRect回调，让我们在系统绘制的基础上，再做一些其他的事情
+如果没有：CALayer drawInContext
+走完后，CALayer上传backingStore给GPU，结束
 
 ******************************************************************************
-#### 优化部分
+#### UI优化
+##### 如何高性能的画一个圆角
+视图和圆角的大小对帧率并没有什么卵影响，数量才是伤害的核心输出
+如果能够只用cornerRadius解决问题，就不用优化。
+如果必须设置masksToBounds，可以参考圆角视图的数量，如果数量较少(一页只有几个)也可以考虑不用优化
+最后可以用贝塞尔曲线画圆角CoreGraphics
 ##### 如何对代码进行性能优化
 静态分析Analyze
 debug->View Debuging里可以看离屏渲染，图层混合等等
@@ -716,13 +981,57 @@ DataBuffer到ImageBuffer的这个过程，就是Decode过程。DataBuffer代表�
 （上面三个都难以解决的时候，可以用这个）
 CPU在计算的时候会很慢。可以吧这个东西画成一张图
 5.异步渲染
-##### 内存优化
-？？？
 ##### UIImage加载图片性能问题
 imageNamed系统会缓存，imageWithContentsOfFile不会，所以小图可以用imageName,如果大图还用会内存长得快
 
 不要在UIImageView使用的时候去缩放图片，你应保证图片的大小和UIImageView的大小相同，在ScrollView搞这个东西非常耗性能，如果一个图片需要缩放，最好在子线程中缩放好了再给他放到UIImageView里（绘本优化的时候遇到过）
+#### 内存优化
+##### 内存优化
+？？？
 
+#### 启动优化
+
+
+##### 二进制重排
+一些理论基础：
+cpu寻址过程
+引入虚拟内存后,cpu在通过虚拟内存地址访问数据的过程如下:
+1.通过虚拟内存地址,找到对应进程的映射表.
+2.通过映射表找到其对应的真实物理地址,进而找到数据.
+这个过程被称为地址翻译,这个过程是由操作系统以及cpu上集成的一个硬件单元MMU协同来完成的 
+虚拟内存和物理内存通过映射表进行映射，但是这个映射并不可能是一一对应的，那样就太过浪费内存了，为了解决效率问题，实际上真实物理内存是分页的，而映射表同样是以页为单位的
+iOS系统中,一页为16KB
+当应用被加载到内存中时，并不会将整个应用加载到内存中，只会放用到的那一部分，也就是懒加载的概念，换句话说就是应用使用多少，实际物理内存就实际存储多少，
+当应用访问到某个地址，映射表中为，也就是说并没有被加载到物理内存中时，系统就会立刻阻塞整个进程，触发一个我们所熟知的缺页中断 - Page Fault .
+当一个缺页中断被触发，操作系统会从磁盘中重新读取这页数据到物理内存上，然后将映射表中虚拟内存指向对应
+二进制重排：
+App启动的时候会加载很多的类，分类，库等等到内存中，所以Page Fault越多，那么耗时就越大。举个栗子：
+Page1:              Page2:
+Method1             Method5
+Method2             Method6
+Method3             Method7
+Method4             Method8
+比如在启动的时候需要Method1和Method8，那么分别在两个不同Page上的，现在已经加载了Page1，需要Page2的Method8，从而触发1次中断
+实际项目中的做法是将启动时需要调用的函数放到一起(比如前10页中)以尽可能减少page fault, 达到优化目的.而这个做法就叫做:二进制重排
+查看中断可以在Instrument的System Trace里看
+重排方法：
+我们可以通过这个参数配置一个.order类型的文件，把要重排的数据放里面，xcode里有配置可以使用这个.order文件
+不能用hook Objc_msgSend。因为hook无法捕捉c++,block，还有swift，得用clang插桩来获取符号表
+获取启动加载所有函数的符号(clang插桩覆盖)：
+先解释Clang插桩：Clang是轻量级编译器，插桩是在保证被测程序原有逻辑完整性的基础上在程序中插入一些代码段（比较像hook，加入一些自己东西）
+静态插桩实际上是在编译期就在每一个函数内部二进制源数据添加hook代码(我们添加的__sanitizer_cov_trace_pc_guard函数)来实现全局的方法hook的效果，从而获取启动时的函数
+根据代码的注释，大概意思是：
+函数执行前会将下一个要执行的函数地址保存到寄存器中，拿到函数的返回地址，   然后通过动态库拿到句柄，通过句柄拿到函数的内存地址，通过函数内存地址拿到函数。靠这样拿到最后启动时候函数的符号表
+clang静态插桩坑点:
+1.多线程的问题,可能会影响最后函数的搜集，可以用苹果的原子队列<OSAtomic.h>（先进后出，线程安全，只能保存结构体）
+2.load方法拿不到
+3.去重
+其实坑点不少，但是都可以找到对应的方法
+swift工程/混编工程问题和纯的OC工程不太一样，swift工程需要单独配置一下
+完整的教程，包含了代码
+http://www.zyiz.net/tech/detail-127196.html
+https://mp.weixin.qq.com/s?__biz=MzA5NzMwODI0MA==&mid=2647766465&idx=1&sn=e9598765d3314a0d17dc98069344b6a2&chksm=8887cefebff047e8c92f8c97e1b517e6fe7521a5efc83bb80d99edbd12ae7dab9fc416961962&scene=21#wechat_redirect
+最后二进制重排后的时间还是在pageFault里可以查看
 
 
 
@@ -785,3 +1094,6 @@ dyld通过ImageLoader开始加载libSystem，可以看到栈中出现了libSyste
 *************
 
 
+## 一些好的网址
+##### runloop完全文章
+https://www.jianshu.com/p/215db502b09d
