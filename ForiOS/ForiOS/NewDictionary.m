@@ -24,7 +24,9 @@
 }
 
 - (void)dealloc {
-    NSLog(@"");
+//    __weak __typeof(self) weakSelf = self;
+//    NSLog(@"%p", weakSelf);
+//    NSLog(@"1111%@", self);
 }
 
 - (instancetype)init {

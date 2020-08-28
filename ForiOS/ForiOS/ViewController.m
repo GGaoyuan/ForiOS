@@ -60,6 +60,7 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 //        [self performSelector:@selector(test123) withObject:nil afterDelay:0];
 //
 //    });
+    NSLog(@"发送:%@",[NSThread currentThread]);
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSLog(@"发送:%@",[NSThread currentThread]);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"noti" object:nil];

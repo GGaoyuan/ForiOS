@@ -11,7 +11,12 @@
 
 ******************************************************************************
 ### Swift
-
+##### 闭包和逃逸闭包
+？？？
+##### unowned和weak
+？？？
+##### 深拷贝和浅拷贝
+？？？
 
 ******************************************************************************
 ### 内存 && Runtime && Runloop
@@ -283,6 +288,22 @@ find查找大概就是将index-1,从index开始，遍历一遍查找，当走过
 这里面有详细的源码
 https://www.jianshu.com/p/fcf8d17121e3
 
+##### 消息转发机制objc_msgSend
+objc_msgSend会查找当前对象的methodList，如果没有，会往自己的父类中去查找，如果都查不到会进行消息转发。当找到了对应的方法后，会吧方法缓存到一个表中，下一次再访问的时候就从缓存中查找，这样速度更快
+消息转发分为两个阶段：
+1.动态方法解析：先查询接受者，看有没有动态添    -=——）加方法处理这个消息
+2.完整的消息转发机制：这时候第一步已经执行完，运行时系统不会再动态添加方法，也不会再去查找动态添加的方法，这时系统会看有没有其他的消息接收对象，如果有就转发消息给备用对象，如果没有，系统会把消息封装在NSInvocation对象，给接受者最后一次机会处理消息
+##### Runtime的内存优化
+1.类数据结构变化
+当类被Runtime加载之后，类的结构会发生一些变化，
+CleanMemory加载后不会发生更改的内存块，class_ro_t属于Clean Memory，因为它是只读的
+DirtyMemory运行时会进行更改的内存块，类一旦被加载，就会变成Dirty Memory，例如，我们可以在 Runtime 给类动态的添加方法
+在介绍优化方法之前，我们先来看一下，在类加载之后类的结构变化：
+在类加载到Runtime中后会被分配用于读取/写入数据的结构体class_rw_t
+Tips：class_ro_t是只读的，存放的是编译期间就确定的字段信息；而class_rw_t是在 runtime 时才创建的，它会先将class_ro_t的内容拷贝一份，再将类的分类的属性、方法、协议等信息添加进去，之所以要这么设计是因为 Objective-C 是动态语言，你可以在运行时更改它们方法，属性等，并且分类可以在不改变类设计的前提下，将新方法添加到类中
+优化可以吧rw里很多不会改变的方法放在一个新建的rw_ext里，rw_ext再指向ro，让一部分DirtyMemory变成CleanMemory
+https://halfrost.com/objc_runtime_isa_class/
+
 -------------
 #### Runloop
 ##### NSThread、NSRunLoop 和 AutoreleasePool
@@ -304,10 +325,12 @@ https://www.jianshu.com/p/fcf8d17121e3
         __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeTimers);
         /// 3. 通知 Observers: 即将触发 Source (非基于port的,Source0) 回调。
         __CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__(kCFRunLoopBeforeSources);
-        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);
+        /// 主线程的调用
+        __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block); 
 
         /// 4. 触发 Source0 (非基于port的) 回调。
         __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__(source0);
+        /// 主线程的调用
         __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__(block);
 
         /// 6. 通知Observers，即将进入休眠
@@ -452,10 +475,13 @@ BeforeWaiting(准备进入休眠)时调用_objc_autoreleasePoolPop()和_objc_aut
 Exit(即将退出Loop)时调用_objc_autoreleasePoolPop()来释放自动释放池。这个Observer优先级最低，保证其释放池子发生在其他所有回调之后
 孙源的Runloop分享里说过，在当前runloop结束之后和下一次runloop结束之前调用drain方法
 ##### 解释下事件响应过程
-硬件的监听器发现有硬件的事件发生后（触摸，摇晃，锁屏等等），由IOKit生成一个IOEvent事件然后由MachPort转发给对应的App进程，然后source1会接受这个事件，调用ApplicationHandleEventQueue进行内部分发，然后将IOEvent包装成UIEvent进行处理分发，比如UIButton的点击，touchBegin等等
-##### 解释一下手势识别的过程
-当App收到ApplicationHandleEventQueue分发的IOEvent之后，会先canle掉当前的touchesBegin/Move/End的回调，并将对应的UIGestureRecognizer标记为待处理。
-当runloop为将要进入休眠的时候（Beforewaiting），会获取到所有的UIGestureRecognizer，然后执行所有的手势识别
+硬件的监听器发现有硬件的事件发生后（触摸，摇晃，锁屏，触摸等等），由IOKit生成一个IOEvent事件然后由MachPort转发给对应的App进程，然后source1会接受这个事件，调用ApplicationHandleEventQueue进行内部分发，然后将IOEvent包装成UIEvent进行处理分发，比如UIButton的点击，touchBegin等等
+##### 解释一下手势识别的过程/事件响应过程
+硬件监听器发现有硬件的事件发生后（触摸，摇晃，点击等等），由IOKit生成一个IOHIDEvent事件然后由MachPort转发给对应的App进程，触发source1触发回调，然后通过ApplicationHandleEventQueue分发。
+ApplicationHandleEventQueue会把IOHIDEvent处理并包装成UIEvent进行处理或分发，其中包括识别UIGesture/处理屏幕旋转/发送给UIWindow等。
+通常事件比如 UIButton 点击、touchesBegin/Move/End/Cancel 事件都是在这个回调中完成的。
+手势识别：
+当上面的 _UIApplicationHandleEventQueue() 识别了一个手势时，其首先会调用 Cancel 将当前的 touchesBegin/Move/End 系列回调打断（如何打断呢？）。随后系统将对应的 UIGestureRecognizer 标记为待处理。苹果注册了一个 Observer 监测 BeforeWaiting (Loop即将进入休眠) 事件，这个Observer的回调函数是 _UIGestureRecognizerUpdateObserver()，其内部会获取所有刚被标记为待处理的 GestureRecognizer，并执行GestureRecognizer的回调。当有 UIGestureRecognizer 的变化(创建/销毁/状态改变)时，这个回调都会进行相应处理。
 ##### 解释一下页面的渲染的过程
 渲染过程，包括像动画效果，我们项目中的inMainThread（这里是因为mainThread的runloopCallOut是在Pop和Push之间，应该也是在Beforwaiting的时候），都是在beforewaiting(即将休眠的时候)的时候被系统捕获这些被打了标记的对象，然后统一作出处理。
 layer会调用[CALyer display]，进入到真正的绘制过程。接下来就是通过判断看是否是异步绘制代理方法func display(_ layer: CALayer)，如果有异步绘制的代理方法，则走异步绘制func display(_ layer: CALayer)方法
@@ -827,7 +853,7 @@ Runloop加Machport
 
 ******************************************************************************
 
-## 持久化
+### 持久化
 ##### iOS中的持久化方案有哪些
 ？？？
 ##### 你们的App是如何处理本地数据安全的(比如用户名的密码)
@@ -952,7 +978,7 @@ layer会创建backingStore获取上下文CGContextRef,
 走完后，CALayer上传backingStore给GPU，结束
 
 ******************************************************************************
-#### UI优化
+#### 性能优化
 ##### 如何高性能的画一个圆角
 视图和圆角的大小对帧率并没有什么卵影响，数量才是伤害的核心输出
 如果能够只用cornerRadius解决问题，就不用优化。
@@ -985,6 +1011,15 @@ CPU在计算的时候会很慢。可以吧这个东西画成一张图
 imageNamed系统会缓存，imageWithContentsOfFile不会，所以小图可以用imageName,如果大图还用会内存长得快
 
 不要在UIImageView使用的时候去缩放图片，你应保证图片的大小和UIImageView的大小相同，在ScrollView搞这个东西非常耗性能，如果一个图片需要缩放，最好在子线程中缩放好了再给他放到UIImageView里（绘本优化的时候遇到过）
+##### 如何检测应用是否卡顿
+？？？
+##### 容错处理你们一般是注意哪些？
+？？？
+##### 如何防止拦截潜在的崩溃？
+runtime消息转发？？？
+##### 内存告急的处理
+？？？
+
 #### 内存优化
 ##### 内存优化
 ？？？
@@ -1055,6 +1090,26 @@ SDWebImage使用NSCache类来实现内存缓存。
 SDWebImage 默认会有一个对上次加载失败的图片拒绝再次加载的机制。 也就是说，一张图片在本次会话加载失败了，如果再次加载就会直接拒绝。(额外知识)
 SDWebImage 会在每次 APP 结束的时候执行清理任务。 清理缓存的规则分两步进行。 第一步先清除掉过期的缓存文件。 如果清除掉过期的缓存之后，空间还不够。 那么就继续按文件时间从早到晚排序，先清除最早的缓存文件，直到剩余空间达到要求。具体点，SDWebImage 是怎么控制哪些缓存过期，以及剩余空间多少才够呢？maxCacheAge是文件缓存的时长,maxCacheAge 的默认值，注释上写的很清楚，缓存一周,SDWebImage 在默认情况下不会对缓存空间maxCacheSize设限制。分别在应用进入后台和结束的时候，遍历所有的缓存文件，如果缓存文件超过 maxCacheAge 中指定的时长，就会被删除掉。(额外知识)
 
+##### SD里在查询磁盘的时候为什么会有一个ioQueue(SD怎么保证查找安全)
+一个async(ioQueue)实现，一个串行队列，保证当前只有一个任务操作磁盘
+
+##### SD查找Disk为什么要autoreleasepool
+因为查询磁盘差的是NSData，得到一个UIImage，转换的时候会出现大量的临时变量
+
+##### SD如何判断是JPEG，PNG，或者其他格式的？
+通过二进制码，在磁盘缓存的时候拿到的是NSData，然后通过前缀0xFF,0x89等待，判断图片的格式
+
+##### SD是怎么做到URL不变，但是图片变化，让图片也变化的？
+在完成了拿图片之后，有一个RefreshCache的枚举，里面有提到CacheControl。这个东西可以在ResponseHeader里看到（青花瓷抓包）
+cache-control: max-age=31536000
+last-modified: Tue, 26 Mar 2019 14:16:09 GMT
+这俩就是这个问题的关键
+如果last-modified在事件内，是不会请求的，直接用缓存，主要就是设置“If-Modified-Since”
+这个字段得要后台支持，因为在Response的Header里
+
+##### SD为什么要重写NSOperation
+重写start方法要设置一些ResponseCache里的一些东西，是否要保存responseCache
+
 ******************************************************************************
 ### 编译，链接，App启动
 ##### 编译链接的过程
@@ -1097,3 +1152,7 @@ dyld通过ImageLoader开始加载libSystem，可以看到栈中出现了libSyste
 ## 一些好的网址
 ##### runloop完全文章
 https://www.jianshu.com/p/215db502b09d
+##### APM
+https://juejin.im/post/5ef6930fe51d4534a361530a?utm_source=gold_browser_extension#heading-32
+##### 大厂面试题
+https://www.jianshu.com/p/89978870f49f
