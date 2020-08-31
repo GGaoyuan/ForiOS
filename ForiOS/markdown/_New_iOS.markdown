@@ -94,6 +94,24 @@ AutoReleasePool的官方注释
 栈中存放的指针指向加入需要release的对象或者POOL_SENTINEL(哨兵对象，用于分隔autoreleasepool）。
 栈中指向POOL_SENTINEL的指针就是autoreleasepool的一个标记。当autoreleasepool进行出栈操作，每一个比这个哨兵对象后进栈的对象都会release。
 ##### weak的实现原理？SideTable的结构是什么样的
+weak 的实现原理可以概括一下三步：
+- 初始化时：runtime会调用objc_initWeak函数，初始化一个新的weak指针指向对象的地址。
+- 添加引用时：objc_initWeak函数会调用objc_storeWeak()函数，objc_storeWeak()的作用是更新指针指向，创建对应的弱引用表。
+- 释放时，调用clearDeallocating函数。clearDeallocating函数首先根据对象地址获取所有weak指针地址的数组，然后遍历这个数组把其中的数据设为nil，最后把这个entry从weak表中删除，最后清理对象的记录。
+```
+id objc_initWeak(id *location, id newObj) {
+// 查看对象实例是否有效
+// 无效对象直接导致指针释放
+    if (!newObj) {
+        *location = nil;
+        return nil;
+    }
+    // 这里传递了三个 bool 数值
+    // 使用 template 进行常量参数传递是为了优化性能
+    return storeWeakfalse/*old*/, true/*new*/, true/*crash*/>
+    (location, (objc_object*)newObj);
+}
+```
 weak苹果是用的一个引用计数表进行管理
 weak的管理表和引用计数表都是通过SideTables进行管理，SideTables全局的哈希表，由多个SideTable结构体组成，一共有64个以对应的内存地址作为Key去查表
 ![](/images/sideTables01.jpeg)
@@ -1242,6 +1260,28 @@ dyld通过ImageLoader开始加载libSystem，可以看到栈中出现了libSyste
 1.应用服务提供商从服务器端把要发送的消息和设备令牌(Token啊，令牌啥的用户信息)发送给苹果的消息推送服务器 。
 2.根据设备令牌在已注册的设备(iPhone、iPad、iTouch、mac 等)查找对应的设备，将消息发送给相 应的设备。 
 3.客户端设备接将接收到的消息传递给相应的应用程序，应用程序根据用户设置弹出通知消息。
+##### dealloc中用weakSelf的结果是什么
+```
+- (void)dealloc {
+    __weak __typeof(self) weakSelf = self;
+    NSLog(@"%p", weakSelf);
+}
+```
+会crash，原因是这么写会在dealloc的时候会调用storeWeak,进行注册弱引用表,此时会判断是否是正在释放阶段并且如果在在释放就crash
+源码
+```
+//weak_register_no_lock方法
+if (deallocating) {
+        if (crashIfDeallocating) {
+            _objc_fatal("Cannot form weak reference to instance (%p) of "
+                        "class %s. It is possible that this object was "
+                        "over-released, or is in the process of deallocation.",
+                        (void*)referent, object_getClassName((id)referent));
+        } else {
+            return nil;
+        }
+    }
+```
 *************
 
 
