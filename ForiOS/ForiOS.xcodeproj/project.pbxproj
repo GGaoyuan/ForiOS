@@ -16,6 +16,8 @@
 		3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644424E66DE400E0F369 /* ThreadTest.swift */; };
 		3034644724E673E200E0F369 /* GYOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644624E673E200E0F369 /* GYOperation.swift */; };
 		308397DE24F503AE0054FED7 /* FastSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308397DD24F503AE0054FED7 /* FastSort.swift */; };
+		308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EC24FCE5590054FED7 /* DrawRectViewController.m */; };
+		308397F024FCE56A0054FED7 /* DrawRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EF24FCE56A0054FED7 /* DrawRectView.m */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
@@ -75,6 +77,10 @@
 		3034644424E66DE400E0F369 /* ThreadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTest.swift; sourceTree = "<group>"; };
 		3034644624E673E200E0F369 /* GYOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GYOperation.swift; sourceTree = "<group>"; };
 		308397DD24F503AE0054FED7 /* FastSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSort.swift; sourceTree = "<group>"; };
+		308397EB24FCE5590054FED7 /* DrawRectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawRectViewController.h; sourceTree = "<group>"; };
+		308397EC24FCE5590054FED7 /* DrawRectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectViewController.m; sourceTree = "<group>"; };
+		308397EE24FCE56A0054FED7 /* DrawRectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawRectView.h; sourceTree = "<group>"; };
+		308397EF24FCE56A0054FED7 /* DrawRectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectView.m; sourceTree = "<group>"; };
 		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
@@ -170,6 +176,17 @@
 			path = Thread;
 			sourceTree = "<group>";
 		};
+		308397EA24FCE5350054FED7 /* DrawRect */ = {
+			isa = PBXGroup;
+			children = (
+				308397EB24FCE5590054FED7 /* DrawRectViewController.h */,
+				308397EC24FCE5590054FED7 /* DrawRectViewController.m */,
+				308397EE24FCE56A0054FED7 /* DrawRectView.h */,
+				308397EF24FCE56A0054FED7 /* DrawRectView.m */,
+			);
+			path = DrawRect;
+			sourceTree = "<group>";
+		};
 		30AFC59E24401FD10090BFA4 = {
 			isa = PBXGroup;
 			children = (
@@ -195,6 +212,7 @@
 		30AFC5A924401FD10090BFA4 /* ForiOS */ = {
 			isa = PBXGroup;
 			children = (
+				308397EA24FCE5350054FED7 /* DrawRect */,
 				3034644324E66DC700E0F369 /* Thread */,
 				30EEC5D124E3DF7F00873596 /* Alg */,
 				30AFC5AA24401FD10090BFA4 /* AppDelegate.h */,
@@ -474,6 +492,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				308397F024FCE56A0054FED7 /* DrawRectView.m in Sources */,
 				30D7B57B24728DE500F9CD69 /* SwiftMain.swift in Sources */,
 				30A90BB324C7475700B47D50 /* NewDictionary2.m in Sources */,
 				30D7B5852472928100F9CD69 /* HPMouse.swift in Sources */,
@@ -495,6 +514,7 @@
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
 				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
 				3034644724E673E200E0F369 /* GYOperation.swift in Sources */,
+				308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */,
 				30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */,
 				30AFC5AC24401FD10090BFA4 /* AppDelegate.m in Sources */,
 				3033B42E248953B5003A5A9B /* KVOObject.m in Sources */,

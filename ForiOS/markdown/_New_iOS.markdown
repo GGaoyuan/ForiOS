@@ -975,7 +975,8 @@ UIView是默认的YES，UIButton是NO
 shouldRasterize = YES在其他属性触发离屏渲染的同时，会将光栅化后的内容缓存起来，如果对应的layer及其sublayers没有发生改变，在下一帧的时候可以直接复用。shouldRasterize = YES，这将隐式的创建一个位图，各种阴影遮罩等效果也会保存到位图中并缓存起来，从而减少渲染的频度
 比如某个页面卡，可以开启光栅化。让位图缓存复用，如果能成功复用，就会有性能提升。性能的提升取决于多少被复用了。具体的复用在xcode的debug->viewDebuging里instrument看“Color Hits Green and Misses Red”
 因此栅格化仅适用于较复杂的、静态的效果，别再TableView里用，离屏渲染过多性能消耗会得不偿失，而且有时候使用光栅化经常出现未命中缓存的情况
-##### 什么是异步绘制
+
+##### <span id="yibuhuizhi_jump">什么是异步绘制</span>
 layer会创建backingStore获取上下文CGContextRef,
 接下来判断是否有代理
 如果有：
@@ -984,6 +985,35 @@ layer会创建backingStore获取上下文CGContextRef,
 如果没有：CALayer drawInContext
 走完后，CALayer上传backingStore给GPU，结束
 
+##### <span id="drawRect01_jump">drawRect为什么会出现内存暴增</span>
+CALayer其实也只是iOS当中一个普通的类，它也并不能直接渲染到屏幕上，因为屏幕上你所看到的东西，其实都是一张张图片。而为什么我们能看到CALayer的内容呢，是因为CALayer内部有一个contents属性。contents默认可以传一个id类型的对象，但是只有你传CGImage的时候，它才能够正常显示在屏幕上。 所以最终我们的图形渲染落点落在contents身上如图
+![](/images/drawRect01.png)
+contents除了给它赋值CGImage之外，我们也可以直接对它进行绘制，实现drawRect方法即可自定义绘制。drawRect方法没有默认的实现，因为对UIView来说，contents并不是必须的，UIView不关心绘制的内容。
+如果UIView检测到drawRect方法被调用了，它就会为视图分配一个content(寄宿图)这个寄宿图的像素尺寸等于视图大小乘以contentsScale(这个属性与屏幕分辨率有关，我们的画板程序在不同模拟器下呈现的内存用量不同也是因为它)的值。
+因为重写了drawRect方法，drawRect方法就会自动调用。生成一张寄宿图后，方法里面的代码利用CoreGraphics去绘制，然后内容就会缓存起来，等待下次你调用-setNeedsDisplay时再进行更新。
+视图的drawRect:方法的背后实际上都是底层的CALayer进行了重绘和保存中间产生的图片，CALayer的delegate属性默认实现了CALayerDelegate协议，当它需要内容信息的时候会调用协议中的方法来拿。当画板视图重绘时，因为它的支持图层CALayer的代理就是画板视图本身，所以支持图层会请求画板视图给它一个寄宿图来显示，它此刻会调用：(这部分可以看看[异步绘制](#yibuhuizhi_jump)，很像)
+```
+- (void)displayLayer:(CALayer *)layer;
+```
+如果画板视图实现了这个方法，就可以拿到layer来直接设置contents寄宿图，如果这个方法没有实现，支持图层CALayer会尝试调用：
+```
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+```
+(其实这一部分就是异步绘制的步骤)
+这个方法调用之前，CALayer创建了一个合适尺寸的空寄宿图（尺寸由bounds和contentsScale决定）和一个Core Graphics的绘制上下文环境，为绘制寄宿图做准备，它作为ctx参数传入。在这一步生成的空寄宿图内存是相当巨大的，它就是本次内存问题的关键，一旦你实现了CALayerDelegate协议中的-drawLayer:inContext:方法或者UIView中的-drawRect:方法（其实就是前者的包装方法），图层就创建了一个绘制上下文，这个上下文需要的内存可从这个公式得出：图层宽*图层高*4 字节，宽高的单位均为像素。图层每次重绘的时候都需要重新抹掉内存然后重新分配。它就是我们画板程序内存暴增的真正原因。
+**解决办法：**
+最合理的办法处理类似于画板这样画线条的需求直接用专有图层CAShapeLayer。
+CAShapeLayer是一个通过矢量图形而不是bitmap来绘制的图层子类。用CGPath来定义想要绘制的图形，CAShapeLayer会自动渲染。它可以完美替代我们的直接使用Core Graphics绘制layer，对比之下使用CAShapeLayer有以下优点
+- 渲染快速。CAShapeLayer 使用了硬件加速，绘制同一图形会比用 Core Graphics 快很多。
+- 高效使用内存。一个 CAShapeLayer 不需要像普通 CALayer 一样创建一个寄宿图形，所以无论有多大，都不会占用太多的内存。
+- 不会被图层边界剪裁掉。
+- 不会出现像素化。
+
+**总结一下绘制性能优化原则：**
+- 绘制图形性能的优化最好的办法就是不去绘制。
+- 利用专有图层代替绘图需求。
+- 不得不用到绘图尽量缩小视图面积，并且尽量降低重绘频率。
+- 异步绘制，推测内容，提前在其他线程绘制图片，在主线程中直接设置图片。
 ******************************************************************************
 #### 性能优化
 ##### 如何高性能的画一个圆角
@@ -1029,7 +1059,7 @@ runtime消息转发？？？
 
 #### 内存优化
 ##### 内存优化
-drawRect
+drawRect内存暴增优化，可以使用CAShapeLayer[drawRect内存问题](#drawRect01_jump)
 
 #### 启动优化
 
@@ -1119,6 +1149,65 @@ last-modified: Tue, 26 Mar 2019 14:16:09 GMT
 
 ******************************************************************************
 ### 编译，链接，App启动
+##### +load方法在Mach-O的哪个数据段
+![](/images/macho01.png)
+Header:
+包含该二进制文件的一般信息包含：
+- 字节顺序
+- 架构类型
+- 加载指令的数量等。
+```
+struct mach_header_64 {
+    uint32_t    magic;              /* mach magic 标识符 */
+    cpu_type_t    cputype;          /* CPU 类型标识符，同通用二进制格式中的定义 r */
+    cpu_subtype_t    cpusubtype;    /*  CPU 子类型标识符，同通用二级制格式中的定义  */
+    uint32_t    filetype;           /* 文件类型  */
+    uint32_t    ncmds;              /* 加载器中加载命令的条数  */
+    uint32_t    sizeofcmds;         /* 加载器中加载命令的总大小 */
+    uint32_t    flags;              /* dyld 的标志 */
+}
+```
+Load commands:
+一张包含很多内容的表,内容包括:
+- 区域的位置
+- 符号表（这里解释下符号表：符号表是一种用于语言翻译器（例如编译器和解释器）中的数据结构。在符号表中，程序源代码中的每个标识符都和它的声明或使用信息绑定在一起，比如其数据类型、作用域以及内存地址，如常数表、变量名表、数组名表、过程名表、标号表等等，统称为符号表。）
+- 动态符号表等
+  
+描述了文件中数据的具体组织结构，不同的数据类型使用不同的加载命令表示。
+loadCommands中记录了很多信息,包括动态链接器(比如dyld)的位置,程序的入口地址(main),依赖库的信息,代码的位置.符号表的位置等等.
+![](/images/macho02.png)
+
+DATA：
+Mach-O的Data区域由Segment段和Section节组成。
+先来说Segment的组成，
+```
+#define SEG_PAGEZERO    "__PAGEZERO" /* 当时 MH_EXECUTE 文件时，捕获到空指针 */
+#define SEG_TEXT    "__TEXT" /* 代码/只读数据段 */
+#define SEG_DATA    "__DATA" /* 数据段 */
+#define SEG_OBJC    "__OBJC" /* Objective-C runtime 段 */
+#define SEG_LINKEDIT    "__LINKEDIT" /* 包含需要被动态链接器使用的符号和其他表，包括符号表、字符串表等 */
+```
+Segment（主要指的__TEXT和__DATA可以进一步分解为Section：
+```
+struct section_64 { 
+    char        sectname[16];   /* Section 名字 */
+    char        segname[16];    /* Section 所在的 Segment 名称 */
+    uint64_t    addr;       /* Section 所在的内存地址 */
+    uint64_t    size;       /* Section 的大小 */
+    uint32_t    offset;     /* Section 所在的文件偏移 */
+    uint32_t    align;      /* Section 的内存对齐边界 (2 的次幂) */
+    uint32_t    reloff;     /* 重定位信息的文件偏移 */
+    uint32_t    nreloc;     /* 重定位条目的数目 */
+    uint32_t    flags;      /* 标志属性 */
+    uint32_t    reserved1;  /* 保留字段1 (for offset or index) */
+    uint32_t    reserved2;  /* 保留字段2 (for count or sizeof) */
+    uint32_t    reserved3;  /* 保留字段3 */
+};
+```
+
+
+所以结论应该是在load command里
+
 ##### 编译链接的过程
 1.预处理：把宏替换，删除注释，展开头文件，产生 .i 文件。
 2.编译：把之前的 .i 文件转换成汇编语言，产生 .s文件。

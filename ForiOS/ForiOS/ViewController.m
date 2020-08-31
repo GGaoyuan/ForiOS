@@ -16,8 +16,8 @@
 #import "UIImageView+WebCache.h"
 #import "TestString.h"
 #import "AlgStart.h"
-//#import "YYCache.h"
 #import <dlfcn.h>
+#import "DrawRectViewController.h"
 
 @interface ViewController ()
 
@@ -27,26 +27,48 @@
 
 @implementation ViewController
 
+
+#pragma mark - 二进制重排
+
 void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
-                                                    uint32_t *stop) {
-  static uint64_t N;  // Counter for the guards.
-  if (start == stop || *start) return;  // Initialize only once.
-//  printf("INIT: %p %p\n", start, stop);
-  for (uint32_t *x = start; x < stop; x++)
-    *x = ++N;  // Guards should start from 1.
+                                         uint32_t *stop) {
+    static uint64_t N;  // Counter for the guards.
+    if (start == stop || *start) return;  // Initialize only once.
+    printf("INIT: %p %p\n", start, stop);
+    for (uint32_t *x = start; x < stop; x++)
+        *x = ++N;  // Guards should start from 1.
 }
 
 void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
     if (!*guard) return;  // Duplicate the guard check.
-     
     void *PC = __builtin_return_address(0); //PC就是指向各个函数调用完__sanitizer_cov_trace_pc_guard之后的下一行代码的内存地址
     Dl_info info;
     dladdr(PC, &info);
-     
-//    printf("fname=%s \nfbase=%p \nsname=%s\nsaddr=%p \n",info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);
+    printf("fname=%s \nfbase=%p \nsname=%s\nsaddr=%p \n",info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);
     char PcDescr[1024];
-//    printf("guard: %p %x PC %s\n", guard, *guard, PcDescr);
+    printf("guard: %p %x PC %s\n", guard, *guard, PcDescr);
 }
+
+#pragma mark - 添加按钮
+- (void)addBtn {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(100, 100, 100, 100);
+    button.backgroundColor = [UIColor redColor];
+    [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+- (void)buttonAction {
+    [self drawRectQuestion];
+}
+
+#pragma mark - DrawRect内存暴增
+- (void)drawRectQuestion {
+    DrawRectViewController *vc = [DrawRectViewController new];
+    [self presentViewController:vc animated:true completion:nil];
+}
+
+
+#pragma mark - aaa
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
    NSLog(@"observeValueForKeyPath");
@@ -80,12 +102,16 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 }
 
 
-//automaticallyNotifiesObserversForKey
+////////////////
 
-//- (BOOL)shouldAutomaticallyForwardAppearanceMethods
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self addBtn];
+    return;
+    
     
     NewDictionary *dic = [NewDictionary new];
     if ([dic isKindOfClass:[NSObject class]]) {
