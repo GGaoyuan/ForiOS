@@ -36,7 +36,8 @@ CPU 占用率很高
 
 1、oc中的timer有哪几种，哪种timer是精确的
 2、NSTimer为什么不精确
-3、对app做过哪些优化
+
+
 4、说说autoreleasepool的实现原理，autorelease_pool_page结构体中的哨兵指真是什么
 5、app启动优化做过吗，有哪些需要优化的地方
 6、用machoview打开编译好的二进制文件，+load方法在二进制文件的哪个数据段
@@ -50,6 +51,7 @@ CPU 占用率很高
     __weak __typeof(self) weakSelf = self;
     NSLog(@"%p", weakSelf);
 }
+3、对app做过哪些优化
 算法：判断一个二叉树是否为平衡二叉树，限定语言C++，Java，PYTHON
 
 
