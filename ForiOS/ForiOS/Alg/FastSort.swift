@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// 快速排序
 class FastSort: NSObject {
     
     private var sortArray: [Int]!
