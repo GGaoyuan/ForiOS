@@ -112,6 +112,7 @@ id objc_initWeak(id *location, id newObj) {
     (location, (objc_object*)newObj);
 }
 ```
+http://www.cocoachina.com/articles/18962（weak的实现原理）
 weak苹果是用的一个引用计数表进行管理
 weak的管理表和引用计数表都是通过SideTables进行管理，SideTables全局的哈希表，由多个SideTable结构体组成，一共有64个以对应的内存地址作为Key去查表
 ![](/images/sideTables01.jpeg)
@@ -1292,3 +1293,5 @@ https://www.jianshu.com/p/215db502b09d
 https://juejin.im/post/5ef6930fe51d4534a361530a?utm_source=gold_browser_extension#heading-32
 ##### 大厂面试题
 https://www.jianshu.com/p/89978870f49f
+##### 一个面试题集
+https://www.jianshu.com/p/e709fde38de3
