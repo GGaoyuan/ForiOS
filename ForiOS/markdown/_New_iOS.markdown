@@ -1078,7 +1078,12 @@ runtime消息转发？？？
 
 #### 内存优化
 ##### 内存优化
-drawRect内存暴增优化，可以使用CAShapeLayer[drawRect内存问题](#drawRect01_jump)
+drawRect内存暴增优化，可以使用CAShapeLayer（[drawRect内存问题](#drawRect01_jump)）
+使用autoReleasepool
+收到内存警告的时候清除不必要的内存
+不要用imageNamed，用contentFile
+后台的图片最好越小越好，这个和图片分辨率有关
+注意循环引用，内存泄漏
 
 #### 启动优化
 
