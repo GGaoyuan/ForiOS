@@ -15,7 +15,31 @@ CADisplayLink>Dispatch>NSTimer
 CADisplayLink：和iOS界面刷新效率同步执行，可以在1s内执行60次，执行效率最高。这里注意一下，刷新频率和是否卡顿并没有关系，毕竟CADisplayLink还能用来做简单的帧率检测
 DispatchTimer：GCD的timer是根据系统内核来的，比较准
 NSTimer：和CADisplayLink都是依赖于Runloop，但是他是最不准的。一旦遇到runloop\mainThread处理任务阻塞了，那么可能某一次runloop的回调就会放弃，所以不是很准确
-
+##### iOS一个对象占用多少空间
+分别调用class_getInstanceSize和malloc_size方法
+```
+@interface Person : NSObject {
+    int _age;
+    int _number;
+    int _sex;
+}
+@end
+struct Person_IMPL {
+    struct NSObject_IMPL NSObject_IVARS;
+    int _age;
+    int _number;
+    int _sex;
+};
+@end
+```
+1个结构体指针 (8字节)
+1个 int _age (4字节)
+1个 int _number (4字节)
+1个 int _sex (4字节)
+8 + 4 + 4 + 4 = 20 字节
+根据结构体内存对齐的原则，结构体实际需要的内存大小应该是8的整数倍，也就是24个字节
+但是系统给对象实际分配的内存大小是32字节
+具体原因是Apple系统中的malloc函数分配内存空间时，内存是根据一个bucket的大小来分配的. bucket的大小是16，32，48，64，80 ...，可以看出系统是按16的倍数来分配对象的内存大小的
 ******************************************************************************
 ### Swift
 ##### 闭包和逃逸闭包
@@ -524,6 +548,23 @@ layer会创建backingStore获取上下文CGContextRef,
 直接走func display(_ layer: CALayer)方法，里面dispatchAsyncGlobal，然后再dispatch到Main的过程中吧异步生成的东西赋值给layer.contents，结束
 
 #### Category
+##### Category的实现原理
+```
+typedef struct category_t {
+    const char *name;//类的名字 主类名字
+    classref_t cls;//类
+    struct method_list_t *instanceMethods;//实例方法的列表
+    struct method_list_t *classMethods;//类方法的列表
+    struct protocol_list_t *protocols;//所有协议的列表
+    struct property_list_t *instanceProperties;//添加的所有属性
+} category_t;
+```
+在编译时期，会将分类中实现的方法生成一个结构体 method_list_t 、将声明的属性生成一个结构体 property_list_t ，然后通过这些结构体生成一个结构体 category_t 。
+然后将结构体 category_t 保存下来
+在运行时期，Runtime 会拿到编译时期我们保存下来的结构体 category_t
+然后将结构体 category_t 中的实例方法列表、协议列表、属性列表添加到主类中
+将结构体 category_t 中的类方法列表、协议列表添加到主类的 metaClass 中
+
 ##### Category如何被加载的
 在_objc_init->map_images->_read_images，然后将category的方法和类方法添加到对应的类里面。回顾[App启动过程](#AppLaunch_jump)，里面有写
 ##### 两个category的load方法的加载顺序，两个category的同名方法的加载顺序呢，initialize,在继承关系中他们有什么区别
@@ -851,18 +892,6 @@ NSOperationQueue因为面向对象，所以支持KVO，可以监测正在执行(
 相比GCD，NSOperationQueue的粒度更细腻，支持更复杂的操作。但是iOS开发中大部分都只会遇到异步操作，不会有很复杂的线程管理，所以GCD更轻量便捷，但是如果考虑复杂的线程操作，那么GCD代码量会暴增，NSOperationQueue会更简便一些
 NSOperation主要是重写start和main方法，一个是针对串行，一个是针对并行。Operation的cacel，并不是真正的停止，线程只要开始就不会停掉，只是不给你回调而已
 
-#### 锁
-##### 自旋锁与互斥锁（mutex）的区别
-自旋锁和互斥锁的区别在于
-1:自旋锁时候忙等，就是说上一个线程被锁后，当前线程不会休眠，而是不停的去检查锁是否可用，当上一个线程完事后当前线程立即执行
-2:互斥锁是上一个线程被锁住后当前线程休眠，此时CPU会去执行其他任务。当上一个线程完成后，当前线程再被唤醒执行
-优缺点：
-自旋锁不会引起休眠，所以没有线程调度所以速度快，但是因为当前线程会不停检查是否解锁所以会占用CPU资源，所以自旋锁适合于那种很短时间的操作（sideTable,atomic），而不适合那种时间较长的锁。互斥锁正好反着
-自旋锁：gcd信号量（semp）
-互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
-
-##### 线程死锁的四个条件
-？？？
 ##### 线程可以取消吗
 只能取消未执行的，不能取消正在执行的
 ##### 那子线程中的autorelease变量什么时候释放？
@@ -876,7 +905,27 @@ Runloop加Machport
 接收通知处理代码线程 由发出通知的线程决定
 如果发送线程是在异步，则接收的线程也是在异步
 这里有一个NotificationQueue的东西，没有用过，但是写的是一个双向链表，用于管理通知发送时机(异步发送)，比如runloop空闲发送，尽快发送，立刻发送。Queue依赖runloop，子线程的话得要run.runloop,最终还是通过NSNotificationCenter进行发送通知。所谓异步，指的是非实时发送而是在合适的时机发送，并没有开启异步线程
+#### 锁
+##### 自旋锁与互斥锁（mutex）的区别
+自旋锁和互斥锁的区别在于
+1:自旋锁时候忙等，就是说上一个线程被锁后，当前线程不会休眠，而是不停的去检查锁是否可用，当上一个线程完事后当前线程立即执行
+2:互斥锁是上一个线程被锁住后当前线程休眠，此时CPU会去执行其他任务。当上一个线程完成后，当前线程再被唤醒执行
+优缺点：
+自旋锁不会引起休眠，所以没有线程调度所以速度快，但是因为当前线程会不停检查是否解锁所以会占用CPU资源，所以自旋锁适合于那种很短时间的操作（sideTable,atomic），而不适合那种时间较长的锁。互斥锁正好反着
+自旋锁：gcd信号量（semp）
+互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
 
+##### 线程死锁的四个条件，怎么避免
+产生死锁的四个必要条件：
+（1） 互斥条件：一个资源每次只能被一个进程使用。
+（2） 请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。
+（3） 不剥夺条件:进程已获得的资源，在末使用完之前，不能强行剥夺。
+（4） 循环等待条件:若干进程之间形成一种头尾相接的循环等待资源关系。
+只要四个同事满足，就会出现死锁
+避免：
+1.只要上面的有一个条件满足，就不会有死锁
+2。用异步就肯定不会
+3.银行家算法
 ******************************************************************************
 
 ### 持久化
@@ -891,6 +940,8 @@ Runloop加Machport
 
 ### UI和优化
 #### UI部分
+##### Frame和Bounse
+
 ##### 一张图片的内存占用大小是由什么决定的
 分辨率
 ##### Images.xcassets和直接用图片有什么不一样

@@ -18,6 +18,7 @@
 		308397DE24F503AE0054FED7 /* FastSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308397DD24F503AE0054FED7 /* FastSort.swift */; };
 		308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EC24FCE5590054FED7 /* DrawRectViewController.m */; };
 		308397F024FCE56A0054FED7 /* DrawRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EF24FCE56A0054FED7 /* DrawRectView.m */; };
+		30A354BB24FFF14E005A5253 /* ViewController+Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A354BA24FFF14E005A5253 /* ViewController+Test.m */; };
 		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
@@ -81,6 +82,8 @@
 		308397EC24FCE5590054FED7 /* DrawRectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectViewController.m; sourceTree = "<group>"; };
 		308397EE24FCE56A0054FED7 /* DrawRectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawRectView.h; sourceTree = "<group>"; };
 		308397EF24FCE56A0054FED7 /* DrawRectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectView.m; sourceTree = "<group>"; };
+		30A354B924FFF14E005A5253 /* ViewController+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+Test.h"; sourceTree = "<group>"; };
+		30A354BA24FFF14E005A5253 /* ViewController+Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ViewController+Test.m"; sourceTree = "<group>"; };
 		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
@@ -241,6 +244,8 @@
 				302F999124E2F11E00DBEB5C /* TestView.m */,
 				302F999324E2F13600DBEB5C /* TestLayer.h */,
 				302F999424E2F13600DBEB5C /* TestLayer.m */,
+				30A354B924FFF14E005A5253 /* ViewController+Test.h */,
+				30A354BA24FFF14E005A5253 /* ViewController+Test.m */,
 			);
 			path = ForiOS;
 			sourceTree = "<group>";
@@ -499,6 +504,7 @@
 				308397DE24F503AE0054FED7 /* FastSort.swift in Sources */,
 				302B322E24811263007AEA23 /* WebImage.swift in Sources */,
 				302F999524E2F13600DBEB5C /* TestLayer.m in Sources */,
+				30A354BB24FFF14E005A5253 /* ViewController+Test.m in Sources */,
 				30EEC5D724E3E10B00873596 /* TreeNode.m in Sources */,
 				30D7B5872472929100F9CD69 /* LogitechMouse.swift in Sources */,
 				30D7B57D24728EA300F9CD69 /* DesignPatternEntrance.swift in Sources */,
