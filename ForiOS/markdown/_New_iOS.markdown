@@ -53,7 +53,7 @@ inline函数要注意
 ##### 闭包和逃逸闭包
 ？？？
 ##### unowned和weak
-？？？
+无主引用，与弱引用一样，当把一个实例声明为无主引用时，此实例不会持有这个对象，即不会使对象的引用计数加1。但与弱引用不同的是，当对象被废弃，其无主引用并不会被置为 nil
 ##### 深拷贝和浅拷贝
 ？？？
 
@@ -94,6 +94,16 @@ NSNull：在集合对象中，表示空值的对象
 ？？？
 ##### ARC下的retain和release的优化（这个答案不确定对不对）
 ？？？会对引用计数的溢出做处理，里面有一个extra_rc，如果溢出这个变量会有值
+自动加入retain和release
+
+##### NSString的引用计数问题
+NSString分了：
+__NSCFConstantString
+__NSCFString
+NSTaggedPointerString
+这三种类型，三种类型的String由初始化方式和字符的长度决定的
+__NSCFConstantString类型和NSTaggedPointerString以整数最大值作为引用计数（-1），并一直存在于内存中
+__NSCFString遵循普通的引用计数
 ##### 内存管理方案
 1.taggedPointer:由于NSNumber、NSDate一类的变量本身的值需要占用的内存大小常常不需要8个字节，所以将一个对象的指针拆成两部分，一部分直接保存数据，另一部分作为特殊标记，表示这是一个特别的指针，不指向任何一个地址，将值直接存储到了指针本身里。但是TaggedPointer因为并不是真正的对象，而是一个伪对象，所以你如果完全把它当成对象来使，可能会让它露马脚。所有对象都有 isa指针，而TaggedPointer其实是没有的具体的
 ![](/images/taggedpointer.png)
@@ -154,7 +164,7 @@ RecountMap:C++的Map，存放对象真正的引用计数。对象通过内存地
 weak_table_t:一个结构体，里面两个元素，一个是存放对象引用计数和指向那个对象的对象的引用计数结构体的数组（有点拗口，就是一个数组，里面装的结构体，结构体里是weak对象的指针，还有一个元素是引用了这个weak对象的对象地址的数组），还有是这个数组的最大长度。为了扩容，扩容策略和cache_t一样。但是cache_t是哈希表，这个是数组，所以cache_t每次扩容会清除原有的数据
 https://www.jianshu.com/p/ef6d9bf8fe59
 ##### weak属性如何自动置nil的
-请回顾对象的释放过程，dealloc的实现机制
+请回顾对象的释放过程，[dealloc的实现机制](#dealloc_jump) 
 objc_rootdealooc
 rootdealloc
 objct_dispose
@@ -165,7 +175,7 @@ objc_destructInstance
 就是这个objc_clear_deallocing，会去查找sideTables里对应存储的表，并且清除对象
 ##### 访问__weak修饰的变量，是否已经被注册在了@autoreleasePool中?为什么?
 会扔到autoreleasepool中，不然创建之后也就会销毁（之前做过assign的demo，生成之后就被释放），为了延长它的生命周期，必须注册到 @autoreleasePool中，以延缓释放。
-##### 简述一下Dealloc的实现机制
+##### <span id="dealloc_jump">简述一下Dealloc的实现机制</span>
 1.调用objc_rootdealloc()
 2.rootdealloc()
 3.object_dispose()  //dispose翻译是处理
