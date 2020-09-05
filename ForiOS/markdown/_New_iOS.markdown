@@ -1129,7 +1129,7 @@ DataBuffer到ImageBuffer的这个过程，就是Decode过程。DataBuffer代表�
 2.预解码：
 针对的是图片加载。图片从磁盘加载过来是由DataBuffer(通过压缩算法得到的二进制数据，比如jpeg,png)，然后decode解码到像素缓冲区ImageBuffer。这个decode可能会很耗时，可以放到异步线程中去(电子书那个加圆角问题)
 3.按需加载：
-通过runloop，孙源的分享里有提到过，监听runloop的状态，因为滑动会切换mode，当runloop到了beforwaiting的时候，再开始加载。不过这个方法有个坑爹的效果就是快速滑动的时候会有很多的空白
+通过runloop，孙源的分享里有提到过，监听runloop的状态，因为滑动会切换mode，当runloop到了beforwaiting的时候，再开始加载。不过这个方法有个坑爹的效果就是快速滑动的时候会有很多的空白（应该是setModel在performdelay里设置）
 4.减少图层层级：
 （上面三个都难以解决的时候，可以用这个）
 CPU在计算的时候会很慢。可以吧这个东西画成一张图
@@ -1139,7 +1139,16 @@ imageNamed系统会缓存，imageWithContentsOfFile不会，所以小图可以�
 
 不要在UIImageView使用的时候去缩放图片，你应保证图片的大小和UIImageView的大小相同，在ScrollView搞这个东西非常耗性能，如果一个图片需要缩放，最好在子线程中缩放好了再给他放到UIImageView里（绘本优化的时候遇到过）
 ##### 如何检测应用是否卡顿
-？？？
+```
+while (YES) {   
+    // 有信号的话 就查询当前runloop的状态
+    // 假定连续5次超时50ms认为卡顿(当然也包含了单次超时250ms)
+    // 因为下面 runloop 状态改变回调方法runLoopObserverCallBack中会将信号量递增 1,所以每次 runloop 状态改变后,下面的语句都会执行一次
+    // dispatch_semaphore_wait:Returns zero on success, or non-zero if the timeout occurred.        
+    long st = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 50*NSEC_PER_MSEC));
+    ....
+```
+开启一个子线程，通过信号量每50ms就会ping一次主线程的状态。当主线程状态没变的时候，连续几次都是，那么就是卡顿了
 ##### 容错处理你们一般是注意哪些？
 ？？？
 ##### 如何防止拦截潜在的崩溃？
