@@ -69,17 +69,20 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 }
 
 
+#pragma mark - 卡顿监控Ping主线程
+- (void)fpsPingQuestion {
+    dispatch_semaphore_t sm2 = dispatch_semaphore_create(1);
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        while (1) {
+            long value1 = dispatch_semaphore_wait(sm2, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+            NSLog(@"111");
+        }
+    });
+}
+
+
 #pragma mark - 信号量
 - (void)semaphoreQuestion {
-    dispatch_semaphore_t sm2 = dispatch_semaphore_create(1);
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            while (1) {
-                long value1 = dispatch_semaphore_wait(sm2, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
-                NSLog(@"111");
-            }
-        });
-    return;
-
     __block NSInteger tickets = 50;
     // queue1 代表北京火车票售卖窗口
     dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
