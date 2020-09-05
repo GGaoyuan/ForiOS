@@ -15,11 +15,11 @@
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
 		3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644424E66DE400E0F369 /* ThreadTest.swift */; };
 		3034644724E673E200E0F369 /* GYOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644624E673E200E0F369 /* GYOperation.swift */; };
+		307CC05125039DA1006EFC93 /* SafeReadWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307CC05025039DA1006EFC93 /* SafeReadWrite.swift */; };
 		308397DE24F503AE0054FED7 /* FastSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308397DD24F503AE0054FED7 /* FastSort.swift */; };
 		308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EC24FCE5590054FED7 /* DrawRectViewController.m */; };
 		308397F024FCE56A0054FED7 /* DrawRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EF24FCE56A0054FED7 /* DrawRectView.m */; };
 		30A354BB24FFF14E005A5253 /* ViewController+Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A354BA24FFF14E005A5253 /* ViewController+Test.m */; };
-		30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BA824AB912700B47D50 /* FPSMonitor.swift */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
 		30A90BB324C7475700B47D50 /* NewDictionary2.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BB224C7475700B47D50 /* NewDictionary2.m */; };
@@ -77,6 +77,7 @@
 		3033B42D248953B5003A5A9B /* KVOObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOObject.m; sourceTree = "<group>"; };
 		3034644424E66DE400E0F369 /* ThreadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTest.swift; sourceTree = "<group>"; };
 		3034644624E673E200E0F369 /* GYOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GYOperation.swift; sourceTree = "<group>"; };
+		307CC05025039DA1006EFC93 /* SafeReadWrite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeReadWrite.swift; sourceTree = "<group>"; };
 		308397DD24F503AE0054FED7 /* FastSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSort.swift; sourceTree = "<group>"; };
 		308397EB24FCE5590054FED7 /* DrawRectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawRectViewController.h; sourceTree = "<group>"; };
 		308397EC24FCE5590054FED7 /* DrawRectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectViewController.m; sourceTree = "<group>"; };
@@ -84,7 +85,6 @@
 		308397EF24FCE56A0054FED7 /* DrawRectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectView.m; sourceTree = "<group>"; };
 		30A354B924FFF14E005A5253 /* ViewController+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+Test.h"; sourceTree = "<group>"; };
 		30A354BA24FFF14E005A5253 /* ViewController+Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ViewController+Test.m"; sourceTree = "<group>"; };
-		30A90BA824AB912700B47D50 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
 		30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+AAA.h"; sourceTree = "<group>"; };
 		30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ViewController+AAA.m"; sourceTree = "<group>"; };
@@ -216,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				308397EA24FCE5350054FED7 /* DrawRect */,
+				30D7B57324725BAF00F9CD69 /* Swift */,
 				3034644324E66DC700E0F369 /* Thread */,
 				30EEC5D124E3DF7F00873596 /* Alg */,
 				30AFC5AA24401FD10090BFA4 /* AppDelegate.h */,
@@ -233,7 +234,6 @@
 				3033B42A2489530E003A5A9B /* NewDictionary.m */,
 				30A90BB124C7475700B47D50 /* NewDictionary2.h */,
 				30A90BB224C7475700B47D50 /* NewDictionary2.m */,
-				30D7B57324725BAF00F9CD69 /* Swift */,
 				3033B42C248953B5003A5A9B /* KVOObject.h */,
 				3033B42D248953B5003A5A9B /* KVOObject.m */,
 				30A90BAC24B4D23900B47D50 /* ViewController+AAA.h */,
@@ -273,9 +273,9 @@
 			children = (
 				30D7B50024723AD600F9CD69 /* ForiOS-Bridging-Header.h */,
 				30D7B57A24728DE500F9CD69 /* SwiftMain.swift */,
+				307CC05025039DA1006EFC93 /* SafeReadWrite.swift */,
 				302B32222480FA47007AEA23 /* SourceCode */,
 				30D7B578247284C800F9CD69 /* DP */,
-				30A90BA824AB912700B47D50 /* FPSMonitor.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -515,8 +515,8 @@
 				30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */,
 				30C9D06F248676F200044171 /* UIImageView+WebImage.swift in Sources */,
 				30D7B5832472927700F9CD69 /* LenovoMouse.swift in Sources */,
-				30A90BA924AB912700B47D50 /* FPSMonitor.swift in Sources */,
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
+				307CC05125039DA1006EFC93 /* SafeReadWrite.swift in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
 				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
 				3034644724E673E200E0F369 /* GYOperation.swift in Sources */,

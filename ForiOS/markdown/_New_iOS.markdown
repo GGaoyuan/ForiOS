@@ -53,7 +53,7 @@ inline函数要注意
 ##### 闭包和逃逸闭包
 ？？？
 ##### unowned和weak
-无主引用，与弱引用一样，当把一个实例声明为无主引用时，此实例不会持有这个对象，即不会使对象的引用计数加1。但与弱引用不同的是，当对象被废弃，其无主引用并不会被置为 nil
+？？？
 ##### 深拷贝和浅拷贝
 ？？？
 
@@ -95,16 +95,6 @@ NSNull：在集合对象中，表示空值的对象
 ？？？
 ##### ARC下的retain和release的优化（这个答案不确定对不对）
 ？？？会对引用计数的溢出做处理，里面有一个extra_rc，如果溢出这个变量会有值
-自动加入retain和release
-
-##### NSString的引用计数问题
-NSString分了：
-__NSCFConstantString
-__NSCFString
-NSTaggedPointerString
-这三种类型，三种类型的String由初始化方式和字符的长度决定的
-__NSCFConstantString类型和NSTaggedPointerString以整数最大值作为引用计数（-1），并一直存在于内存中
-__NSCFString遵循普通的引用计数
 ##### 内存管理方案
 1.taggedPointer:由于NSNumber、NSDate一类的变量本身的值需要占用的内存大小常常不需要8个字节，所以将一个对象的指针拆成两部分，一部分直接保存数据，另一部分作为特殊标记，表示这是一个特别的指针，不指向任何一个地址，将值直接存储到了指针本身里。但是TaggedPointer因为并不是真正的对象，而是一个伪对象，所以你如果完全把它当成对象来使，可能会让它露马脚。所有对象都有 isa指针，而TaggedPointer其实是没有的具体的
 ![](/images/taggedpointer.png)
@@ -165,7 +155,7 @@ RecountMap:C++的Map，存放对象真正的引用计数。对象通过内存地
 weak_table_t:一个结构体，里面两个元素，一个是存放对象引用计数和指向那个对象的对象的引用计数结构体的数组（有点拗口，就是一个数组，里面装的结构体，结构体里是weak对象的指针，还有一个元素是引用了这个weak对象的对象地址的数组），还有是这个数组的最大长度。为了扩容，扩容策略和cache_t一样。但是cache_t是哈希表，这个是数组，所以cache_t每次扩容会清除原有的数据
 https://www.jianshu.com/p/ef6d9bf8fe59
 ##### weak属性如何自动置nil的
-请回顾对象的释放过程，[dealloc的实现机制](#dealloc_jump) 
+请回顾对象的释放过程，dealloc的实现机制
 objc_rootdealooc
 rootdealloc
 objct_dispose
@@ -176,7 +166,7 @@ objc_destructInstance
 就是这个objc_clear_deallocing，会去查找sideTables里对应存储的表，并且清除对象
 ##### 访问__weak修饰的变量，是否已经被注册在了@autoreleasePool中?为什么?
 会扔到autoreleasepool中，不然创建之后也就会销毁（之前做过assign的demo，生成之后就被释放），为了延长它的生命周期，必须注册到 @autoreleasePool中，以延缓释放。
-##### <span id="dealloc_jump">简述一下Dealloc的实现机制</span>
+##### 简述一下Dealloc的实现机制
 1.调用objc_rootdealloc()
 2.rootdealloc()
 3.object_dispose()  //dispose翻译是处理
@@ -923,8 +913,8 @@ NSOperation主要是重写start和main方法，一个是针对串行，一个是
 2:互斥锁是上一个线程被锁住后当前线程休眠，此时CPU会去执行其他任务。当上一个线程完成后，当前线程再被唤醒执行
 优缺点：
 自旋锁不会引起休眠，所以没有线程调度所以速度快，但是因为当前线程会不停检查是否解锁所以会占用CPU资源，所以自旋锁适合于那种很短时间的操作（sideTable,atomic），而不适合那种时间较长的锁。互斥锁正好反着
-自旋锁：gcd信号量（semp）,OSSpinLock
-互斥锁：@syncoized,pthread_mutex,NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
+自旋锁：gcd信号量（semp）,OSSpinLock，属性的atomic原来用的是spinlock_t（自旋锁），后来YY大神文章说了，苹果说自旋锁有bug，改成os_unfair_lock（互斥锁）
+互斥锁：@syncoized,pthread_mutex,os_unfair_lock，NSLock,NSConditoin,NSConditionLock，NSRecursiveLock（递归锁，在调用 lock 之前，NSLock 必须先调用 unlock。但正如名字所暗示的那样， NSRecursiveLock 允许在被解锁前锁定多次。如果解锁的次数与锁定的次数相匹配，则 认为锁被释放）
 
 ##### 线程可以取消吗
 只能取消未执行的，不能取消正在执行的
@@ -1163,8 +1153,9 @@ while (YES) {
 ？？？
 ##### 如何防止拦截潜在的崩溃？
 runtime消息转发？？？
+不需要拦截
 ##### 内存告急的处理
-？？？
+释放缓存，image的问题，节约内存
 
 #### 内存优化
 ##### 内存优化

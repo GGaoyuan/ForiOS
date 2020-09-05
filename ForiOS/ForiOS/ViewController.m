@@ -169,15 +169,15 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
     [super viewDidLoad];
     
     [self addBtn];
-    return;
     
     
-    NewDictionary *dic = [NewDictionary new];
-    if ([dic isKindOfClass:[NSObject class]]) {
-        NSLog(@"");
-    } else {
-        NSLog(@"");
-    }
+    
+//    NewDictionary *dic = [NewDictionary new];
+//    if ([dic isKindOfClass:[NSObject class]]) {
+//        NSLog(@"");
+//    } else {
+//        NSLog(@"");
+//    }
     
     
 //    SwiftMain *swiftMain = [SwiftMain new];
