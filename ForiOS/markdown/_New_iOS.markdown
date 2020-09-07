@@ -1,6 +1,12 @@
 [toc]
 ## iOS
 ### Objective-C
+##### isKindOfClass 与 isMemberOfClass
+
+##### iOS开发中的加密方式
+对称加密： DES(不安全)、3DES、AES
+非对称加密:RSA加密
+哈希算法加密：MD5加密、.SHA加密、HMAC加密
 ##### Objective-C如何实现多继承
 协议+组合
 ##### 一个NSObject对象占用多少内存
