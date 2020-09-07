@@ -46,6 +46,11 @@ struct Person_IMPL {
 根据结构体内存对齐的原则，结构体实际需要的内存大小应该是8的整数倍，也就是24个字节
 但是系统给对象实际分配的内存大小是32字节
 具体原因是Apple系统中的malloc函数分配内存空间时，内存是根据一个bucket的大小来分配的. bucket的大小是16，32，48，64，80 ...，可以看出系统是按16的倍数来分配对象的内存大小的
+##### 字典注意事项：setvalue和setobject的区别
+setObject:ForKey：是NSMutableDictionary特有的。
+setValue:ForKey：是KVC的主要方法。
+setobject中的key和value可以为nil以外的任何对象。
+setValue中的key只能为字符串，value可以为nil也可以为空对象[NSNull null]以及全部对象
 ******************************************************************************
 ### Swift
 ##### 内联函数和普通函数的区别
