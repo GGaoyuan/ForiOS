@@ -70,25 +70,35 @@ class TreeNodeSolution: NSObject {
         return leftNode?.val == rightNode?.val && symmetric_result(leftNode?.left, rightNode?.right) && symmetric_result(leftNode?.right, rightNode?.left)
         
     }
-    /// 二叉树镜像
+    /// 二叉树镜像/翻转二叉树
     func mirrorTree(_ root: TreeNode?) -> TreeNode? {
         if root == nil { return nil }
-        
+        let tempNode = root?.left
+        root?.left = root?.right
+        root?.right = tempNode
+        let _ = mirrorTree(root?.left)
+        let _ = mirrorTree(root?.right)
         return root
     }
-    private func mirrorSwitch() {
-        
+    /// 层序遍历
+    func levelOrder(_ root: TreeNode?) -> [Int] {
+        var result = [Int]()
+        if root == nil { return result }
+        var nodeQueue = [TreeNode]()
+        nodeQueue.append(root!)
+        while nodeQueue.count > 0 {
+            if nodeQueue.first?.left != nil {
+                nodeQueue.append(nodeQueue.first!.left!)
+            }
+            if nodeQueue.first?.right != nil {
+                nodeQueue.append(nodeQueue.first!.right!)
+            }
+            result.append(nodeQueue.first!.val)
+            nodeQueue.remove(at: 0)
+        }
+        return result
     }
 }
-
-
-/*
- if root?.left != nil {
-     return isSymmetric(root?.left)
- } else {
-     return isSymmetric(root?.right)
- }
- */
 
 class TreeNode: NSObject {
     public var val: Int
