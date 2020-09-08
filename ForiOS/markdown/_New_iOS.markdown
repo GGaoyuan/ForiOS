@@ -363,6 +363,7 @@ objc_msgSend会查找当前对象的methodList，如果没有，会往自己的�
 消息转发分为两个阶段：
 1.动态方法解析：先查询接受者，看有没有动态添    -=——）加方法处理这个消息
 2.完整的消息转发机制：这时候第一步已经执行完，运行时系统不会再动态添加方法，也不会再去查找动态添加的方法，这时系统会看有没有其他的消息接收对象，如果有就转发消息给备用对象，如果没有，系统会把消息封装在NSInvocation对象，给接受者最后一次机会处理消息
+![](images/msg_send.jpeg)
 ##### Runtime的内存优化
 1.类数据结构变化
 当类被Runtime加载之后，类的结构会发生一些变化，
@@ -380,7 +381,7 @@ https://halfrost.com/objc_runtime_isa_class/
 苹果不允许直接创建RunLoop，但是可以获取Main和CurrentRunloop
 线程和Runloop是一一对应的，保存在一个全局的Dictionary中。
 子线程默认是没有开启runloop的，需要自己手动run。当线程结束的时候，runloop被回收，可以通过runloop线程保活。
-线程会对应一个runloop
+线程会对应一个runloop，autoreleasepage里有对应的线程字段属性
 线程在RunloopPage可以得知会对应一个autoreleasepool
 ##### 循环的细节
 ![](/images/runloop_001.png)
@@ -495,7 +496,7 @@ source:runloop执行的输入源（一个protcol）
 只要符合protocol就可以随便跑(几乎不可能遇到)
 runloop自己定义了俩，就叫source0和source1
 source0:处理App内部事件，比如touch事件，socket
-source1:由runloop和内核管理，mach port驱动，如CFMachPort,CFMessagePort。（mach port用在进程通信）
+source1:由runloop和内核管理，machport驱动，如CFMachPort,CFMessagePort。（machport用在KVO线程通信）
 observer:告诉当前的runloop是设么状态，在干嘛
 ```
 typedef CF_OPTIONS(CFOptionFlags, CFRunLoopActivity) {
@@ -523,7 +524,7 @@ NSRunLoopCommonModes    //上面俩的集合，俩的都能跑
 这里说一句，gcd的timer是系统内核实现，由runloop回调，gcdtimer的实现和runloop无关
 ##### 和runloop有关的东西(孙源)
 NSTimer：完全依赖runloop
-UIEvent
+UIEvent：事件的产生到分发给相应的事件处理函数都通过 runloop (souece0)
 Autorelease
 NSObject中关于时间的方法，比如performDelay，performcancel，performOnMainThread等等
 CADisplayLink:每画一帧给一个回调
@@ -872,6 +873,9 @@ void _NSSetObjectValueAndNotify() {
 }
 ```
 通过代码可以知道，其实要手动触发的话也得用willChangeValueForKey和didChangeValueForKey方法才行
+
+##### KVO于多线程
+KVO多线程问题可以使用MachPort接受异步线程发送的消息
 
 ******************************************************************************
 
