@@ -168,7 +168,7 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self addBtn];
+//    [self addBtn];
     
     
     
@@ -187,7 +187,8 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 //    [ThreadTest test];
 //    return;
     
-    [AlgStart start];
+    [AlgEntrance start];
+//    [AlgStart start];
     return;
         
 //    NSString *a1 = nil
