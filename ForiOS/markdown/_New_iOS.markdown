@@ -1,6 +1,9 @@
 [toc]
 ## iOS
 ### Objective-C
+##### union
+和结构体类似，但是结构体是每一个变量一片内存
+Union允许装入该“联合”所定义的任何一种数据，这些数据共享同一段内存，以达到节省空间的目的。union变量所占用的内存长度等于最长的成员的内存长度
 ##### isKindOfClass 与 isMemberOfClass
 
 ##### iOS开发中的加密方式
@@ -77,7 +80,6 @@ Block
 代理
 通知
 try/catch:出现异常用@throw可能会出现内存泄漏的情况，通常不是那种致命错误，用返回nil或者NSError，如果非要用try/catch那么要注意在final里释放资源（比如数据库）
-线程常驻的时候自动加入autoreleasepool，因为线程一直存活，所以不会释放，注意释放，很多有线程常驻的三方库都会有这样的逻辑
 ##### 如何理解NSCopying
 对象想要拷贝必须实现NSCopying协议，如果是想要深拷贝是实现NSMutableCopying协议，默认的拷贝都是浅拷贝
 copywithzone方法里的zone参数是历史遗留问题，不必理会
@@ -978,7 +980,7 @@ MD5加盐
 ### UI和优化
 #### UI部分
 ##### Frame和Bounse
-一个是按照父视图，一个是按照自己，就算bondse的x和y不为0，最后也是0
+一个是按照父视图，一个是按照自己，就算bondse的x和y不为0，最后也是0，但是这是bonse的size会以圆点改变大小
 ##### 一张图片的内存占用大小是由什么决定的
 分辨率，x*y*4
 ##### Images.xcassets和直接用图片有什么不一样

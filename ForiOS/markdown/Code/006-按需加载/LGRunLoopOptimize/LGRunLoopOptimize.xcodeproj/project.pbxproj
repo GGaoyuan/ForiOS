@@ -1,0 +1,637 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		017A86452427CA4B00A3F474 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A86442427CA4B00A3F474 /* AppDelegate.m */; };
+		017A86482427CA4B00A3F474 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A86472427CA4B00A3F474 /* SceneDelegate.m */; };
+		017A864B2427CA4B00A3F474 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A864A2427CA4B00A3F474 /* ViewController.m */; };
+		017A864E2427CA4B00A3F474 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 017A864C2427CA4B00A3F474 /* Main.storyboard */; };
+		017A86502427CA4D00A3F474 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 017A864F2427CA4D00A3F474 /* Assets.xcassets */; };
+		017A86532427CA4D00A3F474 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 017A86512427CA4D00A3F474 /* LaunchScreen.storyboard */; };
+		017A86562427CA4D00A3F474 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A86552427CA4D00A3F474 /* main.m */; };
+		017A86602427CA4D00A3F474 /* LGRunLoopOptimizeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A865F2427CA4D00A3F474 /* LGRunLoopOptimizeTests.m */; };
+		017A866B2427CA4D00A3F474 /* LGRunLoopOptimizeUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 017A866A2427CA4D00A3F474 /* LGRunLoopOptimizeUITests.m */; };
+		A30CC3EEDA2023F48F6C1C0F /* libPods-LGRunLoopOptimize.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8DFDA073E5539F6CCBE369 /* libPods-LGRunLoopOptimize.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		017A865C2427CA4D00A3F474 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 017A86382427CA4B00A3F474 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 017A863F2427CA4B00A3F474;
+			remoteInfo = LGRunLoopOptimize;
+		};
+		017A86672427CA4D00A3F474 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 017A86382427CA4B00A3F474 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 017A863F2427CA4B00A3F474;
+			remoteInfo = LGRunLoopOptimize;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		017A86402427CA4B00A3F474 /* LGRunLoopOptimize.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LGRunLoopOptimize.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		017A86432427CA4B00A3F474 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		017A86442427CA4B00A3F474 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		017A86462427CA4B00A3F474 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		017A86472427CA4B00A3F474 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		017A86492427CA4B00A3F474 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		017A864A2427CA4B00A3F474 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		017A864D2427CA4B00A3F474 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		017A864F2427CA4D00A3F474 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		017A86522427CA4D00A3F474 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		017A86542427CA4D00A3F474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		017A86552427CA4D00A3F474 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		017A865B2427CA4D00A3F474 /* LGRunLoopOptimizeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LGRunLoopOptimizeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		017A865F2427CA4D00A3F474 /* LGRunLoopOptimizeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LGRunLoopOptimizeTests.m; sourceTree = "<group>"; };
+		017A86612427CA4D00A3F474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		017A86662427CA4D00A3F474 /* LGRunLoopOptimizeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LGRunLoopOptimizeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		017A866A2427CA4D00A3F474 /* LGRunLoopOptimizeUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LGRunLoopOptimizeUITests.m; sourceTree = "<group>"; };
+		017A866C2427CA4D00A3F474 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0A8DFDA073E5539F6CCBE369 /* libPods-LGRunLoopOptimize.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LGRunLoopOptimize.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F120532A51B603AFF7FDB9D /* Pods-LGRunLoopOptimize.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LGRunLoopOptimize.release.xcconfig"; path = "Target Support Files/Pods-LGRunLoopOptimize/Pods-LGRunLoopOptimize.release.xcconfig"; sourceTree = "<group>"; };
+		ED1DBFAC2BF6F1A7AAA009C2 /* Pods-LGRunLoopOptimize.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LGRunLoopOptimize.debug.xcconfig"; path = "Target Support Files/Pods-LGRunLoopOptimize/Pods-LGRunLoopOptimize.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		017A863D2427CA4B00A3F474 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A30CC3EEDA2023F48F6C1C0F /* libPods-LGRunLoopOptimize.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		017A86582427CA4D00A3F474 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		017A86632427CA4D00A3F474 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		017A86372427CA4B00A3F474 = {
+			isa = PBXGroup;
+			children = (
+				017A86422427CA4B00A3F474 /* LGRunLoopOptimize */,
+				017A865E2427CA4D00A3F474 /* LGRunLoopOptimizeTests */,
+				017A86692427CA4D00A3F474 /* LGRunLoopOptimizeUITests */,
+				017A86412427CA4B00A3F474 /* Products */,
+				C0724297A4A4566A6D6932BB /* Pods */,
+				E038F7ED53F12EF0E8BCEE6D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		017A86412427CA4B00A3F474 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				017A86402427CA4B00A3F474 /* LGRunLoopOptimize.app */,
+				017A865B2427CA4D00A3F474 /* LGRunLoopOptimizeTests.xctest */,
+				017A86662427CA4D00A3F474 /* LGRunLoopOptimizeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		017A86422427CA4B00A3F474 /* LGRunLoopOptimize */ = {
+			isa = PBXGroup;
+			children = (
+				017A86432427CA4B00A3F474 /* AppDelegate.h */,
+				017A86442427CA4B00A3F474 /* AppDelegate.m */,
+				017A86462427CA4B00A3F474 /* SceneDelegate.h */,
+				017A86472427CA4B00A3F474 /* SceneDelegate.m */,
+				017A86492427CA4B00A3F474 /* ViewController.h */,
+				017A864A2427CA4B00A3F474 /* ViewController.m */,
+				017A864C2427CA4B00A3F474 /* Main.storyboard */,
+				017A864F2427CA4D00A3F474 /* Assets.xcassets */,
+				017A86512427CA4D00A3F474 /* LaunchScreen.storyboard */,
+				017A86542427CA4D00A3F474 /* Info.plist */,
+				017A86552427CA4D00A3F474 /* main.m */,
+			);
+			path = LGRunLoopOptimize;
+			sourceTree = "<group>";
+		};
+		017A865E2427CA4D00A3F474 /* LGRunLoopOptimizeTests */ = {
+			isa = PBXGroup;
+			children = (
+				017A865F2427CA4D00A3F474 /* LGRunLoopOptimizeTests.m */,
+				017A86612427CA4D00A3F474 /* Info.plist */,
+			);
+			path = LGRunLoopOptimizeTests;
+			sourceTree = "<group>";
+		};
+		017A86692427CA4D00A3F474 /* LGRunLoopOptimizeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				017A866A2427CA4D00A3F474 /* LGRunLoopOptimizeUITests.m */,
+				017A866C2427CA4D00A3F474 /* Info.plist */,
+			);
+			path = LGRunLoopOptimizeUITests;
+			sourceTree = "<group>";
+		};
+		C0724297A4A4566A6D6932BB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ED1DBFAC2BF6F1A7AAA009C2 /* Pods-LGRunLoopOptimize.debug.xcconfig */,
+				6F120532A51B603AFF7FDB9D /* Pods-LGRunLoopOptimize.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		E038F7ED53F12EF0E8BCEE6D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0A8DFDA073E5539F6CCBE369 /* libPods-LGRunLoopOptimize.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		017A863F2427CA4B00A3F474 /* LGRunLoopOptimize */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 017A866F2427CA4D00A3F474 /* Build configuration list for PBXNativeTarget "LGRunLoopOptimize" */;
+			buildPhases = (
+				46F271B0FB07637F24B63BB4 /* [CP] Check Pods Manifest.lock */,
+				017A863C2427CA4B00A3F474 /* Sources */,
+				017A863D2427CA4B00A3F474 /* Frameworks */,
+				017A863E2427CA4B00A3F474 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LGRunLoopOptimize;
+			productName = LGRunLoopOptimize;
+			productReference = 017A86402427CA4B00A3F474 /* LGRunLoopOptimize.app */;
+			productType = "com.apple.product-type.application";
+		};
+		017A865A2427CA4D00A3F474 /* LGRunLoopOptimizeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 017A86722427CA4D00A3F474 /* Build configuration list for PBXNativeTarget "LGRunLoopOptimizeTests" */;
+			buildPhases = (
+				017A86572427CA4D00A3F474 /* Sources */,
+				017A86582427CA4D00A3F474 /* Frameworks */,
+				017A86592427CA4D00A3F474 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				017A865D2427CA4D00A3F474 /* PBXTargetDependency */,
+			);
+			name = LGRunLoopOptimizeTests;
+			productName = LGRunLoopOptimizeTests;
+			productReference = 017A865B2427CA4D00A3F474 /* LGRunLoopOptimizeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		017A86652427CA4D00A3F474 /* LGRunLoopOptimizeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 017A86752427CA4D00A3F474 /* Build configuration list for PBXNativeTarget "LGRunLoopOptimizeUITests" */;
+			buildPhases = (
+				017A86622427CA4D00A3F474 /* Sources */,
+				017A86632427CA4D00A3F474 /* Frameworks */,
+				017A86642427CA4D00A3F474 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				017A86682427CA4D00A3F474 /* PBXTargetDependency */,
+			);
+			name = LGRunLoopOptimizeUITests;
+			productName = LGRunLoopOptimizeUITests;
+			productReference = 017A86662427CA4D00A3F474 /* LGRunLoopOptimizeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		017A86382427CA4B00A3F474 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = LGEDU;
+				TargetAttributes = {
+					017A863F2427CA4B00A3F474 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+					017A865A2427CA4D00A3F474 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 017A863F2427CA4B00A3F474;
+					};
+					017A86652427CA4D00A3F474 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 017A863F2427CA4B00A3F474;
+					};
+				};
+			};
+			buildConfigurationList = 017A863B2427CA4B00A3F474 /* Build configuration list for PBXProject "LGRunLoopOptimize" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 017A86372427CA4B00A3F474;
+			productRefGroup = 017A86412427CA4B00A3F474 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				017A863F2427CA4B00A3F474 /* LGRunLoopOptimize */,
+				017A865A2427CA4D00A3F474 /* LGRunLoopOptimizeTests */,
+				017A86652427CA4D00A3F474 /* LGRunLoopOptimizeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		017A863E2427CA4B00A3F474 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				017A86532427CA4D00A3F474 /* LaunchScreen.storyboard in Resources */,
+				017A86502427CA4D00A3F474 /* Assets.xcassets in Resources */,
+				017A864E2427CA4B00A3F474 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		017A86592427CA4D00A3F474 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		017A86642427CA4D00A3F474 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		46F271B0FB07637F24B63BB4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LGRunLoopOptimize-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		017A863C2427CA4B00A3F474 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				017A864B2427CA4B00A3F474 /* ViewController.m in Sources */,
+				017A86452427CA4B00A3F474 /* AppDelegate.m in Sources */,
+				017A86562427CA4D00A3F474 /* main.m in Sources */,
+				017A86482427CA4B00A3F474 /* SceneDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		017A86572427CA4D00A3F474 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				017A86602427CA4D00A3F474 /* LGRunLoopOptimizeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		017A86622427CA4D00A3F474 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				017A866B2427CA4D00A3F474 /* LGRunLoopOptimizeUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		017A865D2427CA4D00A3F474 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 017A863F2427CA4B00A3F474 /* LGRunLoopOptimize */;
+			targetProxy = 017A865C2427CA4D00A3F474 /* PBXContainerItemProxy */;
+		};
+		017A86682427CA4D00A3F474 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 017A863F2427CA4B00A3F474 /* LGRunLoopOptimize */;
+			targetProxy = 017A86672427CA4D00A3F474 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		017A864C2427CA4B00A3F474 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				017A864D2427CA4B00A3F474 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		017A86512427CA4D00A3F474 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				017A86522427CA4D00A3F474 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		017A866D2427CA4D00A3F474 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		017A866E2427CA4D00A3F474 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		017A86702427CA4D00A3F474 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ED1DBFAC2BF6F1A7AAA009C2 /* Pods-LGRunLoopOptimize.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LGRunLoopOptimize/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LG.LGRunLoopOptimize;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		017A86712427CA4D00A3F474 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6F120532A51B603AFF7FDB9D /* Pods-LGRunLoopOptimize.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LGRunLoopOptimize/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LG.LGRunLoopOptimize;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		017A86732427CA4D00A3F474 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LGRunLoopOptimizeTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LG.LGRunLoopOptimizeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LGRunLoopOptimize.app/LGRunLoopOptimize";
+			};
+			name = Debug;
+		};
+		017A86742427CA4D00A3F474 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LGRunLoopOptimizeTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LG.LGRunLoopOptimizeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LGRunLoopOptimize.app/LGRunLoopOptimize";
+			};
+			name = Release;
+		};
+		017A86762427CA4D00A3F474 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LGRunLoopOptimizeUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LG.LGRunLoopOptimizeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LGRunLoopOptimize;
+			};
+			name = Debug;
+		};
+		017A86772427CA4D00A3F474 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LGRunLoopOptimizeUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = LG.LGRunLoopOptimizeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LGRunLoopOptimize;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		017A863B2427CA4B00A3F474 /* Build configuration list for PBXProject "LGRunLoopOptimize" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				017A866D2427CA4D00A3F474 /* Debug */,
+				017A866E2427CA4D00A3F474 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		017A866F2427CA4D00A3F474 /* Build configuration list for PBXNativeTarget "LGRunLoopOptimize" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				017A86702427CA4D00A3F474 /* Debug */,
+				017A86712427CA4D00A3F474 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		017A86722427CA4D00A3F474 /* Build configuration list for PBXNativeTarget "LGRunLoopOptimizeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				017A86732427CA4D00A3F474 /* Debug */,
+				017A86742427CA4D00A3F474 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		017A86752427CA4D00A3F474 /* Build configuration list for PBXNativeTarget "LGRunLoopOptimizeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				017A86762427CA4D00A3F474 /* Debug */,
+				017A86772427CA4D00A3F474 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 017A86382427CA4B00A3F474 /* Project object */;
+}

@@ -18,7 +18,7 @@
 #import "AlgStart.h"
 #import <dlfcn.h>
 #import "DrawRectViewController.h"
-
+#import "AsyncImageView.h"
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -127,6 +127,14 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 }
 
 
+#pragma mark - 异步渲染
+- (void)asyncView {
+    AsyncImageView *view = [[AsyncImageView alloc] initWithFrame:CGRectMake(0, 100, 300, 300)];
+    view.image = [UIImage imageNamed:@"aaa"];
+    view.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:view];
+}
+
 #pragma mark - aaa
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
@@ -167,6 +175,8 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self asyncView];
     
 //    [self addBtn];
     

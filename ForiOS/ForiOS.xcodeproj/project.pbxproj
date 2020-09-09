@@ -15,6 +15,7 @@
 		3033B42E248953B5003A5A9B /* KVOObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3033B42D248953B5003A5A9B /* KVOObject.m */; };
 		3034644524E66DE400E0F369 /* ThreadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644424E66DE400E0F369 /* ThreadTest.swift */; };
 		3034644724E673E200E0F369 /* GYOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3034644624E673E200E0F369 /* GYOperation.swift */; };
+		3064FBD625093D71004531D7 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3064FBD525093D71004531D7 /* AsyncImageView.m */; };
 		307CC05125039DA1006EFC93 /* SafeReadWrite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307CC05025039DA1006EFC93 /* SafeReadWrite.swift */; };
 		307CC05325076996006EFC93 /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307CC05225076996006EFC93 /* Tree.swift */; };
 		307CC05525076F67006EFC93 /* AlgEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307CC05425076F67006EFC93 /* AlgEntrance.swift */; };
@@ -79,6 +80,8 @@
 		3033B42D248953B5003A5A9B /* KVOObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KVOObject.m; sourceTree = "<group>"; };
 		3034644424E66DE400E0F369 /* ThreadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadTest.swift; sourceTree = "<group>"; };
 		3034644624E673E200E0F369 /* GYOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GYOperation.swift; sourceTree = "<group>"; };
+		3064FBD425093D71004531D7 /* AsyncImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
+		3064FBD525093D71004531D7 /* AsyncImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
 		307CC05025039DA1006EFC93 /* SafeReadWrite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeReadWrite.swift; sourceTree = "<group>"; };
 		307CC05225076996006EFC93 /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		307CC05425076F67006EFC93 /* AlgEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgEntrance.swift; sourceTree = "<group>"; };
@@ -183,6 +186,15 @@
 			path = Thread;
 			sourceTree = "<group>";
 		};
+		3064FBD725093D7D004531D7 /* Async */ = {
+			isa = PBXGroup;
+			children = (
+				3064FBD425093D71004531D7 /* AsyncImageView.h */,
+				3064FBD525093D71004531D7 /* AsyncImageView.m */,
+			);
+			path = Async;
+			sourceTree = "<group>";
+		};
 		308397EA24FCE5350054FED7 /* DrawRect */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +231,7 @@
 		30AFC5A924401FD10090BFA4 /* ForiOS */ = {
 			isa = PBXGroup;
 			children = (
+				3064FBD725093D7D004531D7 /* Async */,
 				308397EA24FCE5350054FED7 /* DrawRect */,
 				30D7B57324725BAF00F9CD69 /* Swift */,
 				3034644324E66DC700E0F369 /* Thread */,
@@ -526,6 +539,7 @@
 				307CC05125039DA1006EFC93 /* SafeReadWrite.swift in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
 				307CC05325076996006EFC93 /* Tree.swift in Sources */,
+				3064FBD625093D71004531D7 /* AsyncImageView.m in Sources */,
 				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
 				3034644724E673E200E0F369 /* GYOperation.swift in Sources */,
 				308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */,
