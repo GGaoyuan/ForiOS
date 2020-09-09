@@ -10,4 +10,8 @@
 
 @implementation KVOObject
 
+- (void)say {
+    NSLog(@"a hahahaha");
+}
+
 @end

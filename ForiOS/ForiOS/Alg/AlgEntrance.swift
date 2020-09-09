@@ -23,6 +23,8 @@ class AlgEntrance: NSObject {
     
     /// 二叉树
     class func binaryTree() {
+        let scale = UIScreen.main.scale
+        print(scale)
 //        let treeNode = TreeNode.createTree(values: [4, 1, 6, 8, 7, 2, 3, 5, 9, 0, 10])
         let treeNode = TreeNode.createTree(values: [4, 1, 6, 8, 2, 5, 0])
         let solution = TreeNodeSolution()

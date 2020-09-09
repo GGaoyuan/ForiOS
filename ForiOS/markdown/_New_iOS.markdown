@@ -1110,6 +1110,7 @@ contents除了给它赋值CGImage之外，我们也可以直接对它进行绘�
 ```
 (其实这一部分就是异步绘制的步骤)
 这个方法调用之前，CALayer创建了一个合适尺寸的空寄宿图（尺寸由bounds和contentsScale决定）和一个Core Graphics的绘制上下文环境，为绘制寄宿图做准备，它作为ctx参数传入。在这一步生成的空寄宿图内存是相当巨大的，它就是本次内存问题的关键，一旦你实现了CALayerDelegate协议中的-drawLayer:inContext:方法或者UIView中的-drawRect:方法（其实就是前者的包装方法），图层就创建了一个绘制上下文，这个上下文需要的内存可从这个公式得出：图层宽*图层高*4 字节，宽高的单位均为像素。图层每次重绘的时候都需要重新抹掉内存然后重新分配。它就是我们画板程序内存暴增的真正原因。
+https://blog.csdn.net/shihuboke/article/details/75195524
 **解决办法：**
 最合理的办法处理类似于画板这样画线条的需求直接用专有图层CAShapeLayer。
 CAShapeLayer是一个通过矢量图形而不是bitmap来绘制的图层子类。用CGPath来定义想要绘制的图形，CAShapeLayer会自动渲染。它可以完美替代我们的直接使用Core Graphics绘制layer，对比之下使用CAShapeLayer有以下优点
@@ -1178,6 +1179,7 @@ runtime消息转发？？？
 
 #### 内存优化
 ##### 内存优化
+https://juejin.im/post/6844903621276991502#heading-19
 drawRect内存暴增优化，可以使用CAShapeLayer（[drawRect内存问题](#drawRect01_jump)）
 使用autoReleasepool
 收到内存警告的时候清除不必要的内存

@@ -98,11 +98,11 @@ class TreeNodeSolution: NSObject {
         }
         return result
     }
+
     /// 二叉树的直径
     func diameterOfBinaryTree(_ root: TreeNode?) -> Int {
         return 0
     }
-    
 }
 
 class TreeNode: NSObject {

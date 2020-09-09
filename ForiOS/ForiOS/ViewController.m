@@ -27,7 +27,6 @@
 
 @implementation ViewController
 
-
 #pragma mark - 二进制重排
 
 void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
@@ -127,12 +126,21 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 }
 
 
+
 #pragma mark - 异步渲染
 - (void)asyncView {
     AsyncImageView *view = [[AsyncImageView alloc] initWithFrame:CGRectMake(0, 100, 300, 300)];
     view.image = [UIImage imageNamed:@"aaa"];
     view.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:view];
+}
+
+#pragma mark - NSMutableArray的MutableCopy
+- (void)mutableArrayCopy {
+    NSMutableArray *test1 = [NSMutableArray arrayWithArray:@[[NSObject new], [NSObject new], [NSObject new]]];
+    NSMutableArray *test2 = test1.mutableCopy;
+    [test1 removeLastObject];
+    NSLog(@"%@", test2);
 }
 
 #pragma mark - aaa
@@ -177,7 +185,26 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
     [super viewDidLoad];
     
     [self asyncView];
+    void (^blk)(void) = ^{
+        printf("val=");
+    };
     
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    view.backgroundColor = [UIColor redColor];
+    [self.view addSubview:view];
+    UIView *view2 = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 80, 80)];
+    view2.backgroundColor = [UIColor blueColor];
+    view2.bounds = CGRectMake(10, 10, 90, 90);
+    [view addSubview:view2];
+    
+    
+    KVOObject *obj1 = [KVOObject new];
+    
+    id obj2 = [KVOObject class];
+    void *obj = &obj2;
+    [(__bridge id)obj say];
+    
+//    [self mutableArrayCopy];
 //    [self addBtn];
     
     
