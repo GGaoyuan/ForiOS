@@ -58,7 +58,7 @@ App由原生和weex混编，独自一人设计编码原生部分,与前端联调
   - 这里可以利用Prefetching
 - 不用相应事件的可以用CALayer替换UIView, CATextLayer替换UILabel
 - CALayer异步渲染
-- Runloop的performDelay
+- Runloop的performDelay（后者监听Runloop，吧滑动的时候的那些渲染任务都搜集起来，然后在快要Beforewaiting的时候，再加载，按需加载）
 - 减少视图层级
 
 https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/
@@ -80,5 +80,11 @@ FPS降低
 CPU占用率很高
 主线程Runloop执行了很久
 
-SD/YYImage预解码
+
 Cocos:
+内存泄漏
+杀死进程
+
+
+SD/YYImage预解码问题
+
