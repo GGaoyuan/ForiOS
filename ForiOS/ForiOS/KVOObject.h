@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString *name;
 
+- (void)say;
 @end
 
 NS_ASSUME_NONNULL_END
