@@ -27,6 +27,14 @@
 
 @implementation ViewController
 
++ (void)initialize
+{
+    NSLog(@"");
+}
+
++ (void)load {
+    NSLog(@"");
+}
 
 #pragma mark - 二进制重排
 
