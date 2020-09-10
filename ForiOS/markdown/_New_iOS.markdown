@@ -982,7 +982,9 @@ MD5加盐
 ##### Frame和Bounse
 一个是按照父视图，一个是按照自己，就算bondse的x和y不为0，最后也是0，但是这是bonse的size会以圆点改变大小
 ##### 一张图片的内存占用大小是由什么决定的
-分辨率，x*y*4
+分辨率，x*y*4，为什么是4
+##### 图片内存大小为什么是分辨率*4 
+每个像素32位4个字节
 ##### Images.xcassets和直接用图片有什么不一样
 sets里叫aaa，实际上可以改名叫bbb
 不用再为多像素的图片命名。什么2x，3x不用管
@@ -1052,6 +1054,12 @@ view的层次结构是否合理?
 具体做法：
 先创建一个CALayer子类，重写display方法，添加displayAsync方法。这样只要外部创建添加了该layer后调用setNeedsDisplay方法，就会运行display方法。
 在displayAsync方法中，我们创建了一个串行队列，添加了一个异步任务来画图片
+##### 什么是离屏渲染
+GPU渲染的结果要放到FrameBuffer中，但是如果因为某些原因**不能存到FrameBuffer中而是存到了其他地方，之后再写入framebuffer，就是离屏渲染**
+另外，如果我们在UIView中实现了drawRect方法，就算它的函数体内部实际没有代码，系统也会为这个view申请一块内存区域（backingStore），等待CoreGraphics可能的绘画操作，因为像素数据是暂时存入了CGContext，而不是直接到了frame buffer，但是这个并不是离屏渲染。另一个证据是，如果你的view实现了drawRect，此时打开Xcode调试的“Color offscreen rendered yellow”开关，你会发现这片区域不会被标记为黄色，说明Xcode并不认为这属于离屏渲染。
+**其实通过CPU渲染就是俗称的“软件渲染”，而真正的离屏渲染发生在GPU。**
+WWDC说主要的渲染操作都是由CoreAnimation的Render Server模块完成，Render Server会遵循“画家算法”，按次序输出到frame buffer，后一层覆盖前一层，就能得到最终的显示结果。然而有些场景并没有那么简单。作为“画家”的GPU虽然可以一层一层往画布上进行输出，但是无法在某一层渲染完成之后，再回过头来擦除/改变其中的某个部分。所以对于某些显示数据，就不得不另开一块内存，借助这个临时中转区域来完成一些更复杂的、多次的修改/剪裁操作。
+
 ##### 离屏渲染
 当前屏幕渲染：GPU的渲染操作是在用于当前屏幕显示的缓冲区进行的
 离屏渲染：在当前缓冲区外开辟一个新的缓冲区进行渲染（这个是要尽量避免的）
@@ -1235,6 +1243,20 @@ https://mp.weixin.qq.com/s?__biz=MzA5NzMwODI0MA==&mid=2647766465&idx=1&sn=e95987
 
 ******************************************************************************
 ### 第三方库
+##### MLeaksFinder原理
+为基类 NSObject 添加一个方法 -willDealloc 方法，该方法的作用是，先用一个弱指针指向 self，并在一小段时间(3秒)后，通过这个弱指针调用 -assertNotDealloc，而 -assertNotDealloc 主要作用是直接中断言。
+```
+- (BOOL)willDealloc {
+    __weak id weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf assertNotDealloc];
+    });
+    return YES;
+}
+- (void)assertNotDealloc {
+     NSAssert(NO, @“”);
+}
+```
 ##### YYCache和SD缓存策略（设计一个缓存）
 磁盘缓存的文件夹是Cache文件夹
 YYCache：

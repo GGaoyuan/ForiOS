@@ -19,10 +19,14 @@
 #import <dlfcn.h>
 #import "DrawRectViewController.h"
 #import "AsyncImageView.h"
+#import "TestSingleton.h"
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
 @property (nonatomic, copy) NSMutableArray *aaa;
+
+@property (atomic, strong) NSMutableArray *atomicArray;
+
 @end
 
 @implementation ViewController
@@ -135,13 +139,44 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
     [self.view addSubview:view];
 }
 
-#pragma mark - NSMutableArray的MutableCopy
+#pragma mark - MutableCopy后里面的对象也会Copy一份吗
 - (void)mutableArrayCopy {
     NSMutableArray *test1 = [NSMutableArray arrayWithArray:@[[NSObject new], [NSObject new], [NSObject new]]];
     NSMutableArray *test2 = test1.mutableCopy;
     [test1 removeLastObject];
     NSLog(@"%@", test2);
 }
+
+#pragma mark - Atomic线程不安全
+- (void)atomicArrayTest {
+    self.atomicArray = [NSMutableArray array];
+//    NSLock *lock = [NSLock new];
+    for (int i = 0; i < 50; i++) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [self.atomicArray addObject:@(1)];
+            NSLog(@"1111 - %@", self.atomicArray);
+            [self.atomicArray removeAllObjects];
+        });
+    }
+    for (int i = 0; i < 50; i++) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [self.atomicArray addObject:@(2)];
+            NSLog(@"2222 - %@", self.atomicArray);
+            [self.atomicArray removeAllObjects];
+        });
+    }
+}
+
+#pragma mark - aaa
+- (void)testSingleton {
+    for (int i = 0; i < 50; i++) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSLog(@"1111 - %@", [TestSingleton instance]);
+        });
+    }
+}
+
+
 
 #pragma mark - aaa
 
@@ -183,6 +218,10 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    [self mutableArrayCopy];
+//    [self atomicArrayTest];
+//    [self testSingleton];
     
     [self asyncView];
     void (^blk)(void) = ^{
