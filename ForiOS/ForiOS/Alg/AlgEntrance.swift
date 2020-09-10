@@ -11,8 +11,8 @@ import UIKit
 class AlgEntrance: NSObject {
     @objc public class func start() {
         print("AlgEntrance --- start")
-        //fastSort()
-        binaryTree()
+        fastSort()
+//        binaryTree()
     }
     
     /// 快速排序
@@ -41,5 +41,7 @@ class AlgEntrance: NSObject {
         print("深度 --- \(solution.depth(treeNode))")
         //是否是平衡树
         print("平衡树 --- \(solution.isBalanced(treeNode))")
+        
+        solution.levelOrder(treeNode)
     }
 }

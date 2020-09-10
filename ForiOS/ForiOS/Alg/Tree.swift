@@ -100,9 +100,21 @@ class TreeNodeSolution: NSObject {
     }
 
     /// 二叉树的直径
+    var diameterOfBinaryTreeResult = 0
     func diameterOfBinaryTree(_ root: TreeNode?) -> Int {
-        return 0
+        let _ = _diameterOfBinaryTree(root)
+        return diameterOfBinaryTreeResult
     }
+    private func _diameterOfBinaryTree(_ root: TreeNode?) -> Int {
+        if root == nil {
+            return 0
+        }
+        let left = _diameterOfBinaryTree(root?.left)
+        let right = _diameterOfBinaryTree(root?.right)
+        diameterOfBinaryTreeResult = max(diameterOfBinaryTreeResult, left + right)
+        return max(left, right) + 1
+    }
+    
 }
 
 class TreeNode: NSObject {
