@@ -20,6 +20,8 @@
 #import "DrawRectViewController.h"
 #import "AsyncImageView.h"
 #import "TestSingleton.h"
+#import "AssignObject.h"
+#import "HitTestView.h"
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -27,171 +29,14 @@
 
 @property (atomic, strong) NSMutableArray *atomicArray;
 
+@property (nonatomic, assign) AssignObject *assignObj;
+@property (nonatomic, strong) HitTestView *hittestView;
+
 @end
 
 @implementation ViewController
 
-#pragma mark - 二进制重排
-
-void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
-                                         uint32_t *stop) {
-//    static uint64_t N;  // Counter for the guards.
-//    if (start == stop || *start) return;  // Initialize only once.
-//    printf("INIT: %p %p\n", start, stop);
-//    for (uint32_t *x = start; x < stop; x++)
-//        *x = ++N;  // Guards should start from 1.
-}
-
-void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
-//    if (!*guard) return;  // Duplicate the guard check.
-//    void *PC = __builtin_return_address(0); //PC就是指向各个函数调用完__sanitizer_cov_trace_pc_guard之后的下一行代码的内存地址
-//    Dl_info info;
-//    dladdr(PC, &info);
-//    printf("fname=%s \nfbase=%p \nsname=%s\nsaddr=%p \n",info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);
-//    char PcDescr[1024];
-//    printf("guard: %p %x PC %s\n", guard, *guard, PcDescr);
-}
-
-#pragma mark - 添加按钮
-- (void)addBtn {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(100, 100, 100, 100);
-    button.backgroundColor = [UIColor redColor];
-    [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
-}
-- (void)buttonAction {
-    [self semaphoreQuestion];
-//    [self drawRectQuestion];
-}
-
-#pragma mark - DrawRect内存暴增
-- (void)drawRectQuestion {
-    DrawRectViewController *vc = [DrawRectViewController new];
-    [self presentViewController:vc animated:true completion:nil];
-}
-
-
-#pragma mark - 卡顿监控Ping主线程
-- (void)fpsPingQuestion {
-    dispatch_semaphore_t sm2 = dispatch_semaphore_create(1);
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        while (1) {
-            long value1 = dispatch_semaphore_wait(sm2, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
-            NSLog(@"111");
-        }
-    });
-}
-
-
-#pragma mark - 信号量
-- (void)semaphoreQuestion {
-    __block NSInteger tickets = 50;
-    // queue1 代表北京火车票售卖窗口
-    dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
-    // queue2 代表上海火车票售卖窗口
-    dispatch_queue_t shanghai = dispatch_queue_create("shanghai", DISPATCH_QUEUE_SERIAL);
-    
-    dispatch_semaphore_t sm = dispatch_semaphore_create(1);
-    
-    dispatch_async(beijing, ^{
-        while (1) {
-            long value1 = dispatch_semaphore_wait(sm, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
-            NSLog(@"%ld", value1);
-//            long value1 = dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
-            if (tickets > 0) {  //如果还有票，继续售卖
-                tickets--;
-                NSLog(@"北京卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
-                [NSThread sleepForTimeInterval:2];
-                dispatch_semaphore_signal(sm);
-            } else { //如果已卖完，关闭售票窗口
-                NSLog(@"北京卖，所有火车票均已售完");
-                dispatch_semaphore_signal(sm);
-                break;
-            }
-        }
-    });
-    dispatch_async(shanghai, ^{
-        while (1) {
-            long value1 = dispatch_semaphore_wait(sm, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC));
-//            dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
-            if (tickets > 0) {  //如果还有票，继续售卖
-                tickets--;
-                NSLog(@"上海卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
-                [NSThread sleepForTimeInterval:2];
-                dispatch_semaphore_signal(sm);
-            } else { //如果已卖完，关闭售票窗口
-                NSLog(@"北京卖，所有火车票均已售完");
-                dispatch_semaphore_signal(sm);
-                break;
-            }
-        }
-    });
-}
-
-
-
-#pragma mark - 异步渲染
-- (void)asyncView {
-    AsyncImageView *view = [[AsyncImageView alloc] initWithFrame:CGRectMake(0, 100, 300, 300)];
-    view.image = [UIImage imageNamed:@"aaa"];
-    view.backgroundColor = [UIColor yellowColor];
-    [self.view addSubview:view];
-}
-
-#pragma mark - MutableCopy后里面的对象也会Copy一份吗
-- (void)mutableArrayCopy {
-    NSMutableArray *test1 = [NSMutableArray arrayWithArray:@[[NSObject new], [NSObject new], [NSObject new]]];
-    NSMutableArray *test2 = test1.mutableCopy;
-    [test1 removeLastObject];
-    NSLog(@"%@", test2);
-}
-
-#pragma mark - Atomic线程不安全
-- (void)atomicArrayTest {
-    self.atomicArray = [NSMutableArray array];
-//    NSLock *lock = [NSLock new];
-    for (int i = 0; i < 50; i++) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [self.atomicArray addObject:@(1)];
-            NSLog(@"1111 - %@", self.atomicArray);
-            [self.atomicArray removeAllObjects];
-        });
-    }
-    for (int i = 0; i < 50; i++) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [self.atomicArray addObject:@(2)];
-            NSLog(@"2222 - %@", self.atomicArray);
-            [self.atomicArray removeAllObjects];
-        });
-    }
-}
-
-#pragma mark - aaa
-- (void)testSingleton {
-    for (int i = 0; i < 50; i++) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            NSLog(@"1111 - %@", [TestSingleton instance]);
-        });
-    }
-}
-
-
-
-#pragma mark - aaa
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-   NSLog(@"observeValueForKeyPath");
-}
-
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-//    self.test.name = @"111";
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-////        NSLog(@"%@", FPSMonitor.monitor.fpsThread);
-//        [[NSRunLoop currentRunLoop] run];
-//        [self performSelector:@selector(test123) withObject:nil afterDelay:0];
-//
-//    });
     NSLog(@"发送:%@",[NSThread currentThread]);
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSLog(@"发送:%@",[NSThread currentThread]);
@@ -200,28 +45,28 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 
 }
 
-- (void)notificationCode{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//       //更新 UI 操作
-//    });
-    NSLog(@"notificationCode:%@",[NSThread currentThread]);
-}
-
-- (void)test123 {
-    NSLog(@"111");
-}
-
-
-////////////////
-
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
 //    [self mutableArrayCopy];
 //    [self atomicArrayTest];
 //    [self testSingleton];
+    [self hittestViewTest];
+    
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [AssignObject new];
+    });
+    NSLog(@"");
+    
+//    dispatch_queue_t queue = dispatch_queue_create("aa", DISPATCH_QUEUE_SERIAL);
+//    for (int i = 0; i < 100; i++) {
+//        dispatch_async(queue, ^{
+//            NSLog(@"%@", [NSThread currentThread]);
+//        });
+//    }
+    
+    
     
     [self asyncView];
     void (^blk)(void) = ^{
@@ -326,5 +171,179 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 //        NSLog(@"1");
 //    });
 }
+
+#pragma mark - HitTest
+- (void)hittestViewTest {
+    self.hittestView = [[HitTestView alloc] initWithFrame:CGRectMake(0, 200, 100, 100)];
+    self.hittestView.userInteractionEnabled = true;
+    self.hittestView.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:self.hittestView];
+}
+
+#pragma mark - 二进制重排
+
+void __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
+                                         uint32_t *stop) {
+//    static uint64_t N;  // Counter for the guards.
+//    if (start == stop || *start) return;  // Initialize only once.
+//    printf("INIT: %p %p\n", start, stop);
+//    for (uint32_t *x = start; x < stop; x++)
+//        *x = ++N;  // Guards should start from 1.
+}
+
+void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
+//    if (!*guard) return;  // Duplicate the guard check.
+//    void *PC = __builtin_return_address(0); //PC就是指向各个函数调用完__sanitizer_cov_trace_pc_guard之后的下一行代码的内存地址
+//    Dl_info info;
+//    dladdr(PC, &info);
+//    printf("fname=%s \nfbase=%p \nsname=%s\nsaddr=%p \n",info.dli_fname,info.dli_fbase,info.dli_sname,info.dli_saddr);
+//    char PcDescr[1024];
+//    printf("guard: %p %x PC %s\n", guard, *guard, PcDescr);
+}
+
+#pragma mark - 添加按钮
+- (void)addBtn {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(100, 100, 100, 100);
+    button.backgroundColor = [UIColor redColor];
+    [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+- (void)buttonAction {
+    [self semaphoreQuestion];
+//    [self drawRectQuestion];
+}
+
+#pragma mark - DrawRect内存暴增
+- (void)drawRectQuestion {
+    DrawRectViewController *vc = [DrawRectViewController new];
+    [self presentViewController:vc animated:true completion:nil];
+}
+
+
+#pragma mark - 卡顿监控Ping主线程
+- (void)fpsPingQuestion {
+    dispatch_semaphore_t sm2 = dispatch_semaphore_create(1);
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        while (1) {
+            long value1 = dispatch_semaphore_wait(sm2, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+            NSLog(@"111");
+        }
+    });
+}
+
+
+#pragma mark - 信号量
+- (void)semaphoreQuestion {
+    __block NSInteger tickets = 50;
+    // queue1 代表北京火车票售卖窗口
+    dispatch_queue_t beijing = dispatch_queue_create("beijing", DISPATCH_QUEUE_SERIAL);
+    // queue2 代表上海火车票售卖窗口
+    dispatch_queue_t shanghai = dispatch_queue_create("shanghai", DISPATCH_QUEUE_SERIAL);
+    
+    dispatch_semaphore_t sm = dispatch_semaphore_create(1);
+    
+    dispatch_async(beijing, ^{
+        while (1) {
+            long value1 = dispatch_semaphore_wait(sm, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+            NSLog(@"%ld", value1);
+//            long value1 = dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
+            if (tickets > 0) {  //如果还有票，继续售卖
+                tickets--;
+                NSLog(@"北京卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
+                [NSThread sleepForTimeInterval:2];
+                dispatch_semaphore_signal(sm);
+            } else { //如果已卖完，关闭售票窗口
+                NSLog(@"北京卖，所有火车票均已售完");
+                dispatch_semaphore_signal(sm);
+                break;
+            }
+        }
+    });
+    dispatch_async(shanghai, ^{
+        while (1) {
+            long value1 = dispatch_semaphore_wait(sm, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC));
+//            dispatch_semaphore_wait(sm, DISPATCH_TIME_FOREVER);
+            if (tickets > 0) {  //如果还有票，继续售卖
+                tickets--;
+                NSLog(@"上海卖，剩余票数：%ld 窗口：%@", (long)tickets, [NSThread currentThread]);
+                [NSThread sleepForTimeInterval:2];
+                dispatch_semaphore_signal(sm);
+            } else { //如果已卖完，关闭售票窗口
+                NSLog(@"北京卖，所有火车票均已售完");
+                dispatch_semaphore_signal(sm);
+                break;
+            }
+        }
+    });
+}
+
+
+
+#pragma mark - 异步渲染
+- (void)asyncView {
+    AsyncImageView *view = [[AsyncImageView alloc] initWithFrame:CGRectMake(0, 100, 100, 100)];
+    view.image = [UIImage imageNamed:@"aaa"];
+    view.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:view];
+}
+
+#pragma mark - MutableCopy后里面的对象也会Copy一份吗
+- (void)mutableArrayCopy {
+    NSMutableArray *test1 = [NSMutableArray arrayWithArray:@[[NSObject new], [NSObject new], [NSObject new]]];
+    NSMutableArray *test2 = test1.mutableCopy;
+    [test1 removeLastObject];
+    NSLog(@"%@", test2);
+}
+
+#pragma mark - Atomic线程不安全
+- (void)atomicArrayTest {
+    self.atomicArray = [NSMutableArray array];
+//    NSLock *lock = [NSLock new];
+    for (int i = 0; i < 50; i++) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [self.atomicArray addObject:@(1)];
+            NSLog(@"1111 - %@", self.atomicArray);
+            [self.atomicArray removeAllObjects];
+        });
+    }
+    for (int i = 0; i < 50; i++) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            [self.atomicArray addObject:@(2)];
+            NSLog(@"2222 - %@", self.atomicArray);
+            [self.atomicArray removeAllObjects];
+        });
+    }
+}
+
+#pragma mark - 自己实现一个线程安全的单例
+- (void)testSingleton {
+    for (int i = 0; i < 50; i++) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            NSLog(@"1111 - %@", [TestSingleton instance]);
+        });
+    }
+}
+
+
+
+#pragma mark - aaa
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+   NSLog(@"observeValueForKeyPath");
+}
+
+
+- (void)notificationCode{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//       //更新 UI 操作
+//    });
+    NSLog(@"notificationCode:%@",[NSThread currentThread]);
+}
+
+- (void)test123 {
+    NSLog(@"111");
+}
+
 
 @end

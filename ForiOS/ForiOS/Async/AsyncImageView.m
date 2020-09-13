@@ -10,4 +10,10 @@
 
 @implementation AsyncImageView
 
+//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+//    NSLog(@"hitTesthitTesthitTest");
+//    return [super hitTest:point withEvent:event];
+//}
+
+
 @end

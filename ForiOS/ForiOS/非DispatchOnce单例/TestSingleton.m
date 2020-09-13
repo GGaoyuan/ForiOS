@@ -12,6 +12,7 @@
 
 static TestSingleton *obj = nil;
 + (TestSingleton *)instance {
+//    dispatch_semaphore_t
     NSLock *lock = [NSLock new];
     if (obj == nil) {
         obj = [TestSingleton new];

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		3021ADC6250A76DF0090F478 /* TestSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3021ADC5250A76DF0090F478 /* TestSingleton.m */; };
 		3021ADCA250A793E0090F478 /* SafeReadWrite.m in Sources */ = {isa = PBXBuildFile; fileRef = 3021ADC9250A793E0090F478 /* SafeReadWrite.m */; };
+		3021ADCE250B6F3C0090F478 /* AssignObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3021ADCD250B6F3C0090F478 /* AssignObject.m */; };
+		3021ADD1250B816F0090F478 /* HitTestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3021ADD0250B816F0090F478 /* HitTestView.m */; };
 		302B322E24811263007AEA23 /* WebImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B322D24811263007AEA23 /* WebImage.swift */; };
 		302F998F24DB122D00DBEB5C /* TestString.m in Sources */ = {isa = PBXBuildFile; fileRef = 302F998E24DB122D00DBEB5C /* TestString.m */; };
 		302F999224E2F11E00DBEB5C /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 302F999124E2F11E00DBEB5C /* TestView.m */; };
@@ -72,6 +74,10 @@
 		3021ADC5250A76DF0090F478 /* TestSingleton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestSingleton.m; sourceTree = "<group>"; };
 		3021ADC8250A793E0090F478 /* SafeReadWrite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafeReadWrite.h; sourceTree = "<group>"; };
 		3021ADC9250A793E0090F478 /* SafeReadWrite.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafeReadWrite.m; sourceTree = "<group>"; };
+		3021ADCC250B6F3C0090F478 /* AssignObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssignObject.h; sourceTree = "<group>"; };
+		3021ADCD250B6F3C0090F478 /* AssignObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssignObject.m; sourceTree = "<group>"; };
+		3021ADCF250B816F0090F478 /* HitTestView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HitTestView.h; sourceTree = "<group>"; };
+		3021ADD0250B816F0090F478 /* HitTestView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HitTestView.m; sourceTree = "<group>"; };
 		302B322D24811263007AEA23 /* WebImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebImage.swift; sourceTree = "<group>"; };
 		302F998D24DB122D00DBEB5C /* TestString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestString.h; sourceTree = "<group>"; };
 		302F998E24DB122D00DBEB5C /* TestString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestString.m; sourceTree = "<group>"; };
@@ -182,6 +188,24 @@
 			path = "多读单写";
 			sourceTree = "<group>";
 		};
+		3021ADCB250B6F2A0090F478 /* AssignObjct */ = {
+			isa = PBXGroup;
+			children = (
+				3021ADCC250B6F3C0090F478 /* AssignObject.h */,
+				3021ADCD250B6F3C0090F478 /* AssignObject.m */,
+			);
+			path = AssignObjct;
+			sourceTree = "<group>";
+		};
+		3021ADD2250B817E0090F478 /* HittestView和三角形 */ = {
+			isa = PBXGroup;
+			children = (
+				3021ADCF250B816F0090F478 /* HitTestView.h */,
+				3021ADD0250B816F0090F478 /* HitTestView.m */,
+			);
+			path = "HittestView和三角形";
+			sourceTree = "<group>";
+		};
 		302B32222480FA47007AEA23 /* SourceCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +277,8 @@
 		30AFC5A924401FD10090BFA4 /* ForiOS */ = {
 			isa = PBXGroup;
 			children = (
+				3021ADD2250B817E0090F478 /* HittestView和三角形 */,
+				3021ADCB250B6F2A0090F478 /* AssignObjct */,
 				3021ADC7250A790F0090F478 /* 多读单写 */,
 				3021ADC3250A76B40090F478 /* 非DispatchOnce单例 */,
 				3064FBD725093D7D004531D7 /* Async */,
@@ -562,8 +588,10 @@
 				3021ADCA250A793E0090F478 /* SafeReadWrite.m in Sources */,
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
+				3021ADD1250B816F0090F478 /* HitTestView.m in Sources */,
 				307CC05325076996006EFC93 /* Tree.swift in Sources */,
 				3064FBD625093D71004531D7 /* AsyncImageView.m in Sources */,
+				3021ADCE250B6F3C0090F478 /* AssignObject.m in Sources */,
 				302F998F24DB122D00DBEB5C /* TestString.m in Sources */,
 				3034644724E673E200E0F369 /* GYOperation.swift in Sources */,
 				308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */,

@@ -826,6 +826,8 @@ person.block();
 
 *************
 ### KVO，KVC
+KVO的实现
+https://juejin.im/post/6844903747680731150#heading-4
 ##### KVC能否触发KVO
 KVC能触发KVO，KVC在赋值的时候会会进行方法的调用，首先调用（_setKey,setKey方法），如果没有set方法，责直接内部自己调用设置属性（key，_key）,内部就会监听到值的改变。
 ##### 如何手动调用KVO
