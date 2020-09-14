@@ -32,6 +32,8 @@
 @property (nonatomic, assign) AssignObject *assignObj;
 @property (nonatomic, strong) HitTestView *hittestView;
 
+@property (atomic, assign) int number;
+
 @end
 
 @implementation ViewController
@@ -48,6 +50,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+//    __block int i = 1;
+    int i = 1;
+    NSLog(@"111");
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+            NSLog(@"%d --- %@", i, [NSThread currentThread]);
+
+    });
+    NSLog(@"222");
+    i = 2;
+    return;
 //    [self mutableArrayCopy];
 //    [self atomicArrayTest];
 //    [self testSingleton];
