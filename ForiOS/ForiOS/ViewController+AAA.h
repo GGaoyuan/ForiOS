@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 //分类中的可以写@property，但不会生成setter/getter方法声明和实现，也不会生成私有的成员变量，会编译通过，但是引用变量会报错
 @interface ViewController (AAA)
 
-@property (nonatomic, strong) NSString *a;
+@property (nonatomic, strong) NSString *name;
 
 @end
 

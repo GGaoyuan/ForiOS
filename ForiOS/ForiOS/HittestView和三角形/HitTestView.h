@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HitTestView : UIView
-
+- (void)testCategory;
 @end
 
 @interface HitTestButtonA : UIButton

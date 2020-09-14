@@ -22,6 +22,7 @@
 #import "TestSingleton.h"
 #import "AssignObject.h"
 #import "HitTestView.h"
+#import "HitTestView+Category.h"
 @interface ViewController ()
 
 @property (nonatomic, strong) KVOObject *test;
@@ -39,6 +40,9 @@
 @implementation ViewController
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    HitTestView *testView = [HitTestView new];
+    
+    
     NSLog(@"发送:%@",[NSThread currentThread]);
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSLog(@"发送:%@",[NSThread currentThread]);
@@ -61,9 +65,23 @@
     NSLog(@"222");
     i = 2;
     return;
+
+//    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT);
+    NSLog(@"A --- %@", [NSThread currentThread]);
+    dispatch_async(serial, ^{
+        NSLog(@"B --- %@", [NSThread currentThread]);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"C --- %@", [NSThread currentThread]);
+        });
+    });
+    NSLog(@"D --- %@", [NSThread currentThread]);
+    
+>>>>>>> 04c3135c8b98c9cfce95eed4a4e57d21779a6075
 //    [self mutableArrayCopy];
 //    [self atomicArrayTest];
 //    [self testSingleton];
+//    [self asyncView];
     [self hittestViewTest];
     
     
@@ -72,16 +90,9 @@
     });
     NSLog(@"");
     
-//    dispatch_queue_t queue = dispatch_queue_create("aa", DISPATCH_QUEUE_SERIAL);
-//    for (int i = 0; i < 100; i++) {
-//        dispatch_async(queue, ^{
-//            NSLog(@"%@", [NSThread currentThread]);
-//        });
-//    }
     
     
     
-    [self asyncView];
     void (^blk)(void) = ^{
         printf("val=");
     };
