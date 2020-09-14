@@ -7,8 +7,12 @@
 //
 
 #import "HitTestView.h"
-
+#import "HitTestView+Category.h"
 @implementation HitTestView
+
+- (void)testCategory {
+    
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

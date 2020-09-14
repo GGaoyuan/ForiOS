@@ -22,6 +22,7 @@
 		3064FBD625093D71004531D7 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3064FBD525093D71004531D7 /* AsyncImageView.m */; };
 		307CC05325076996006EFC93 /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307CC05225076996006EFC93 /* Tree.swift */; };
 		307CC05525076F67006EFC93 /* AlgEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307CC05425076F67006EFC93 /* AlgEntrance.swift */; };
+		307CC058250F0B51006EFC93 /* HitTestView+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 307CC057250F0B51006EFC93 /* HitTestView+Category.m */; };
 		308397DE24F503AE0054FED7 /* FastSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308397DD24F503AE0054FED7 /* FastSort.swift */; };
 		308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EC24FCE5590054FED7 /* DrawRectViewController.m */; };
 		308397F024FCE56A0054FED7 /* DrawRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EF24FCE56A0054FED7 /* DrawRectView.m */; };
@@ -95,6 +96,8 @@
 		3064FBD525093D71004531D7 /* AsyncImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
 		307CC05225076996006EFC93 /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		307CC05425076F67006EFC93 /* AlgEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgEntrance.swift; sourceTree = "<group>"; };
+		307CC056250F0B51006EFC93 /* HitTestView+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HitTestView+Category.h"; sourceTree = "<group>"; };
+		307CC057250F0B51006EFC93 /* HitTestView+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "HitTestView+Category.m"; sourceTree = "<group>"; };
 		308397DD24F503AE0054FED7 /* FastSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSort.swift; sourceTree = "<group>"; };
 		308397EB24FCE5590054FED7 /* DrawRectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawRectViewController.h; sourceTree = "<group>"; };
 		308397EC24FCE5590054FED7 /* DrawRectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectViewController.m; sourceTree = "<group>"; };
@@ -202,6 +205,8 @@
 			children = (
 				3021ADCF250B816F0090F478 /* HitTestView.h */,
 				3021ADD0250B816F0090F478 /* HitTestView.m */,
+				307CC056250F0B51006EFC93 /* HitTestView+Category.h */,
+				307CC057250F0B51006EFC93 /* HitTestView+Category.m */,
 			);
 			path = "HittestView和三角形";
 			sourceTree = "<group>";
@@ -581,6 +586,7 @@
 				302F999224E2F11E00DBEB5C /* TestView.m in Sources */,
 				30D7B57F2472914F00F9CD69 /* FactoryProtocol.swift in Sources */,
 				30D7B581247291D400F9CD69 /* MouseProtocol.swift in Sources */,
+				307CC058250F0B51006EFC93 /* HitTestView+Category.m in Sources */,
 				30AFC5B224401FD10090BFA4 /* ViewController.m in Sources */,
 				30D7B5892472937600F9CD69 /* MouseFactory.swift in Sources */,
 				30C9D06F248676F200044171 /* UIImageView+WebImage.swift in Sources */,
