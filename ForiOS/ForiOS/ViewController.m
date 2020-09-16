@@ -33,6 +33,8 @@
 @property (nonatomic, assign) AssignObject *assignObj;
 @property (nonatomic, strong) HitTestView *hittestView;
 
+@property (atomic, assign) int number;
+
 @end
 
 @implementation ViewController
@@ -52,6 +54,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+//    __block int i = 1;
+    int i = 1;
+    NSLog(@"111");
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+            NSLog(@"%d --- %@", i, [NSThread currentThread]);
+
+    });
+    NSLog(@"222");
+    i = 2;
+    return;
+
 //    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
     dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT);
     NSLog(@"A --- %@", [NSThread currentThread]);
@@ -63,6 +77,7 @@
     });
     NSLog(@"D --- %@", [NSThread currentThread]);
     
+>>>>>>> 04c3135c8b98c9cfce95eed4a4e57d21779a6075
 //    [self mutableArrayCopy];
 //    [self atomicArrayTest];
 //    [self testSingleton];
