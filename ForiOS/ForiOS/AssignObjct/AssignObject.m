@@ -11,6 +11,7 @@
 @implementation AssignObject
 
 - (void)dealloc {
+    __strong typeof(self)StrongSelf = self;
     NSLog(@"");
 }
 

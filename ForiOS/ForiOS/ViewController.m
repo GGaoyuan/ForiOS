@@ -35,13 +35,17 @@
 
 @property (atomic, assign) int number;
 
+@property (nonatomic, strong) NSString *str;
+@property (nonatomic, copy) NSMutableString *mutableStr;
 @end
 
 @implementation ViewController
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    HitTestView *testView = [HitTestView new];
     
+    self.mutableStr = [[NSMutableString alloc] initWithString:@"2222"];
+//    self.str = self.mutableStr;
+    NSLog(@"%@ --- %@", self.str, self.mutableStr);
     
     NSLog(@"发送:%@",[NSThread currentThread]);
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -53,7 +57,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.mutableStr = [[NSMutableString alloc] initWithString:@"11111"];
+    self.str = [[NSString alloc] initWithString:self.mutableStr];
+    NSLog(@"%@ --- %@", self.str, self.mutableStr);
 //    __block int i = 1;
     int i = 1;
     NSLog(@"111");
@@ -77,7 +83,7 @@
     });
     NSLog(@"D --- %@", [NSThread currentThread]);
     
->>>>>>> 04c3135c8b98c9cfce95eed4a4e57d21779a6075
+
 //    [self mutableArrayCopy];
 //    [self atomicArrayTest];
 //    [self testSingleton];
