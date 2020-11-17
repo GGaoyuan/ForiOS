@@ -35,13 +35,17 @@
 
 @property (atomic, assign) int number;
 
+@property (nonatomic, strong) NSString *str;
+@property (nonatomic, copy) NSMutableString *mutableStr;
 @end
 
 @implementation ViewController
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    HitTestView *testView = [HitTestView new];
     
+    self.mutableStr = [[NSMutableString alloc] initWithString:@"2222"];
+//    self.str = self.mutableStr;
+    NSLog(@"%@ --- %@", self.str, self.mutableStr);
     
     NSLog(@"发送:%@",[NSThread currentThread]);
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
@@ -53,7 +57,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+<<<<<<< HEAD
     [self mutableArrayCopy];
+=======
+    self.mutableStr = [[NSMutableString alloc] initWithString:@"11111"];
+    self.str = [[NSString alloc] initWithString:self.mutableStr];
+    NSLog(@"%@ --- %@", self.str, self.mutableStr);
+//    __block int i = 1;
+    int i = 1;
+    NSLog(@"111");
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+            NSLog(@"%d --- %@", i, [NSThread currentThread]);
+
+    });
+    NSLog(@"222");
+    i = 2;
+    return;
+
+//    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT);
+    NSLog(@"A --- %@", [NSThread currentThread]);
+    dispatch_async(serial, ^{
+        NSLog(@"B --- %@", [NSThread currentThread]);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"C --- %@", [NSThread currentThread]);
+        });
+    });
+    NSLog(@"D --- %@", [NSThread currentThread]);
+    
+
+//    [self mutableArrayCopy];
+>>>>>>> 9732818b5702f9621ea2cf14cfcf9aa6acdaec4e
 //    [self atomicArrayTest];
 //    [self testSingleton];
 //    [self asyncView];
