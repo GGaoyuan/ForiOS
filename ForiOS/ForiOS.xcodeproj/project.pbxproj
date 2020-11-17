@@ -26,6 +26,7 @@
 		308397DE24F503AE0054FED7 /* FastSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308397DD24F503AE0054FED7 /* FastSort.swift */; };
 		308397ED24FCE5590054FED7 /* DrawRectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EC24FCE5590054FED7 /* DrawRectViewController.m */; };
 		308397F024FCE56A0054FED7 /* DrawRectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 308397EF24FCE56A0054FED7 /* DrawRectView.m */; };
+		309C6AE825307C6D00A6AE77 /* TestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309C6AE725307C6D00A6AE77 /* TestClass.swift */; };
 		30A354BB24FFF14E005A5253 /* ViewController+Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A354BA24FFF14E005A5253 /* ViewController+Test.m */; };
 		30A90BAB24ACE6D800B47D50 /* AsyncLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */; };
 		30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */ = {isa = PBXBuildFile; fileRef = 30A90BAD24B4D23900B47D50 /* ViewController+AAA.m */; };
@@ -103,6 +104,7 @@
 		308397EC24FCE5590054FED7 /* DrawRectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectViewController.m; sourceTree = "<group>"; };
 		308397EE24FCE56A0054FED7 /* DrawRectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DrawRectView.h; sourceTree = "<group>"; };
 		308397EF24FCE56A0054FED7 /* DrawRectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DrawRectView.m; sourceTree = "<group>"; };
+		309C6AE725307C6D00A6AE77 /* TestClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClass.swift; sourceTree = "<group>"; };
 		30A354B924FFF14E005A5253 /* ViewController+Test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ViewController+Test.h"; sourceTree = "<group>"; };
 		30A354BA24FFF14E005A5253 /* ViewController+Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ViewController+Test.m"; sourceTree = "<group>"; };
 		30A90BAA24ACE6D800B47D50 /* AsyncLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLabel.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				30D7B57A24728DE500F9CD69 /* SwiftMain.swift */,
 				302B32222480FA47007AEA23 /* SourceCode */,
 				30D7B578247284C800F9CD69 /* DP */,
+				309C6AE725307C6D00A6AE77 /* TestClass.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -595,6 +598,7 @@
 				3033B42B2489530E003A5A9B /* NewDictionary.m in Sources */,
 				30A90BAE24B4D23900B47D50 /* ViewController+AAA.m in Sources */,
 				3021ADD1250B816F0090F478 /* HitTestView.m in Sources */,
+				309C6AE825307C6D00A6AE77 /* TestClass.swift in Sources */,
 				307CC05325076996006EFC93 /* Tree.swift in Sources */,
 				3064FBD625093D71004531D7 /* AsyncImageView.m in Sources */,
 				3021ADCE250B6F3C0090F478 /* AssignObject.m in Sources */,

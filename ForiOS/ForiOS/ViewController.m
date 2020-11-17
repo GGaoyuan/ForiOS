@@ -53,37 +53,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    __block int i = 1;
-    int i = 1;
-    NSLog(@"111");
-    dispatch_async(dispatch_get_main_queue(), ^{
-
-            NSLog(@"%d --- %@", i, [NSThread currentThread]);
-
-    });
-    NSLog(@"222");
-    i = 2;
-    return;
-
-//    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
-    dispatch_queue_t serial = dispatch_queue_create("", DISPATCH_QUEUE_CONCURRENT);
-    NSLog(@"A --- %@", [NSThread currentThread]);
-    dispatch_async(serial, ^{
-        NSLog(@"B --- %@", [NSThread currentThread]);
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            NSLog(@"C --- %@", [NSThread currentThread]);
-        });
-    });
-    NSLog(@"D --- %@", [NSThread currentThread]);
-    
->>>>>>> 04c3135c8b98c9cfce95eed4a4e57d21779a6075
-//    [self mutableArrayCopy];
+    [self mutableArrayCopy];
 //    [self atomicArrayTest];
 //    [self testSingleton];
 //    [self asyncView];
     [self hittestViewTest];
     
+    
+    
+//    TestClassAAA *aaa = 
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [AssignObject new];
@@ -199,7 +177,7 @@
 #pragma mark - HitTest
 - (void)hittestViewTest {
     self.hittestView = [[HitTestView alloc] initWithFrame:CGRectMake(0, 200, 100, 100)];
-    self.hittestView.userInteractionEnabled = true;
+    self.hittestView.userInteractionEnabled = false;
     self.hittestView.backgroundColor = [UIColor greenColor];
     [self.view addSubview:self.hittestView];
 }
@@ -314,6 +292,7 @@ void __sanitizer_cov_trace_pc_guard(uint32_t *guard) {
 
 #pragma mark - MutableCopy后里面的对象也会Copy一份吗
 - (void)mutableArrayCopy {
+    //只会copy指针
     NSMutableArray *test1 = [NSMutableArray arrayWithArray:@[[NSObject new], [NSObject new], [NSObject new]]];
     NSMutableArray *test2 = test1.mutableCopy;
     [test1 removeLastObject];
