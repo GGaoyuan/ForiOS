@@ -16,17 +16,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pvI-2u-rY1">
-                                <rect key="frame" x="184" y="845" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pvI-2u-rY1">
+                                <rect key="frame" x="186.5" y="836" width="41" height="30"/>
+                                <state key="normal" title="Effect"/>
                                 <connections>
-                                    <action selector="startAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FHC-FX-Pwu"/>
+                                    <action selector="effectAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WqY-yP-zRZ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZN2-Tl-T3T">
+                                <rect key="frame" x="122.5" y="836" width="34" height="30"/>
+                                <state key="normal" title="Start"/>
+                                <connections>
+                                    <action selector="startAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nPL-sq-0XJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MaX-SW-kBZ">
+                                <rect key="frame" x="257.5" y="836" width="39" height="30"/>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="resetAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t6q-d7-bd4"/>
+                                    <action selector="startAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yFR-Tr-Yso"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="pvI-2u-rY1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3LL-Na-Yqj"/>
+                            <constraint firstItem="MaX-SW-kBZ" firstAttribute="centerY" secondItem="pvI-2u-rY1" secondAttribute="centerY" id="85p-N7-Ie1"/>
+                            <constraint firstItem="ZN2-Tl-T3T" firstAttribute="centerY" secondItem="pvI-2u-rY1" secondAttribute="centerY" id="VNW-tw-mU9"/>
+                            <constraint firstItem="MaX-SW-kBZ" firstAttribute="leading" secondItem="pvI-2u-rY1" secondAttribute="trailing" constant="30" id="hrn-mb-a2S"/>
+                            <constraint firstItem="pvI-2u-rY1" firstAttribute="leading" secondItem="ZN2-Tl-T3T" secondAttribute="trailing" constant="30" id="ykT-V2-OjV"/>
+                            <constraint firstAttribute="bottom" secondItem="pvI-2u-rY1" secondAttribute="bottom" constant="30" id="z7F-38-uzO"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
