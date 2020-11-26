@@ -7,7 +7,6 @@
 
 import UIKit
 
-
-protocol SwiftFoundation: NSObjectProtocol {
+protocol SwiftFoundation: Any {
     
 }
