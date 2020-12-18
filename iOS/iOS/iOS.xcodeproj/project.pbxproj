@@ -18,9 +18,7 @@
 		3068283A25359287005A9C24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3068283825359287005A9C24 /* LaunchScreen.storyboard */; };
 		3068284525359287005A9C24 /* iOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068284425359287005A9C24 /* iOSTests.swift */; };
 		3068285025359287005A9C24 /* iOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068284F25359287005A9C24 /* iOSUITests.swift */; };
-		309F72AF25384262002EB4D4 /* SwiftTips.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309F72AE25384262002EB4D4 /* SwiftTips.swift */; };
-		309F72BA25394054002EB4D4 /* SwiftFoundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309F72B925394054002EB4D4 /* SwiftFoundation.swift */; };
-		30BCAE402563B84F008F3B11 /* SFGlobalFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BCAE3F2563B84F008F3B11 /* SFGlobalFunction.swift */; };
+		30BCAE402563B84F008F3B11 /* YDGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BCAE3F2563B84F008F3B11 /* YDGlobal.swift */; };
 		30BCAE462563B98F008F3B11 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BCAE452563B98F008F3B11 /* UIImage+Extension.swift */; };
 		30BE24962564FFA800C80C7D /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BE24952564FFA800C80C7D /* UIView+Extension.swift */; };
 		BCB5022897CDA2D35BB7F5D1 /* libPods-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 352287AB63E707FA56D24F0D /* libPods-iOS.a */; };
@@ -61,9 +59,7 @@
 		3068284B25359287005A9C24 /* iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3068284F25359287005A9C24 /* iOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSUITests.swift; sourceTree = "<group>"; };
 		3068285125359287005A9C24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		309F72AE25384262002EB4D4 /* SwiftTips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftTips.swift; sourceTree = "<group>"; };
-		309F72B925394054002EB4D4 /* SwiftFoundation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftFoundation.swift; sourceTree = "<group>"; };
-		30BCAE3F2563B84F008F3B11 /* SFGlobalFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFGlobalFunction.swift; sourceTree = "<group>"; };
+		30BCAE3F2563B84F008F3B11 /* YDGlobal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YDGlobal.swift; sourceTree = "<group>"; };
 		30BCAE452563B98F008F3B11 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30BE248E2564F4AE00C80C7D /* iOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		30BE24952564FFA800C80C7D /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
@@ -168,8 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				30539F21256FB21D00C75B76 /* TestResource */,
-				309F72AD25384192002EB4D4 /* SwiftTips */,
-				3068286025359299005A9C24 /* SwiftFoundation */,
+				3068286025359299005A9C24 /* YDFoundation */,
 				303AEECB258C9523001B6F17 /* Classes */,
 				3068283625359287005A9C24 /* Assets.xcassets */,
 				3068283825359287005A9C24 /* LaunchScreen.storyboard */,
@@ -197,24 +192,15 @@
 			path = iOSUITests;
 			sourceTree = "<group>";
 		};
-		3068286025359299005A9C24 /* SwiftFoundation */ = {
+		3068286025359299005A9C24 /* YDFoundation */ = {
 			isa = PBXGroup;
 			children = (
 				30539F3B256FB8E900C75B76 /* Monitor */,
 				30BE249A25660F9000C80C7D /* Tool */,
 				30BCAE442563B97A008F3B11 /* Extension */,
-				309F72B925394054002EB4D4 /* SwiftFoundation.swift */,
-				30BCAE3F2563B84F008F3B11 /* SFGlobalFunction.swift */,
+				30BCAE3F2563B84F008F3B11 /* YDGlobal.swift */,
 			);
-			path = SwiftFoundation;
-			sourceTree = "<group>";
-		};
-		309F72AD25384192002EB4D4 /* SwiftTips */ = {
-			isa = PBXGroup;
-			children = (
-				309F72AE25384262002EB4D4 /* SwiftTips.swift */,
-			);
-			path = SwiftTips;
+			path = YDFoundation;
 			sourceTree = "<group>";
 		};
 		30BCAE442563B97A008F3B11 /* Extension */ = {
@@ -409,13 +395,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				30BE24962564FFA800C80C7D /* UIView+Extension.swift in Sources */,
-				309F72AF25384262002EB4D4 /* SwiftTips.swift in Sources */,
-				30BCAE402563B84F008F3B11 /* SFGlobalFunction.swift in Sources */,
+				30BCAE402563B84F008F3B11 /* YDGlobal.swift in Sources */,
 				30539F61256FBFE300C75B76 /* MLTestView.swift in Sources */,
 				30BCAE462563B98F008F3B11 /* UIImage+Extension.swift in Sources */,
 				30539F53256FBD7600C75B76 /* MemoryLeakDetector.swift in Sources */,
 				303AEEBE258C93BE001B6F17 /* HomeViewController.swift in Sources */,
-				309F72BA25394054002EB4D4 /* SwiftFoundation.swift in Sources */,
 				3068282E25359284005A9C24 /* AppDelegate.swift in Sources */,
 				30539F48256FBC3B00C75B76 /* MLTestViewController.swift in Sources */,
 			);
@@ -599,7 +583,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "iOS/iOS-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -621,7 +605,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iOS/iOS-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
