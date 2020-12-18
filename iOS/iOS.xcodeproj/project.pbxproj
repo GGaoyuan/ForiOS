@@ -13,7 +13,6 @@
 		30539F53256FBD7600C75B76 /* MemoryLeakDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30539F52256FBD7600C75B76 /* MemoryLeakDetector.swift */; };
 		30539F61256FBFE300C75B76 /* MLTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30539F60256FBFE300C75B76 /* MLTestView.swift */; };
 		3068282E25359284005A9C24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068282D25359284005A9C24 /* AppDelegate.swift */; };
-		3068283025359284005A9C24 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068282F25359284005A9C24 /* SceneDelegate.swift */; };
 		3068283225359284005A9C24 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068283125359284005A9C24 /* ViewController.swift */; };
 		3068283525359284005A9C24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3068283325359284005A9C24 /* Main.storyboard */; };
 		3068283725359287005A9C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3068283625359287005A9C24 /* Assets.xcassets */; };
@@ -54,7 +53,6 @@
 		30539F60256FBFE300C75B76 /* MLTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTestView.swift; sourceTree = "<group>"; };
 		3068282A25359284005A9C24 /* iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3068282D25359284005A9C24 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3068282F25359284005A9C24 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		3068283125359284005A9C24 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		3068283425359284005A9C24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3068283625359287005A9C24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -169,7 +167,6 @@
 				309F729625382AFE002EB4D4 /* POP */,
 				3068286025359299005A9C24 /* SwiftFoundation */,
 				3068282D25359284005A9C24 /* AppDelegate.swift */,
-				3068282F25359284005A9C24 /* SceneDelegate.swift */,
 				3068283125359284005A9C24 /* ViewController.swift */,
 				3068283325359284005A9C24 /* Main.storyboard */,
 				3068283625359287005A9C24 /* Assets.xcassets */,
@@ -270,7 +267,6 @@
 				3068282625359284005A9C24 /* Sources */,
 				3068282725359284005A9C24 /* Frameworks */,
 				3068282825359284005A9C24 /* Resources */,
-				7E016CF4C290ADD1349DC411 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -412,23 +408,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7E016CF4C290ADD1349DC411 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS/Pods-iOS-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iOS/Pods-iOS-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS/Pods-iOS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -446,7 +425,6 @@
 				309F72BA25394054002EB4D4 /* SwiftFoundation.swift in Sources */,
 				3068282E25359284005A9C24 /* AppDelegate.swift in Sources */,
 				30539F48256FBC3B00C75B76 /* MLTestViewController.swift in Sources */,
-				3068283025359284005A9C24 /* SceneDelegate.swift in Sources */,
 				309F729825382B12002EB4D4 /* POPTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -553,7 +531,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -608,7 +586,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
