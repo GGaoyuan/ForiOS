@@ -31,4 +31,8 @@ class MLTestViewController: UIViewController {
     @IBAction func dismiss(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+    
+    deinit {
+        print("deinit MLTestViewController")
+    }
 }
