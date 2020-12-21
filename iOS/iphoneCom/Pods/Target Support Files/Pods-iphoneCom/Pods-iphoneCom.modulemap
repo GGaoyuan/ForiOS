@@ -1,0 +1,6 @@
+module Pods_iphoneCom {
+  umbrella header "Pods-iphoneCom-umbrella.h"
+
+  export *
+  module * { export * }
+}

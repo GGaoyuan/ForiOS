@@ -1,0 +1,22 @@
+platform :ios, '12.0'
+inhibit_all_warnings!   #去掉pod里的所有警告
+
+
+target 'iphoneCom' do
+  #pod 'YYModel'
+  #pod 'YYImage'
+  #pod 'YYCache'
+  #pod 'YYWebImage'
+  #pod 'YYText'
+  pod 'YYKit'
+  pod "AFNetworking"
+  pod 'Alamofire'
+  pod 'HandyJSON'
+  pod 'Kingfisher' # 图片加载
+  pod 'SnapKit'
+  
+  pod 'FBMemoryProfiler'
+  pod 'FBAllocationTracker'
+  pod 'FBRetainCycleDetector'
+  
+end
