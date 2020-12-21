@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		303AEEBE258C93BE001B6F17 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303AEEBD258C93BE001B6F17 /* HomeViewController.swift */; };
+		303AEF1E258CC4F4001B6F17 /* YDMemoryMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 303AEF1D258CC4F4001B6F17 /* YDMemoryMonitor.swift */; };
 		30539F2C256FB4D600C75B76 /* TestResource_JSON.json in Resources */ = {isa = PBXBuildFile; fileRef = 30539F2B256FB4D600C75B76 /* TestResource_JSON.json */; };
 		30539F48256FBC3B00C75B76 /* MLTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30539F46256FBC3B00C75B76 /* MLTestViewController.swift */; };
 		30539F49256FBC3B00C75B76 /* MLTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 30539F47256FBC3B00C75B76 /* MLTestViewController.xib */; };
-		30539F53256FBD7600C75B76 /* MemoryLeakDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30539F52256FBD7600C75B76 /* MemoryLeakDetector.swift */; };
 		30539F61256FBFE300C75B76 /* MLTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30539F60256FBFE300C75B76 /* MLTestView.swift */; };
 		3068282E25359284005A9C24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068282D25359284005A9C24 /* AppDelegate.swift */; };
 		3068283725359287005A9C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3068283625359287005A9C24 /* Assets.xcassets */; };
@@ -43,10 +43,10 @@
 
 /* Begin PBXFileReference section */
 		303AEEBD258C93BE001B6F17 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		303AEF1D258CC4F4001B6F17 /* YDMemoryMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YDMemoryMonitor.swift; sourceTree = "<group>"; };
 		30539F2B256FB4D600C75B76 /* TestResource_JSON.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = TestResource_JSON.json; sourceTree = "<group>"; };
 		30539F46256FBC3B00C75B76 /* MLTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTestViewController.swift; sourceTree = "<group>"; };
 		30539F47256FBC3B00C75B76 /* MLTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MLTestViewController.xib; sourceTree = "<group>"; };
-		30539F52256FBD7600C75B76 /* MemoryLeakDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryLeakDetector.swift; sourceTree = "<group>"; };
 		30539F60256FBFE300C75B76 /* MLTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLTestView.swift; sourceTree = "<group>"; };
 		3068282A25359284005A9C24 /* iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3068282D25359284005A9C24 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -115,17 +115,17 @@
 			isa = PBXGroup;
 			children = (
 				30539F3D256FBBF500C75B76 /* Test */,
-				30539F3C256FB92E00C75B76 /* MemoryLeakDetector */,
+				30539F3C256FB92E00C75B76 /* MemoryMonitor */,
 			);
 			path = Monitor;
 			sourceTree = "<group>";
 		};
-		30539F3C256FB92E00C75B76 /* MemoryLeakDetector */ = {
+		30539F3C256FB92E00C75B76 /* MemoryMonitor */ = {
 			isa = PBXGroup;
 			children = (
-				30539F52256FBD7600C75B76 /* MemoryLeakDetector.swift */,
+				303AEF1D258CC4F4001B6F17 /* YDMemoryMonitor.swift */,
 			);
-			path = MemoryLeakDetector;
+			path = MemoryMonitor;
 			sourceTree = "<group>";
 		};
 		30539F3D256FBBF500C75B76 /* Test */ = {
@@ -398,9 +398,9 @@
 				30BCAE402563B84F008F3B11 /* YDGlobal.swift in Sources */,
 				30539F61256FBFE300C75B76 /* MLTestView.swift in Sources */,
 				30BCAE462563B98F008F3B11 /* UIImage+Extension.swift in Sources */,
-				30539F53256FBD7600C75B76 /* MemoryLeakDetector.swift in Sources */,
 				303AEEBE258C93BE001B6F17 /* HomeViewController.swift in Sources */,
 				3068282E25359284005A9C24 /* AppDelegate.swift in Sources */,
+				303AEF1E258CC4F4001B6F17 /* YDMemoryMonitor.swift in Sources */,
 				30539F48256FBC3B00C75B76 /* MLTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

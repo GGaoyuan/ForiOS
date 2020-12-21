@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SnapKit
 
 class HomeViewController: UIViewController {
 
@@ -27,9 +26,7 @@ class HomeViewController: UIViewController {
             return button
         }()
         view.addSubview(btn)
-        btn.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
-        
-        
+        btn.frame = CGRect(x: 100, y: 100, width: 100, height: 100)        
     }
     
     @objc func leakTest() {

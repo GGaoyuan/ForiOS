@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+
 class MLTestViewController: UIViewController {
     
     var testView: MLTestView!
@@ -22,6 +23,12 @@ class MLTestViewController: UIViewController {
         testView.blk = {
             self.mlFunc()
         }
+        
+        
+        let detector = FBRetainCycleDetector()
+        detector.addCandidate(self)
+        let result = detector.findRetainCycles()
+        print("")
     }
 
     func mlFunc() {
