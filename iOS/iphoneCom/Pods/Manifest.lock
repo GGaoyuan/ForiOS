@@ -20,10 +20,14 @@ PODS:
     - FBAllocationTracker (~> 0.1)
     - FBRetainCycleDetector (~> 0.1)
   - FBRetainCycleDetector (0.1.4)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - HandyJSON (5.0.2)
   - Kingfisher (5.15.6):
     - Kingfisher/Core (= 5.15.6)
   - Kingfisher/Core (5.15.6)
+  - KVOController (1.2.0)
   - SnapKit (5.0.1)
   - YYKit (1.0.9):
     - YYKit/no-arc (= 1.0.9)
@@ -35,8 +39,10 @@ DEPENDENCIES:
   - FBAllocationTracker
   - FBMemoryProfiler
   - FBRetainCycleDetector
+  - FMDB
   - HandyJSON
   - Kingfisher
+  - KVOController
   - SnapKit
   - YYKit
 
@@ -47,8 +53,10 @@ SPEC REPOS:
     - FBAllocationTracker
     - FBMemoryProfiler
     - FBRetainCycleDetector
+    - FMDB
     - HandyJSON
     - Kingfisher
+    - KVOController
     - SnapKit
     - YYKit
 
@@ -58,11 +66,13 @@ SPEC CHECKSUMS:
   FBAllocationTracker: dfdca3f71aceca6a85e95e3c6ec76a9785eba0f1
   FBMemoryProfiler: 623fc5f8a61f7d02ec75c87e3b97c90f621d8b02
   FBRetainCycleDetector: 46f8179bbb1c587deee3ea838a1a3ee02acf5015
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
   Kingfisher: b3554e7bf6106115b44e8795300bad580ef2fdc7
+  KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
   YYKit: 7cda43304a8dc3696c449041e2cb3107b4e236e7
 
-PODFILE CHECKSUM: ffe55306623570d8492c9d7ab281719150fdc03e
+PODFILE CHECKSUM: b5e8b0e0e63f92446b07a2231c64890814e61d80
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

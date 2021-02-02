@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		30C9D5D225B1973D0059957A /* KTVRRDInnerGlowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D5D125B1973D0059957A /* KTVRRDInnerGlowView.m */; };
+		30C9D5D825B1A1770059957A /* TestLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D5D725B1A1770059957A /* TestLayer.m */; };
+		30CD77A925C1423900CEA0F6 /* YDConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77A825C1423900CEA0F6 /* YDConstant.swift */; };
+		30CD77B825C1454400CEA0F6 /* CommandEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77B725C1454400CEA0F6 /* CommandEntrance.swift */; };
+		30CD77BD25C1457600CEA0F6 /* DPEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77BC25C1457600CEA0F6 /* DPEntrance.swift */; };
+		30CD77C525C14B0700CEA0F6 /* CMDGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77C425C14B0700CEA0F6 /* CMDGroup.swift */; };
+		30CD77CA25C14B9800CEA0F6 /* CMDRequirementGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77C925C14B9800CEA0F6 /* CMDRequirementGroup.swift */; };
+		30CD77CF25C14C3800CEA0F6 /* CMDPageGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77CE25C14C3800CEA0F6 /* CMDPageGroup.swift */; };
+		30CD77D425C14CCD00CEA0F6 /* CMDCodeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77D325C14CCD00CEA0F6 /* CMDCodeGroup.swift */; };
+		30CD77D925C14F8B00CEA0F6 /* CMDInvoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77D825C14F8B00CEA0F6 /* CMDInvoker.swift */; };
+		30CD77E125C1524D00CEA0F6 /* CMDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77E025C1524D00CEA0F6 /* CMDCommand.swift */; };
+		30CD77FC25C1596D00CEA0F6 /* CMDAddRequirementCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77FB25C1596D00CEA0F6 /* CMDAddRequirementCommand.swift */; };
+		30CD780125C15A0E00CEA0F6 /* CMDDeletePageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD780025C15A0E00CEA0F6 /* CMDDeletePageCommand.swift */; };
+		30CD780925C1678000CEA0F6 /* CMDChangeCodeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD780825C1678000CEA0F6 /* CMDChangeCodeCommand.swift */; };
 		30DA670225908092008BE5F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 30DA670125908092008BE5F3 /* AppDelegate.m */; };
 		30DA670D25908094008BE5F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30DA670C25908094008BE5F3 /* Assets.xcassets */; };
 		30DA671025908094008BE5F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30DA670E25908094008BE5F3 /* LaunchScreen.storyboard */; };
@@ -22,10 +36,6 @@
 		30DA676C25908194008BE5F3 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA676325908194008BE5F3 /* UIView+Extension.swift */; };
 		30DA676D25908194008BE5F3 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA676425908194008BE5F3 /* UIImage+Extension.swift */; };
 		30DA676E25908194008BE5F3 /* YDGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA676525908194008BE5F3 /* YDGlobal.swift */; };
-		30DA679B25908F1E008BE5F3 /* CorpProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA679A25908F1E008BE5F3 /* CorpProtocol.swift */; };
-		30DA67A325908F39008BE5F3 /* ProductProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA67A225908F39008BE5F3 /* ProductProtocol.swift */; };
-		30DA67A825909021008BE5F3 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA67A725909021008BE5F3 /* House.swift */; };
-		30DA67AD25909030008BE5F3 /* iPod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30DA67AC25909030008BE5F3 /* iPod.swift */; };
 		6F2177959A114154027648A7 /* libPods-iphoneCom.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4E955EBD1E88752908910F /* libPods-iphoneCom.a */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +58,22 @@
 
 /* Begin PBXFileReference section */
 		2215AD3C5554281AFA44C555 /* Pods-iphoneCom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iphoneCom.release.xcconfig"; path = "Target Support Files/Pods-iphoneCom/Pods-iphoneCom.release.xcconfig"; sourceTree = "<group>"; };
+		30C9D5D025B1973D0059957A /* KTVRRDInnerGlowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVRRDInnerGlowView.h; sourceTree = "<group>"; };
+		30C9D5D125B1973D0059957A /* KTVRRDInnerGlowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVRRDInnerGlowView.m; sourceTree = "<group>"; };
+		30C9D5D625B1A1760059957A /* TestLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLayer.h; sourceTree = "<group>"; };
+		30C9D5D725B1A1770059957A /* TestLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLayer.m; sourceTree = "<group>"; };
+		30CD77A825C1423900CEA0F6 /* YDConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YDConstant.swift; sourceTree = "<group>"; };
+		30CD77B725C1454400CEA0F6 /* CommandEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandEntrance.swift; sourceTree = "<group>"; };
+		30CD77BC25C1457600CEA0F6 /* DPEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPEntrance.swift; sourceTree = "<group>"; };
+		30CD77C425C14B0700CEA0F6 /* CMDGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDGroup.swift; sourceTree = "<group>"; };
+		30CD77C925C14B9800CEA0F6 /* CMDRequirementGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDRequirementGroup.swift; sourceTree = "<group>"; };
+		30CD77CE25C14C3800CEA0F6 /* CMDPageGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDPageGroup.swift; sourceTree = "<group>"; };
+		30CD77D325C14CCD00CEA0F6 /* CMDCodeGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDCodeGroup.swift; sourceTree = "<group>"; };
+		30CD77D825C14F8B00CEA0F6 /* CMDInvoker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDInvoker.swift; sourceTree = "<group>"; };
+		30CD77E025C1524D00CEA0F6 /* CMDCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDCommand.swift; sourceTree = "<group>"; };
+		30CD77FB25C1596D00CEA0F6 /* CMDAddRequirementCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDAddRequirementCommand.swift; sourceTree = "<group>"; };
+		30CD780025C15A0E00CEA0F6 /* CMDDeletePageCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDDeletePageCommand.swift; sourceTree = "<group>"; };
+		30CD780825C1678000CEA0F6 /* CMDChangeCodeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMDChangeCodeCommand.swift; sourceTree = "<group>"; };
 		30DA66FD25908092008BE5F3 /* iphoneCom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iphoneCom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		30DA670025908092008BE5F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		30DA670125908092008BE5F3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -71,10 +97,6 @@
 		30DA676325908194008BE5F3 /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		30DA676425908194008BE5F3 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		30DA676525908194008BE5F3 /* YDGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YDGlobal.swift; sourceTree = "<group>"; };
-		30DA679A25908F1E008BE5F3 /* CorpProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorpProtocol.swift; sourceTree = "<group>"; };
-		30DA67A225908F39008BE5F3 /* ProductProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProtocol.swift; sourceTree = "<group>"; };
-		30DA67A725909021008BE5F3 /* House.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = House.swift; sourceTree = "<group>"; };
-		30DA67AC25909030008BE5F3 /* iPod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iPod.swift; sourceTree = "<group>"; };
 		AD4E955EBD1E88752908910F /* libPods-iphoneCom.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-iphoneCom.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9023C3DE798CAF66B089250 /* Pods-iphoneCom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iphoneCom.debug.xcconfig"; path = "Target Support Files/Pods-iphoneCom/Pods-iphoneCom.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -113,6 +135,31 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		30CD77B325C144A200CEA0F6 /* Command */ = {
+			isa = PBXGroup;
+			children = (
+				30CD77B725C1454400CEA0F6 /* CommandEntrance.swift */,
+				30CD77D825C14F8B00CEA0F6 /* CMDInvoker.swift */,
+				30CD77E525C1565600CEA0F6 /* Commands */,
+				30CD77C425C14B0700CEA0F6 /* CMDGroup.swift */,
+				30CD77C925C14B9800CEA0F6 /* CMDRequirementGroup.swift */,
+				30CD77CE25C14C3800CEA0F6 /* CMDPageGroup.swift */,
+				30CD77D325C14CCD00CEA0F6 /* CMDCodeGroup.swift */,
+			);
+			path = Command;
+			sourceTree = "<group>";
+		};
+		30CD77E525C1565600CEA0F6 /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				30CD77E025C1524D00CEA0F6 /* CMDCommand.swift */,
+				30CD77FB25C1596D00CEA0F6 /* CMDAddRequirementCommand.swift */,
+				30CD780025C15A0E00CEA0F6 /* CMDDeletePageCommand.swift */,
+				30CD780825C1678000CEA0F6 /* CMDChangeCodeCommand.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
 		30DA66F425908092008BE5F3 = {
 			isa = PBXGroup;
 			children = (
@@ -140,7 +187,7 @@
 			children = (
 				30DA679825908EE0008BE5F3 /* DesignPatterns */,
 				30DA675825908194008BE5F3 /* TestResource */,
-				30DA675A25908194008BE5F3 /* YDFoundation */,
+				30DA675A25908194008BE5F3 /* YD */,
 				30DA6747259080DC008BE5F3 /* Classes */,
 				30DA670025908092008BE5F3 /* AppDelegate.h */,
 				30DA670125908092008BE5F3 /* AppDelegate.m */,
@@ -175,6 +222,10 @@
 			isa = PBXGroup;
 			children = (
 				30DA6742259080B2008BE5F3 /* HomeViewController.swift */,
+				30C9D5D025B1973D0059957A /* KTVRRDInnerGlowView.h */,
+				30C9D5D125B1973D0059957A /* KTVRRDInnerGlowView.m */,
+				30C9D5D625B1A1760059957A /* TestLayer.h */,
+				30C9D5D725B1A1770059957A /* TestLayer.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -187,15 +238,16 @@
 			path = TestResource;
 			sourceTree = "<group>";
 		};
-		30DA675A25908194008BE5F3 /* YDFoundation */ = {
+		30DA675A25908194008BE5F3 /* YD */ = {
 			isa = PBXGroup;
 			children = (
-				30DA675B25908194008BE5F3 /* Monitor */,
 				30DA676525908194008BE5F3 /* YDGlobal.swift */,
+				30CD77A825C1423900CEA0F6 /* YDConstant.swift */,
+				30DA675B25908194008BE5F3 /* Monitor */,
 				30DA676225908194008BE5F3 /* Extension */,
 				30DA676625908194008BE5F3 /* Tool */,
 			);
-			path = YDFoundation;
+			path = YD;
 			sourceTree = "<group>";
 		};
 		30DA675B25908194008BE5F3 /* Monitor */ = {
@@ -244,20 +296,10 @@
 		30DA679825908EE0008BE5F3 /* DesignPatterns */ = {
 			isa = PBXGroup;
 			children = (
-				30DA679925908EF9008BE5F3 /* Bridge */,
+				30CD77BC25C1457600CEA0F6 /* DPEntrance.swift */,
+				30CD77B325C144A200CEA0F6 /* Command */,
 			);
 			path = DesignPatterns;
-			sourceTree = "<group>";
-		};
-		30DA679925908EF9008BE5F3 /* Bridge */ = {
-			isa = PBXGroup;
-			children = (
-				30DA679A25908F1E008BE5F3 /* CorpProtocol.swift */,
-				30DA67A225908F39008BE5F3 /* ProductProtocol.swift */,
-				30DA67A725909021008BE5F3 /* House.swift */,
-				30DA67AC25909030008BE5F3 /* iPod.swift */,
-			);
-			path = Bridge;
 			sourceTree = "<group>";
 		};
 		DDD32383D545707924576A85 /* Pods */ = {
@@ -426,19 +468,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30CD77E125C1524D00CEA0F6 /* CMDCommand.swift in Sources */,
 				30DA676B25908194008BE5F3 /* YDMemoryMonitor.swift in Sources */,
-				30DA67A325908F39008BE5F3 /* ProductProtocol.swift in Sources */,
+				30CD77BD25C1457600CEA0F6 /* DPEntrance.swift in Sources */,
+				30CD77A925C1423900CEA0F6 /* YDConstant.swift in Sources */,
 				30DA676C25908194008BE5F3 /* UIView+Extension.swift in Sources */,
+				30CD77CF25C14C3800CEA0F6 /* CMDPageGroup.swift in Sources */,
+				30C9D5D825B1A1770059957A /* TestLayer.m in Sources */,
+				30CD77CA25C14B9800CEA0F6 /* CMDRequirementGroup.swift in Sources */,
 				30DA670225908092008BE5F3 /* AppDelegate.m in Sources */,
-				30DA679B25908F1E008BE5F3 /* CorpProtocol.swift in Sources */,
+				30CD780925C1678000CEA0F6 /* CMDChangeCodeCommand.swift in Sources */,
 				30DA676D25908194008BE5F3 /* UIImage+Extension.swift in Sources */,
 				30DA671325908094008BE5F3 /* main.m in Sources */,
-				30DA67AD25909030008BE5F3 /* iPod.swift in Sources */,
 				30DA676A25908194008BE5F3 /* MLTestViewController.swift in Sources */,
+				30CD77B825C1454400CEA0F6 /* CommandEntrance.swift in Sources */,
+				30CD77D425C14CCD00CEA0F6 /* CMDCodeGroup.swift in Sources */,
+				30CD780125C15A0E00CEA0F6 /* CMDDeletePageCommand.swift in Sources */,
 				30DA676E25908194008BE5F3 /* YDGlobal.swift in Sources */,
+				30CD77C525C14B0700CEA0F6 /* CMDGroup.swift in Sources */,
 				30DA6743259080B2008BE5F3 /* HomeViewController.swift in Sources */,
-				30DA67A825909021008BE5F3 /* House.swift in Sources */,
 				30DA676925908194008BE5F3 /* MLTestView.swift in Sources */,
+				30CD77FC25C1596D00CEA0F6 /* CMDAddRequirementCommand.swift in Sources */,
+				30CD77D925C14F8B00CEA0F6 /* CMDInvoker.swift in Sources */,
+				30C9D5D225B1973D0059957A /* KTVRRDInnerGlowView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

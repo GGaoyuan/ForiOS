@@ -15,6 +15,9 @@ target 'iphoneCom' do
   pod 'Kingfisher' # 图片加载
   pod 'SnapKit'
   
+  pod 'KVOController' #安全KVO
+  pod 'FMDB'
+  
   pod 'FBMemoryProfiler'
   pod 'FBAllocationTracker'
   pod 'FBRetainCycleDetector'
