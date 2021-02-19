@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		30C9D5D225B1973D0059957A /* KTVRRDInnerGlowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D5D125B1973D0059957A /* KTVRRDInnerGlowView.m */; };
-		30C9D5D825B1A1770059957A /* TestLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C9D5D725B1A1770059957A /* TestLayer.m */; };
+		30370AAF25C93382003D72A2 /* KTVRRDThemeStorageTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 30370AAE25C93382003D72A2 /* KTVRRDThemeStorageTool.m */; };
 		30CD77A925C1423900CEA0F6 /* YDConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77A825C1423900CEA0F6 /* YDConstant.swift */; };
 		30CD77B825C1454400CEA0F6 /* CommandEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77B725C1454400CEA0F6 /* CommandEntrance.swift */; };
 		30CD77BD25C1457600CEA0F6 /* DPEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CD77BC25C1457600CEA0F6 /* DPEntrance.swift */; };
@@ -58,10 +57,8 @@
 
 /* Begin PBXFileReference section */
 		2215AD3C5554281AFA44C555 /* Pods-iphoneCom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iphoneCom.release.xcconfig"; path = "Target Support Files/Pods-iphoneCom/Pods-iphoneCom.release.xcconfig"; sourceTree = "<group>"; };
-		30C9D5D025B1973D0059957A /* KTVRRDInnerGlowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVRRDInnerGlowView.h; sourceTree = "<group>"; };
-		30C9D5D125B1973D0059957A /* KTVRRDInnerGlowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVRRDInnerGlowView.m; sourceTree = "<group>"; };
-		30C9D5D625B1A1760059957A /* TestLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestLayer.h; sourceTree = "<group>"; };
-		30C9D5D725B1A1770059957A /* TestLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLayer.m; sourceTree = "<group>"; };
+		30370AAD25C93382003D72A2 /* KTVRRDThemeStorageTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVRRDThemeStorageTool.h; sourceTree = "<group>"; };
+		30370AAE25C93382003D72A2 /* KTVRRDThemeStorageTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVRRDThemeStorageTool.m; sourceTree = "<group>"; };
 		30CD77A825C1423900CEA0F6 /* YDConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YDConstant.swift; sourceTree = "<group>"; };
 		30CD77B725C1454400CEA0F6 /* CommandEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandEntrance.swift; sourceTree = "<group>"; };
 		30CD77BC25C1457600CEA0F6 /* DPEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPEntrance.swift; sourceTree = "<group>"; };
@@ -222,10 +219,8 @@
 			isa = PBXGroup;
 			children = (
 				30DA6742259080B2008BE5F3 /* HomeViewController.swift */,
-				30C9D5D025B1973D0059957A /* KTVRRDInnerGlowView.h */,
-				30C9D5D125B1973D0059957A /* KTVRRDInnerGlowView.m */,
-				30C9D5D625B1A1760059957A /* TestLayer.h */,
-				30C9D5D725B1A1770059957A /* TestLayer.m */,
+				30370AAD25C93382003D72A2 /* KTVRRDThemeStorageTool.h */,
+				30370AAE25C93382003D72A2 /* KTVRRDThemeStorageTool.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -472,9 +467,9 @@
 				30DA676B25908194008BE5F3 /* YDMemoryMonitor.swift in Sources */,
 				30CD77BD25C1457600CEA0F6 /* DPEntrance.swift in Sources */,
 				30CD77A925C1423900CEA0F6 /* YDConstant.swift in Sources */,
+				30370AAF25C93382003D72A2 /* KTVRRDThemeStorageTool.m in Sources */,
 				30DA676C25908194008BE5F3 /* UIView+Extension.swift in Sources */,
 				30CD77CF25C14C3800CEA0F6 /* CMDPageGroup.swift in Sources */,
-				30C9D5D825B1A1770059957A /* TestLayer.m in Sources */,
 				30CD77CA25C14B9800CEA0F6 /* CMDRequirementGroup.swift in Sources */,
 				30DA670225908092008BE5F3 /* AppDelegate.m in Sources */,
 				30CD780925C1678000CEA0F6 /* CMDChangeCodeCommand.swift in Sources */,
@@ -490,7 +485,6 @@
 				30DA676925908194008BE5F3 /* MLTestView.swift in Sources */,
 				30CD77FC25C1596D00CEA0F6 /* CMDAddRequirementCommand.swift in Sources */,
 				30CD77D925C14F8B00CEA0F6 /* CMDInvoker.swift in Sources */,
-				30C9D5D225B1973D0059957A /* KTVRRDInnerGlowView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

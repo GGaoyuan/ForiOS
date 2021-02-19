@@ -22,11 +22,6 @@ class MLTestViewController: UIViewController {
         let test = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 567))
         test.backgroundColor = .green
         testViewArea.addSubview(test)
-        
-        let testView = KTVRRDInnerGlowView(frame: CGRect(x: 0, y: 0, width: 375, height: 567))
-        testViewArea.addSubview(testView)
-        
-        
     }
 
     func mlFunc() {

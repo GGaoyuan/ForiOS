@@ -28,12 +28,22 @@ import UIKit
         view.addSubview(btn)
         btn.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
         
-        DPEntrance.commandPattern()
+//        DPEntrance.commandPattern()
+        
+//        UserDefaults.standard .setValue(1, forKey: "111")
+//        UserDefaults.standard .setValue(2, forKey: "222")
+//        UserDefaults.standard .setValue(3, forKey: "333")
+        
+        let _ = KTVRRDThemeStorageTool.sharedInstance()
         
     }
     
     @objc func leakTest() {
-        let testVC = MLTestViewController()
-        present(testVC, animated: true, completion: nil)
+        
+        KTVRRDThemeStorageTool.sharedInstance().fetchThemeVersions()
+        
+        
+//        let testVC = MLTestViewController()
+//        present(testVC, animated: true, completion: nil)
     }
 }
